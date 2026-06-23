@@ -245,7 +245,6 @@ if __name__ == "__main__":
     # Collect all test classes and their test methods
     test_classes = [
         TestInstanceResult, TestAggregateMetrics, TestValidityTestResult,
-        TestCorrelationResult, TestStatisticalTest, TestFlipResult,
         TestExecutionSummary, TestAggregateValidityResults, TestConvenienceFunctions,
     ]
 
