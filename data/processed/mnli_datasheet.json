@@ -1,0 +1,56 @@
+{
+  "dataset": "mnli",
+  "huggingface_id": "nyu-mll/multi_nli",
+  "split": "validation_matched",
+  "seed": 42,
+  "target": 200,
+  "raw_count": 9815,
+  "drop_counts": {
+    "empty": 0,
+    "too_short": 81,
+    "too_long": 0,
+    "junk": 0,
+    "exact_dup": 1,
+    "near_dup": 1
+  },
+  "pool_size": 300,
+  "vetted_kept": 282,
+  "vetted_dropped": {
+    "attribution to Tommy debatable; relation unclear": 1,
+    "confusing premise + debatable attribution": 1,
+    "fragment header premise ('TEST ORGANISMS')": 1,
+    "fragment premise ('Near Jerusalem')": 1,
+    "fragment premise (noun phrase)": 2,
+    "fragment premise (noun phrase); relation debatable": 1,
+    "fragment premise/hypothesis (not full sentences)": 1,
+    "garbled hypothesis ('absdorns')": 1,
+    "garbled premise text": 1,
+    "garbled/merged premise": 1,
+    "hypothesis adds unstated info; not strict entailment": 1,
+    "meta hypothesis; relation questionable": 1,
+    "mislabel: hypothesis misstates the interest-rate definition": 1,
+    "mislabel: premise <=18 vs hypothesis >=18, not entailment": 1,
+    "subject-swap; entailment questionable": 1,
+    "unclear premise; weak entailment": 1,
+    "weak/neutral relation; entailment debatable": 1
+  },
+  "final_count": 200,
+  "label_distribution": {
+    "contradiction": 67,
+    "entailment": 67,
+    "neutral": 66
+  },
+  "genre_distribution": {
+    "fiction": 46,
+    "government": 43,
+    "slate": 38,
+    "telephone": 36,
+    "travel": 37
+  },
+  "length_distribution": {
+    "long": 68,
+    "medium": 67,
+    "short": 65
+  },
+  "shortfalls": []
+}

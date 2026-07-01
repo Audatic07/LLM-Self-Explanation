@@ -1,0 +1,39 @@
+{
+  "dataset": "sst2",
+  "huggingface_id": "stanfordnlp/sst2",
+  "split": "validation",
+  "seed": 42,
+  "target": 200,
+  "raw_count": 872,
+  "drop_counts": {
+    "empty": 0,
+    "too_short": 26,
+    "too_long": 0,
+    "junk": 0,
+    "exact_dup": 0,
+    "near_dup": 0
+  },
+  "pool_size": 300,
+  "vetted_kept": 294,
+  "vetted_dropped": {
+    "ambiguous polarity ('closer to pity')": 1,
+    "mixed/ambiguous polarity (heart vs brains)": 1,
+    "neutral/descriptive; gold 'negative' not clearly supported": 1,
+    "text reads negative but gold is positive (likely mislabel)": 2,
+    "weak/ambiguous polarity ('troubling interpretation')": 1
+  },
+  "final_count": 200,
+  "label_distribution": {
+    "negative": 100,
+    "positive": 100
+  },
+  "genre_distribution": {
+    "n/a": 200
+  },
+  "length_distribution": {
+    "long": 68,
+    "medium": 66,
+    "short": 66
+  },
+  "shortfalls": []
+}

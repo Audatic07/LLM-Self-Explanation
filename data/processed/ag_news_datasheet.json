@@ -1,0 +1,58 @@
+{
+  "dataset": "ag_news",
+  "huggingface_id": "fancyzhx/ag_news",
+  "split": "test",
+  "seed": 42,
+  "target": 200,
+  "raw_count": 7600,
+  "drop_counts": {
+    "empty": 0,
+    "too_short": 0,
+    "too_long": 0,
+    "junk": 0,
+    "exact_dup": 1,
+    "near_dup": 0
+  },
+  "pool_size": 300,
+  "vetted_kept": 277,
+  "vetted_dropped": {
+    "BBC job cuts -> Business, gold is World": 1,
+    "English-Channel swim -> ambiguous category": 1,
+    "GM-grass science -> Sci/Tech, gold is Business (mislabel)": 1,
+    "Gap/Wild Planet retail deal -> Business, gold is Sci/Tech": 1,
+    "Michael Jackson legal -> entertainment, not World": 1,
+    "Nextel/Sprint merger -> Business, gold is Sci/Tech": 1,
+    "Olympic basketball -> Sports, gold is World (mislabel)": 1,
+    "Olympic field hockey -> Sports, gold is World (mislabel)": 1,
+    "Olympic gymnastics appeal -> Sports, gold is World (mislabel)": 1,
+    "Senate-candidate politics -> not Sports (mislabel)": 1,
+    "Venezuela referendum -> World, gold is Business (mislabel)": 1,
+    "airline equity raise -> Business, gold is World (mislabel)": 1,
+    "beer how-to / lifestyle -> not clearly Sci/Tech": 1,
+    "biotech economic development -> Business, gold is Sci/Tech": 1,
+    "campaign-finance topic -> weak/cross-category Sci/Tech": 1,
+    "celebrity drug arrest -> entertainment, not World": 1,
+    "cricket Test -> Sports, gold is World (mislabel)": 2,
+    "earnings/profit story -> Business, gold is Sci/Tech (mislabel)": 1,
+    "gene therapy -> Sci/Tech, gold is World (mislabel)": 1,
+    "lawsuit/crime story -> not Sci/Tech (mislabel)": 1,
+    "oil/gas prices -> Business, gold is World (mislabel)": 1,
+    "stocks/earnings -> Business, gold is World (mislabel)": 1
+  },
+  "final_count": 200,
+  "label_distribution": {
+    "Business": 50,
+    "Sci/Tech": 50,
+    "Sports": 50,
+    "World": 50
+  },
+  "genre_distribution": {
+    "n/a": 200
+  },
+  "length_distribution": {
+    "long": 68,
+    "medium": 68,
+    "short": 64
+  },
+  "shortfalls": []
+}
