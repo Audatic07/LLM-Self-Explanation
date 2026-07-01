@@ -11,7 +11,6 @@ build/
 .env
 
 # Data and outputs
-data/
 outputs/
 logs/
 
