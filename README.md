@@ -103,12 +103,13 @@ See `python scripts/run_experiment.py --help` for all CLI options.
 
 | Metric                  | Description                                                                                |
 | ----------------------- | ------------------------------------------------------------------------------------------ |
-| **ECS**           | Explanation Consensus Score -- mean of 6 pairwise Jaccard similarities across 4 strategies |
+| **ECS**           | Explanation Consensus Score -- mean of the **5 cross-paradigm** pairwise Jaccard similarities (H–RO excluded as same-paradigm), reported as **lift over a Monte-Carlo random baseline** |
+| **ECS-overlap**   | Size-robust secondary composite -- mean Overlap Coefficient over the same 5 pairs          |
 | **CC3**           | Consensus Core 3 -- tokens appearing in >=3 of 4 strategies                                |
 | **CC4**           | Consensus Core 4 -- tokens appearing in all 4 strategies                                   |
-| **Jaccard**       | Token-set overlap between any two strategies                                               |
+| **Jaccard**       | Token-set overlap between any two strategies (evidence sets share one lemmatized token space) |
 | **Kendall's tau** | Rank correlation between ordered token lists (H, RO)                                       |
-| **Flip rate**     | Rate at which masking consensus-core tokens changes the model's prediction                 |
+| **Flip rate**     | Erasure pass: rate at which masking/deleting consensus-core tokens changes the model's prediction, vs. a same-size content-word random control |
 
 ## Development
 
@@ -123,7 +124,7 @@ python -m pytest --cov=src --cov-report=term
 python -m pytest tests/test_metrics_calculator.py -v
 ```
 
-All source files under `src/` have 100% test coverage (415 tests across 21 test files).
+The test suite covers the collection, metric, statistics, and erasure paths (500+ tests, including a `test_scientific_invariants.py` fixture suite that pins ECS on synthetic all-agree / all-disagree / inflection-equivalent inputs).
 
 ## Citation
 

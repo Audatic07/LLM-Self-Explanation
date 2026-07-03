@@ -55,8 +55,11 @@ class PaperGenerator:
             r"\section{Methodology}" + "\n\n"
             + "We employ four explanation strategies: Highlighting (H), Rationale (R), "
             + "Counterfactual (CF), and Rank Ordering (RO). "
-            + "Agreement is measured via Jaccard similarity on normalized token sets. "
-            + "The Explanation Consensus Score (ECS) averages six pairwise Jaccard values."
+            + "Agreement is measured via Jaccard similarity on normalized token sets "
+            + "sharing one lemmatized token space. "
+            + "The Explanation Consensus Score (ECS) averages the five cross-paradigm "
+            + "pairwise Jaccard values (the same-paradigm H--RO pair is excluded), "
+            + "reported as lift over a Monte-Carlo random baseline."
         )
 
     def _results(self):

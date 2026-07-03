@@ -206,6 +206,21 @@ General issue across all elicitation prompts: they are sent **as a follow-up tur
 
 ## 8. New defects found in the 2026-07-02 re-check
 
+> **✅ RESOLVED 2026-07-03 (working tree, suite green — 518 tests).** All §8 defects
+> are fixed: **§8.1** erasure pass now instantiates one engine per model and
+> re-classifies each record with its own model (`run_validity_tests.py`); **§8.2**
+> normalization v3.0 lemmatizes every strategy's evidence into one shared token space
+> (an inflection-equivalence fixture test now pins Jaccard=1.0); **§8.3** CF evidence
+> passes through `normalize_tokens` (raw edit tokens kept separately for erasure/
+> minimality); **§8.4** contracted negations live in one shared `POLARITY_WORDS`
+> whitelist imported by the parser (no divergent copy); **§8.5** wrong-prediction
+> instances render in full with a D5 stratum banner, SKIPPED reserved for unparseable
+> classification; **§8.6** clustered bootstrap for pooled CIs, H ranking normalized like
+> RO, MNLI CF ratio over the editable span, H list-of-pairs schema (dup→max), inert
+> unseeded shuffle deleted, audit tooling de-staled. Detail: [`FIX_PLAN_2026-07-02.md`](FIX_PLAN_2026-07-02.md) application-status banner.
+
+
+
 These were found by cross-examining the multi-model smoke run ([`20260702_144026_c22695ee`](outputs/20260702_144026_c22695ee/report.md)) against the raw `instance_results.jsonl` and the current code. §8.2–8.4 are not migration artifacts — they corrupt the ECS numbers of **every run to date**, including the Groq-era results this review previously discussed.
 
 ### 8.1 Erasure pass re-classifies with the wrong model under multi-model (BLOCKING)

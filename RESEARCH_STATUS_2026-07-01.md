@@ -1,5 +1,21 @@
 # LLM Explanation Agreement Study — Research Status & Roadmap
 
+> ## Addendum 2026-07-03 — provider migration + fix pass applied
+> Two things changed since this doc was compiled. (1) **Inference migrated Groq →
+> AWS Bedrock**, three non-Anthropic families concurrently (Nova Pro, Qwen3-235B,
+> DeepSeek V3); this **retires every Groq/llama result** and **obsoletes the token-budget
+> constraint** (full 3×3×200 ≈ $10–25 on-demand). (2) The **FIX_PLAN_2026-07-02 P0–P4
+> items are implemented** (suite green, 518 tests): the three construct-corrupting
+> normalization defects (§8.2–8.4 — R-lemma vs surface mismatch, unnormalized CF,
+> dropped contracted negations) are fixed by a shared **v3.0 lemmatized token space**;
+> the erasure pass is **per-model**; the report no longer contradicts its own data;
+> confidence is restored via **verbalized** elicitation; a **cross-model agreement**
+> analysis is now produced. What remains is **execution, not code**: run the pilot on
+> frozen code, run the per-model erasure pass, then scale — and finish the doc rewrites
+> (the `.kiro` specs now carry a corrigendum banner rather than a full rewrite). The
+> single most important consequence: **all `outputs/` prior to a v3.0 Bedrock run are
+> stale for the paper.**
+
 **Compiled:** 2026-07-01
 **Repository:** `C:\OpenSource\Research`
 **Model under study:** `llama-3.3-70b-versatile` (Groq API, temperature 0)

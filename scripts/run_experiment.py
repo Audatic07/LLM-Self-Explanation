@@ -259,7 +259,7 @@ async def process_instance(
             input_length=len(text.split()),
             ground_truth_label=instance.label,
             predicted_label=predicted_label,
-            confidence=0.0,
+            confidence=None,
             correct=correct,
             raw_highlighting="", raw_rationale="",
             raw_counterfactual="", raw_rank_ordering="",

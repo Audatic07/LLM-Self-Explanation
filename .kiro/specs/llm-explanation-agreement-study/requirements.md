@@ -1,5 +1,23 @@
 # Requirements Document
 
+> ## ⚠️ CORRIGENDUM (2026-07-03) — this section OVERRIDES conflicting text below
+> This document was authored for the original single-provider design and is being
+> superseded in place. Where the body below conflicts with this block, this block is
+> authoritative; the body is retained for history until a full rewrite lands.
+>
+> | Stale (body below) | Actual implemented study |
+> |---|---|
+> | **Groq API**, `GROQ_API_KEY`, "three Groq-compatible models" | **AWS Bedrock** Converse API; three distinct NON-Anthropic families run concurrently: **Amazon Nova Pro, Qwen3-235B, DeepSeek V3** (eu-north-1) |
+> | ECS = mean of **6** pairwise Jaccard (Req 9–10) | ECS = mean of the **5 cross-paradigm** pairs (**H–RO excluded**), reported as **lift over a Monte-Carlo random baseline** (not vs. a 0.5 constant); size-robust `ECS-overlap` secondary |
+> | Confidence 0–100 from the model + Spearman(confidence, ECS) via logprobs (Req 3, 12) | Bedrock exposes **no logprobs**; confidence is **verbalized** (0–100 elicited post-classification, Tian et al. 2023 / Xiong et al. 2024), Spearman(confidence, ECS) with seeded bootstrap CI — RQ retained, not dropped |
+> | **Validity_Checker** masks CC3/CC4, paired t-test vs random (Req 13) | Component **deleted**; a separate post-hoc **erasure pass** (`run_validity_tests.py`) erases CC/strategy/random sets under **mask AND delete** operators, re-classified by **each record's own model**; CC-vs-random tested by **sign-flip permutation**, Holm-corrected (no paired t-test) |
+> | "ECS differs from 0.5 random baseline" (Req 19.4) | Baseline is a **Monte-Carlo expectation** conditioned on set sizes + content vocab (uniform), plus a **salience-weighted** secondary null |
+> | 3 models × 3 datasets × ~200 as the delivered result | Config-driven; the **committed evidence is a pilot** (N per config), built to scale; N is stated honestly in each report |
+> | Normalization with lemmatization toggled off | **v3.0: lemmatization ON** — all four strategies' evidence sets share ONE canonical (WordNet fixed-point) token space; contracted negations are retained as polarity across every path |
+> | Multi-shot CF elicitation reported as single-shot rates | Single-shot (first-attempt) vs coached-loop CF rates are reported as **separate strata** |
+>
+> New capability not in the body: **cross-model same-strategy agreement** (within-model cross-strategy ECS vs cross-model same-strategy Jaccard) is computed from every multi-model run at zero extra API cost.
+
 ## Introduction
 
 This document specifies the requirements for an empirical NLP research project that investigates cross-strategy agreement among LLM self-explanations. The system will conduct controlled experiments across multiple datasets, models, and explanation strategies to determine whether agreement between different explanation methods can serve as a reliability signal for model predictions. The project produces a complete, reproducible research pipeline with datasets, metrics, visualizations, and a publication-ready paper.
@@ -10,13 +28,13 @@ This document specifies the requirements for an empirical NLP research project t
 - **Explanation_Strategy**: A specific prompting method to elicit explanations from language models (H=highlighting, R=rationale, CF=counterfactual, RO=rank-ordering)
 - **ECS**: Explanation Consensus Score - the mean pairwise agreement across all explanation strategy pairs for a single instance
 - **Consensus_Core**: The set of tokens that appear in k out of 4 explanation strategies (CCk notation)
-- **Groq_API**: The API service used for all model inference with deterministic settings
+- **Bedrock_API**: AWS Bedrock Converse API — all model inference, deterministic (T=0). *(Body may say "Groq_API"; see corrigendum.)*
 - **Dataset_Loader**: Component responsible for loading and sampling from SST-2, MNLI, and AG News datasets
-- **Inference_Engine**: Component that executes classification and explanation requests via Groq API
+- **Inference_Engine**: Component that executes classification and explanation requests via AWS Bedrock
 - **Parser**: Component that extracts structured evidence from raw model outputs
-- **Normalizer**: Component that standardizes extracted evidence for comparison
+- **Normalizer**: Component that standardizes extracted evidence for comparison (shared lemmatized token space)
 - **Metrics_Calculator**: Component that computes agreement metrics between explanation strategies
-- **Validity_Checker**: Component that performs consensus-core removal tests
+- **Erasure_Pass**: `run_validity_tests.py` — the separate post-hoc consensus-core/random erasure pass (replaces the deleted **Validity_Checker**; see corrigendum)
 - **Visualization_Generator**: Component that produces publication-quality figures
 - **Paper_Generator**: Component that creates the first-draft research paper
 - **Test_Suite**: Automated tests verifying correctness of all components
@@ -137,7 +155,7 @@ This document specifies the requirements for an empirical NLP research project t
 
 #### Acceptance Criteria
 
-1. WHEN all pairwise agreements are computed for an instance, THE Metrics_Calculator SHALL compute ECS as the mean of all six pairwise Jaccard similarities
+1. WHEN all pairwise agreements are computed for an instance, THE Metrics_Calculator SHALL compute ECS as the mean of the **five cross-paradigm** pairwise Jaccard similarities (**H–RO excluded** as same-paradigm), reported as **lift over the Monte-Carlo random baseline** *(corrigendum: was "all six")*
 2. THE Metrics_Calculator SHALL compute ECS only for instances with valid explanations from all four strategies
 3. IF any explanation strategy fails for an instance, THEN THE Metrics_Calculator SHALL exclude that instance from ECS calculation
 4. THE System SHALL compute aggregate ECS statistics per dataset, per model, and across all experiments

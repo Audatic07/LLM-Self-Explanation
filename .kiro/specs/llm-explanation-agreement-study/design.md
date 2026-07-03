@@ -1,5 +1,16 @@
 # Design Document
 
+> ## ⚠️ CORRIGENDUM (2026-07-03) — authoritative over conflicting body text
+> Inference is **AWS Bedrock** (Converse API), not Groq. The three models are **Amazon
+> Nova Pro, Qwen3-235B, DeepSeek V3** (non-Anthropic, eu-north-1), run concurrently per
+> dataset — not `llama-3.1-8b`/`mixtral`/`gemma`. ECS = mean of the **5 cross-paradigm**
+> Jaccard pairs (H–RO excluded), reported as **lift over a Monte-Carlo null**. Confidence
+> is **verbalized** (no logprobs on Bedrock). The `Validity_Checker` masking component is
+> **deleted**; erasure is a separate post-hoc pass (mask+delete, per-record model, sign-flip
+> permutation + Holm). Normalization is **v3.0, lemmatization ON** (one shared token space).
+> See `requirements.md` corrigendum for the full mapping and `FIX_PLAN_2026-07-02.md` /
+> `REVIEW_strict_reviewer_2026-07.md` §8 for rationale.
+
 ## Overview
 
 The LLM Explanation Agreement Study is a research pipeline that investigates whether cross-strategy agreement among LLM self-explanations can serve as a reliability signal for model predictions. The system executes controlled experiments across three NLP datasets (SST-2, MNLI, AG News), three Groq-compatible language models, and four explanation strategies (token highlighting, rationale generation, counterfactual generation, and rank-ordering).
