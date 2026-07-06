@@ -1,0 +1,24 @@
+Execution Summary
+=================
+Run ID: 88730e46
+Start Time: 2026-06-12 10:31:21
+End Time: 2026-06-12 10:33:08
+Duration: 106.55 seconds (1.78 minutes)
+
+Processing Statistics
+---------------------
+Total Instances: 9
+Successful: 8 (88.9%)
+Failed: 1 (11.1%)
+
+Failure Breakdown
+-----------------
+API Failures: 0
+Normalization Failures: 0
+Parsing Failures by Strategy:
+
+Performance Metrics
+-------------------
+Average Time per Instance: 13.32 seconds
+Total API Requests: 40
+Failed API Requests: 5 (12.5%)

@@ -33,7 +33,11 @@ def setup_logging(log_dir: str = "outputs/logs", log_name: str = None,
     logger.setLevel(logging.DEBUG)
     logger.handlers.clear()
 
-    file_handler = RotatingFileHandler(str(log_file), maxBytes=max_bytes, backupCount=backup_count)
+    # encoding='utf-8' is required on Windows: the default platform encoding (cp1252)
+    # cannot represent the em-dashes/arrows/section signs used throughout this
+    # codebase's log messages, corrupting them to "�" on write (review P1.4).
+    file_handler = RotatingFileHandler(str(log_file), maxBytes=max_bytes, backupCount=backup_count,
+                                       encoding='utf-8')
     file_format = StructuredFormatter('%(asctime)s | %(levelname)-8s | %(module)s:%(lineno)d | %(message)s')
     file_handler.setFormatter(file_format)
     file_handler.setLevel(getattr(logging, file_level.upper(), logging.DEBUG))

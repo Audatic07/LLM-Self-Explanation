@@ -1,0 +1,8 @@
+instance_id,dataset,model,ground_truth_label,predicted_label,confidence,correct,model_refused,prompt_tokens,response_tokens,prompt_hash,jaccard_H_R,jaccard_H_CF,jaccard_H_RO,jaccard_R_CF,jaccard_R_RO,jaccard_CF_RO,kendall_H_RO,normalized_kendall_H_RO,ecs,cf_flip_verified,cf_actual_label,highlighting_parsed,rationale_parsed,counterfactual_parsed,rank_ordering_parsed,cc3_size,cc4_size
+mnli_validation_matched_0000,mnli,llama-3.3-70b-versatile,neutral,contradiction,0.0,False,False,52,1,,,,,,,,,,,False,,False,False,False,False,0,0
+mnli_validation_matched_0006,mnli,llama-3.3-70b-versatile,neutral,entailment,0.0,False,False,44,1,,,,,,,,,,,False,,False,False,False,False,0,0
+ag_news_test_0001,ag_news,llama-3.3-70b-versatile,World,World,0.0,True,False,368,93,34f8f0bbd178d7da,0.2857142857142857,,0.25,,0.5,,,,0.39285714285714285,False,,True,True,False,True,2,2
+ag_news_test_0002,ag_news,llama-3.3-70b-versatile,World,World,0.0,True,False,363,87,d1c55024370f2e12,0.0,,0.5,,0.0,,,,0.0,False,,True,True,False,True,0,0
+ag_news_test_0004,ag_news,llama-3.3-70b-versatile,Business,Sci/Tech,0.0,False,False,50,1,,,,,,,,,,,False,,False,False,False,False,0,0
+ag_news_test_0005,ag_news,llama-3.3-70b-versatile,Sci/Tech,World,0.0,False,False,80,1,,,,,,,,,,,False,,False,False,False,False,0,0
+ag_news_test_0006,ag_news,llama-3.3-70b-versatile,Sports,Sports,0.0,True,False,354,80,1ed0148e7838e3a9,,,0.42857142857142855,,,,,,,False,,True,False,False,True,0,0

@@ -98,6 +98,11 @@ class MetricsConfig:
     # per-cell paired-diff count below which a test is skipped (estimate still reported).
     correction: str = "holm"
     min_n_for_test: int = 6
+    # Pre-registered degeneracy guard for ECS-adj's adjusted_jaccard (ECS_ROBUSTNESS_
+    # PLAN_2026-07-05.md §3.2): a pair is flagged degenerate (returns None) when
+    # J_max - E[J] < ecs_adj_epsilon, since dividing by a near-zero denominator
+    # amplifies numerator noise into a meaningless ratio.
+    ecs_adj_epsilon: float = 0.10
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
 

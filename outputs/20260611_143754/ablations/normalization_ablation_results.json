@@ -1,0 +1,30 @@
+{
+  "full": {
+    "mean_ecs": 0.0,
+    "config": {
+      "use_lemmatization": true,
+      "remove_stopwords": true
+    }
+  },
+  "no_lemmatization": {
+    "mean_ecs": 0.0,
+    "config": {
+      "use_lemmatization": false,
+      "remove_stopwords": true
+    }
+  },
+  "no_stopwords": {
+    "mean_ecs": 0.0,
+    "config": {
+      "use_lemmatization": true,
+      "remove_stopwords": false
+    }
+  },
+  "minimal": {
+    "mean_ecs": 0.0,
+    "config": {
+      "use_lemmatization": false,
+      "remove_stopwords": false
+    }
+  }
+}

@@ -343,3 +343,76 @@ class TestInferenceEngineUsageAccounting:
         assert engine.n_truncated == 1
         # No expansion was possible, so only one call was made.
         assert engine.client.converse.call_count == 1
+
+
+class TestRequestAccounting:
+    """Review P0.4: api_requests_total was a fabricated `len(all_results) * 5`
+    formula (450 claimed vs 805 real Bedrock calls in the pilot log). total_requests
+    must count every REAL HTTP attempt, including throttling retries and the
+    truncation-recovery retry — not just one per logical chat_with_usage() call."""
+
+    @pytest.mark.asyncio
+    async def test_single_success_counts_one_request(self):
+        engine = make_engine()
+        engine.client.converse = MagicMock(return_value=make_response("ok"))
+        await engine._make_request("hello")
+        assert engine.total_requests == 1
+        assert engine.total_requests_failed == 0
+
+    @pytest.mark.asyncio
+    @patch("src.inference.inference_engine.asyncio.sleep", new_callable=AsyncMock)
+    async def test_throttle_then_success_counts_both_attempts(self, mock_sleep):
+        engine = make_engine(max_retries=2)
+        engine.client.converse = MagicMock(side_effect=[
+            make_client_error("ThrottlingException"),
+            make_response("success"),
+        ])
+        await engine._make_request("hello")
+        # 1 failed attempt + 1 successful attempt = 2 total, 1 failed.
+        assert engine.total_requests == 2
+        assert engine.total_requests_failed == 1
+
+    @pytest.mark.asyncio
+    @patch("src.inference.inference_engine.asyncio.sleep", new_callable=AsyncMock)
+    async def test_throttle_exhausted_counts_every_failed_attempt(self, mock_sleep):
+        engine = make_engine(max_retries=1)
+        engine.client.converse = MagicMock(side_effect=make_client_error("ThrottlingException", "always"))
+        with pytest.raises(RateLimitExhausted):
+            await engine._make_request("hello")
+        # 1 initial attempt + 1 retry, both failed.
+        assert engine.total_requests == 2
+        assert engine.total_requests_failed == 2
+
+    @pytest.mark.asyncio
+    async def test_non_retryable_error_counts_one_failed_request(self):
+        engine = make_engine(max_retries=5)
+        engine.client.converse = MagicMock(side_effect=make_client_error("ValidationException", "bad input"))
+        with pytest.raises(APIError):
+            await engine._make_request("hi")
+        assert engine.total_requests == 1
+        assert engine.total_requests_failed == 1
+
+    @pytest.mark.asyncio
+    async def test_truncation_retry_counts_as_two_requests(self):
+        # Both the truncated first attempt and the bigger-budget retry are real,
+        # separately-billed Bedrock calls.
+        engine = make_engine(context_window=8192)
+        engine.client.converse = MagicMock(side_effect=[
+            make_response("partial", stop_reason="max_tokens", input_tokens=30, output_tokens=100),
+            make_response("complete", stop_reason="end_turn", input_tokens=30, output_tokens=250),
+        ])
+        await engine.chat_with_usage([{"role": "user", "content": "x"}], max_tokens=100)
+        assert engine.total_requests == 2
+        assert engine.total_requests_failed == 0
+
+    def test_record_request_tallies_by_category(self):
+        engine = make_engine()
+        engine.record_request("classification")
+        engine.record_request("H")
+        engine.record_request("H")
+        engine.record_request("CF_verify")
+        assert engine.requests_by_category == {"classification": 1, "H": 2, "CF_verify": 1}
+
+    def test_record_request_starts_empty(self):
+        engine = make_engine()
+        assert engine.requests_by_category == {}

@@ -1,0 +1,31 @@
+Execution Summary
+=================
+Run ID: 68fd6530
+Start Time: 2026-06-15 14:25:04
+End Time: 2026-06-15 14:30:04
+Duration: 299.78 seconds (5.00 minutes)
+
+Processing Statistics
+---------------------
+Total Instances: 27
+Successful: 27 (100.0%)
+Failed: 0 (0.0%)
+
+Failure Breakdown
+-----------------
+API Failures: 0
+Normalization Failures: 0
+Prompt Validation Failures: 0
+Parsing Failures by Strategy:
+
+Sampling Log:
+----------------------------------------
+  sst2: requested=10, sampled=10, wrong_pred=0
+  mnli: requested=10, sampled=9, wrong_pred=2
+  ag_news: requested=10, sampled=8, wrong_pred=2
+
+Performance Metrics
+-------------------
+Average Time per Instance: 11.10 seconds
+Total API Requests: 135
+Failed API Requests: 0 (0.0%)

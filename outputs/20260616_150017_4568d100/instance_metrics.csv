@@ -1,0 +1,12 @@
+instance_id,dataset,model,ground_truth_label,predicted_label,confidence,correct,model_refused,prompt_tokens,response_tokens,prompt_hash,jaccard_H_R,jaccard_H_CF,jaccard_H_RO,jaccard_R_CF,jaccard_R_RO,jaccard_CF_RO,overlap_H_R,overlap_H_CF,overlap_H_RO,overlap_R_CF,overlap_R_RO,overlap_CF_RO,rbo_H_RO,kendall_H_RO,normalized_kendall_H_RO,ecs,cf_flip_verified,cf_actual_label,highlighting_parsed,rationale_parsed,counterfactual_parsed,rank_ordering_parsed,cc3_size,cc4_size
+sst2_validation_0000,sst2,openai/gpt-oss-120b,negative,negative,0.0,True,False,367,44,b00a643964e1a260,,,,0.3333333333333333,0.4,0.4,,,,0.5,1.0,1.0,,,,0.37777777777777777,True,positive,False,True,True,True,1,1
+sst2_validation_0001,sst2,openai/gpt-oss-120b,positive,positive,0.0,True,False,382,55,9aba917cfb5449c7,,,,0.0,0.2,0.2,,,,0.0,1.0,1.0,,,,0.13333333333333333,True,negative,False,True,True,True,0,0
+sst2_validation_0002,sst2,openai/gpt-oss-120b,negative,negative,0.0,True,False,364,35,50f5b42b5c34d301,0.0,0.2,,0.0,,,0.0,1.0,,0.0,,,,,,0.06666666666666667,True,positive,True,True,True,False,0,0
+sst2_validation_0003,sst2,openai/gpt-oss-120b,positive,positive,0.0,True,False,376,56,fd4efe262a8ab2d5,,,,0.5,0.6666666666666666,0.3333333333333333,,,,1.0,1.0,1.0,,,,0.49999999999999994,True,negative,False,True,True,True,1,1
+mnli_validation_matched_0000,mnli,openai/gpt-oss-120b,entailment,entailment,0.0,True,False,372,34,bd36af1ff07e9a2a,0.3333333333333333,,1.0,,0.3333333333333333,,1.0,,1.0,,1.0,,0.03134699999999999,,,0.3333333333333333,False,,True,True,False,True,1,1
+mnli_validation_matched_0001,mnli,openai/gpt-oss-120b,contradiction,neutral,0.0,False,False,90,1,,,,,,,,,,,,,,,,,,False,,False,False,False,False,0,0
+mnli_validation_matched_0002,mnli,openai/gpt-oss-120b,neutral,neutral,0.0,True,False,403,42,b00ef8ce8bce925d,,,,,0.2,,,,,,1.0,,,,,,False,,False,True,False,True,0,0
+ag_news_test_0000,ag_news,openai/gpt-oss-120b,Sci/Tech,Business,0.0,False,False,76,1,,,,,,,,,,,,,,,,,,False,,False,False,False,False,0,0
+ag_news_test_0001,ag_news,openai/gpt-oss-120b,Sports,Sports,0.0,True,False,408,33,fbbe5e525705be07,,,,,,,,,,,,,,,,,False,,False,False,False,True,0,0
+ag_news_test_0002,ag_news,openai/gpt-oss-120b,World,World,0.0,True,False,403,37,77b3e5eec9068618,,,,,0.3333333333333333,,,,,,0.6666666666666666,,,,,,False,,False,True,False,True,0,0
+ag_news_test_0003,ag_news,openai/gpt-oss-120b,Business,Business,0.0,True,False,407,26,0b86c33802b9ddb3,,,,,0.0,,,,,,0.0,,,,,,False,,False,True,False,True,0,0

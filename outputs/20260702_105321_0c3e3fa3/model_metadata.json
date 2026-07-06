@@ -1,0 +1,33 @@
+{
+  "table": "models",
+  "entries": [
+    {
+      "name": "llama-3.3-70b",
+      "model_id": "us.meta.llama3-3-70b-instruct-v1:0",
+      "description": "Meta Llama 3.3 70B Instruct (via AWS Bedrock, US inference profile)",
+      "context_window": 131072,
+      "default_temperature": 0,
+      "default_top_p": 1,
+      "supports_function_calling": true
+    },
+    {
+      "name": "claude-haiku-4.5",
+      "model_id": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+      "description": "Anthropic Claude Haiku 4.5 (via AWS Bedrock, US inference profile)",
+      "context_window": 200000,
+      "default_temperature": 0,
+      "default_top_p": 1,
+      "supports_function_calling": true
+    },
+    {
+      "name": "mistral-large-3",
+      "model_id": "mistral.mistral-large-3-675b-instruct",
+      "description": "Mistral Large 3 (via AWS Bedrock, on-demand)",
+      "context_window": 131072,
+      "default_temperature": 0,
+      "default_top_p": 1,
+      "supports_function_calling": true
+    }
+  ],
+  "timestamp": "2026-07-02T10:54:00.250010"
+}

@@ -1,0 +1,236 @@
+{
+  "ablations": {
+    "sst2": {
+      "prompt": {
+        "highlighting_alt": {
+          "mean_ecs": 0.0,
+          "n_instances": 2,
+          "delta_from_baseline": 0
+        },
+        "rationale_alt": {
+          "mean_ecs": 0.0,
+          "n_instances": 2,
+          "delta_from_baseline": 0
+        },
+        "counterfactual_alt": {
+          "mean_ecs": 0.0,
+          "n_instances": 2,
+          "delta_from_baseline": 0
+        },
+        "rank_ordering_alt": {
+          "mean_ecs": 0.0,
+          "n_instances": 2,
+          "delta_from_baseline": 0
+        }
+      },
+      "normalization": {
+        "full": {
+          "mean_ecs": 0.0,
+          "config": {
+            "use_lemmatization": true,
+            "remove_stopwords": true
+          },
+          "delta_from_baseline": 0.0
+        },
+        "no_lemmatization": {
+          "mean_ecs": 0.0,
+          "config": {
+            "use_lemmatization": false,
+            "remove_stopwords": true
+          },
+          "delta_from_baseline": 0.0
+        },
+        "no_stopwords": {
+          "mean_ecs": 0.0,
+          "config": {
+            "use_lemmatization": true,
+            "remove_stopwords": false
+          },
+          "delta_from_baseline": 0.0
+        },
+        "minimal": {
+          "mean_ecs": 0.0,
+          "config": {
+            "use_lemmatization": false,
+            "remove_stopwords": false
+          },
+          "delta_from_baseline": 0.0
+        }
+      },
+      "highlighting_k": {
+        "k=2": {
+          "mean_ecs": 0.0,
+          "n_instances": 2,
+          "delta_from_baseline": 0.0
+        },
+        "k=3": {
+          "mean_ecs": 0.0,
+          "n_instances": 2,
+          "delta_from_baseline": 0.0
+        },
+        "k=5": {
+          "mean_ecs": 0.0,
+          "n_instances": 2,
+          "delta_from_baseline": 0.0
+        }
+      }
+    },
+    "mnli": {
+      "prompt": {
+        "highlighting_alt": {
+          "mean_ecs": 0.0,
+          "n_instances": 3,
+          "delta_from_baseline": 0
+        },
+        "rationale_alt": {
+          "mean_ecs": 0.0,
+          "n_instances": 3,
+          "delta_from_baseline": 0
+        },
+        "counterfactual_alt": {
+          "mean_ecs": 0.0,
+          "n_instances": 0,
+          "delta_from_baseline": 0
+        },
+        "rank_ordering_alt": {
+          "mean_ecs": 0.0,
+          "n_instances": 3,
+          "delta_from_baseline": 0
+        }
+      },
+      "normalization": {
+        "full": {
+          "mean_ecs": 0.0,
+          "config": {
+            "use_lemmatization": true,
+            "remove_stopwords": true
+          },
+          "delta_from_baseline": 0.0
+        },
+        "no_lemmatization": {
+          "mean_ecs": 0.0,
+          "config": {
+            "use_lemmatization": false,
+            "remove_stopwords": true
+          },
+          "delta_from_baseline": 0.0
+        },
+        "no_stopwords": {
+          "mean_ecs": 0.0,
+          "config": {
+            "use_lemmatization": true,
+            "remove_stopwords": false
+          },
+          "delta_from_baseline": 0.0
+        },
+        "minimal": {
+          "mean_ecs": 0.0,
+          "config": {
+            "use_lemmatization": false,
+            "remove_stopwords": false
+          },
+          "delta_from_baseline": 0.0
+        }
+      },
+      "highlighting_k": {
+        "k=2": {
+          "mean_ecs": 0.0,
+          "n_instances": 3,
+          "delta_from_baseline": 0.0
+        },
+        "k=3": {
+          "mean_ecs": 0.0,
+          "n_instances": 3,
+          "delta_from_baseline": 0.0
+        },
+        "k=5": {
+          "mean_ecs": 0.0,
+          "n_instances": 3,
+          "delta_from_baseline": 0.0
+        }
+      }
+    },
+    "ag_news": {
+      "prompt": {
+        "highlighting_alt": {
+          "mean_ecs": 0.0,
+          "n_instances": 4,
+          "delta_from_baseline": 0
+        },
+        "rationale_alt": {
+          "mean_ecs": 0.0,
+          "n_instances": 4,
+          "delta_from_baseline": 0
+        },
+        "counterfactual_alt": {
+          "mean_ecs": 0.0,
+          "n_instances": 0,
+          "delta_from_baseline": 0
+        },
+        "rank_ordering_alt": {
+          "mean_ecs": 0.0,
+          "n_instances": 4,
+          "delta_from_baseline": 0
+        }
+      },
+      "normalization": {
+        "full": {
+          "mean_ecs": 0.0,
+          "config": {
+            "use_lemmatization": true,
+            "remove_stopwords": true
+          },
+          "delta_from_baseline": 0.0
+        },
+        "no_lemmatization": {
+          "mean_ecs": 0.0,
+          "config": {
+            "use_lemmatization": false,
+            "remove_stopwords": true
+          },
+          "delta_from_baseline": 0.0
+        },
+        "no_stopwords": {
+          "mean_ecs": 0.0,
+          "config": {
+            "use_lemmatization": true,
+            "remove_stopwords": false
+          },
+          "delta_from_baseline": 0.0
+        },
+        "minimal": {
+          "mean_ecs": 0.0,
+          "config": {
+            "use_lemmatization": false,
+            "remove_stopwords": false
+          },
+          "delta_from_baseline": 0.0
+        }
+      },
+      "highlighting_k": {
+        "k=2": {
+          "mean_ecs": 0.0,
+          "n_instances": 4,
+          "delta_from_baseline": 0.0
+        },
+        "k=3": {
+          "mean_ecs": 0.0,
+          "n_instances": 4,
+          "delta_from_baseline": 0.0
+        },
+        "k=5": {
+          "mean_ecs": 0.0,
+          "n_instances": 4,
+          "delta_from_baseline": 0.0
+        }
+      }
+    }
+  },
+  "baseline_config": {
+    "normalization": {
+      "remove_stopwords": true,
+      "use_lemmatization": true
+    },
+    "highlighting_k": 3
+  }
+}

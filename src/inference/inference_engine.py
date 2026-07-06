@@ -81,6 +81,17 @@ class InferenceEngine:
         self.total_prompt_tokens = 0
         self.total_completion_tokens = 0
         self.n_truncated = 0
+        # Real request accounting (review P0.4): total_requests/total_requests_failed
+        # count every ACTUAL HTTP attempt to Bedrock (including throttling retries and
+        # the truncation-recovery retry in _complete) — the authoritative replacement
+        # for the old `len(all_results) * 5` guess, which was off by ~2x against the
+        # real pilot log (450 claimed vs 805 actual). requests_by_category is a
+        # caller-supplied semantic breakdown (e.g. "classification", "H", "CF_verify")
+        # populated via record_request() — the engine doesn't know what a call MEANS,
+        # only that one happened, so callers (process_instance) tag it.
+        self.total_requests = 0
+        self.total_requests_failed = 0
+        self.requests_by_category: dict = {}
         self.client = self._build_client()
 
     def _build_client(self):
@@ -206,6 +217,12 @@ class InferenceEngine:
         system_blocks, conversation = self._to_converse(messages)
         attempt = 0
         while True:
+            # Count the attempt about to be made — every pass through this loop is a
+            # REAL HTTP request to Bedrock, whether it ultimately succeeds, gets
+            # retried after throttling, or fails outright (review P0.4: the old
+            # `len(all_results) * 5` guess undercounted by ~2x against what the pilot
+            # log actually showed, precisely because it couldn't see retries).
+            self.total_requests += 1
             try:
                 response = await asyncio.to_thread(
                     self._invoke, conversation, system_blocks, max_tokens
@@ -220,6 +237,7 @@ class InferenceEngine:
                     })
                 return content, usage
             except ClientError as e:
+                self.total_requests_failed += 1
                 code = self._error_code(e)
                 if code in self._THROTTLING_CODES:
                     if attempt >= retries:
@@ -242,6 +260,7 @@ class InferenceEngine:
                                  extra={'error': str(e), 'code': code})
                     raise APIError(f"Bedrock request failed ({code}): {e}")
             except BotoCoreError as e:
+                self.total_requests_failed += 1
                 # Client-side failures: missing credentials, connection/read timeouts.
                 if isinstance(e, NoCredentialsError):
                     raise APIError(f"No Bedrock credentials found. {_CREDS_HELP}")
@@ -251,11 +270,20 @@ class InferenceEngine:
                 attempt += 1
                 await asyncio.sleep(2 ** attempt)
             except Exception as e:
+                self.total_requests_failed += 1
                 if attempt >= retries:
                     logger.error("Bedrock request failed", extra={'error': str(e)})
                     raise APIError(f"Unexpected error during Bedrock request: {e}")
                 attempt += 1
                 await asyncio.sleep(2 ** attempt)
+
+    def record_request(self, category: str) -> None:
+        """Tag one LOGICAL request with a caller-supplied semantic category (e.g.
+        "classification", "H", "CF_verify") for the execution summary's per-category
+        breakdown. Independent of total_requests (raw HTTP attempts incl. retries) —
+        callers (process_instance) call this once per named call SITE, since the
+        engine itself has no notion of what a call semantically represents."""
+        self.requests_by_category[category] = self.requests_by_category.get(category, 0) + 1
 
     def _account(self, usage: TokenUsage) -> None:
         """Fold a call's real usage into the engine's cumulative counters."""

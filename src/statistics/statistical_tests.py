@@ -31,15 +31,33 @@ class CorrelationResult:
     ci_lower: float
     ci_upper: float
     n: int = 0
+    # Kendall's tau-b (review P2.2), a tie-robust companion to Spearman rho.
+    # Verbalized confidence concentrates heavily near {0.9...1.0} (pilot: min 0.7,
+    # mean 0.94), so heavy ties make Spearman fragile (8/9 pilot cells' CIs spanned
+    # 0). scipy's default kendalltau variant is tau-b, which corrects for ties in
+    # both variables rather than treating them as ordinary rank differences.
+    # Descriptive only, pre-specified alongside rho — not a replacement or a test.
+    kendall_tau_b: Optional[float] = None
 
 
 def compute_confidence_ecs_correlation(confidences: List[float], ecs_values: List[float],
                                         n_bootstrap: int = 1000,
-                                        seed: Optional[int] = 42) -> CorrelationResult:
+                                        seed: Optional[int] = 42,
+                                        cluster_ids: Optional[Sequence] = None) -> CorrelationResult:
     """Spearman rho between verbalized confidence and ECS, with a seeded bootstrap CI.
 
     Requires paired inputs (confidences[i] and ecs_values[i] from the same instance).
     Returns a degenerate (0, 1) result below n=3 or when either input is constant.
+
+    ``cluster_ids[i]`` (same length as confidences/ecs_values), when given, is the
+    instance_id behind row i. Pooled levels (overall/dataset) hold one row PER
+    MODEL for the same instance, so a plain row-level bootstrap treats those
+    correlated rows as independent — the CI is too narrow (review P2.3, the same
+    clustering issue already fixed for the pooled ECS bootstrap in
+    run_experiment.py's compute_aggregate_metrics). When provided, the bootstrap
+    resamples whole clusters (all of an instance's rows move together) instead of
+    individual rows. Omit for per-model levels, where each instance contributes
+    exactly one row and row-level resampling is already correct.
     """
     n = min(len(confidences), len(ecs_values))
     if len(confidences) != len(ecs_values):
@@ -55,18 +73,39 @@ def compute_confidence_ecs_correlation(confidences: List[float], ecs_values: Lis
         return CorrelationResult(rho=0.0, p_value=1.0, ci_lower=0.0, ci_upper=0.0, n=n)
     rng = np.random.default_rng(seed)
     boot_rhos = []
-    for _ in range(n_bootstrap):
-        idx = rng.choice(n, n, replace=True)
-        try:
-            boot_rho, _ = scipy.stats.spearmanr([confidences[i] for i in idx], [ecs_values[i] for i in idx])
-            if not np.isnan(boot_rho):
-                boot_rhos.append(boot_rho)
-        except Exception:
-            continue
+    if cluster_ids is not None:
+        if len(cluster_ids) != n:
+            raise ValueError(f"cluster_ids must have length {n}, got {len(cluster_ids)}")
+        clusters: dict = {}
+        for i, cid in enumerate(cluster_ids):
+            clusters.setdefault(cid, []).append(i)
+        cluster_idx_lists = list(clusters.values())
+        n_clusters = len(cluster_idx_lists)
+        for _ in range(n_bootstrap):
+            chosen = rng.integers(0, n_clusters, size=n_clusters)
+            idx = [i for c in chosen for i in cluster_idx_lists[c]]
+            try:
+                boot_rho, _ = scipy.stats.spearmanr([confidences[i] for i in idx], [ecs_values[i] for i in idx])
+                if not np.isnan(boot_rho):
+                    boot_rhos.append(boot_rho)
+            except Exception:
+                continue
+    else:
+        for _ in range(n_bootstrap):
+            idx = rng.choice(n, n, replace=True)
+            try:
+                boot_rho, _ = scipy.stats.spearmanr([confidences[i] for i in idx], [ecs_values[i] for i in idx])
+                if not np.isnan(boot_rho):
+                    boot_rhos.append(boot_rho)
+            except Exception:
+                continue
     ci_lower = float(np.percentile(boot_rhos, 2.5)) if boot_rhos else 0.0
     ci_upper = float(np.percentile(boot_rhos, 97.5)) if boot_rhos else 0.0
+    tau, _ = scipy.stats.kendalltau(confidences, ecs_values)  # variant="b" is the default
+    kendall_tau_b = float(tau) if not np.isnan(tau) else None
     return CorrelationResult(rho=float(rho), p_value=float(p_value),
-                             ci_lower=ci_lower, ci_upper=ci_upper, n=n)
+                             ci_lower=ci_lower, ci_upper=ci_upper, n=n,
+                             kendall_tau_b=kendall_tau_b)
 
 
 def sign_flip_permutation_test(diffs: Sequence[float], n_permutations: int = 10000,

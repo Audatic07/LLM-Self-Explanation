@@ -1,0 +1,24 @@
+Execution Summary
+=================
+Run ID: 7d7a8bf9
+Start Time: 2026-06-15 09:49:49
+End Time: 2026-06-15 09:51:23
+Duration: 94.08 seconds (1.57 minutes)
+
+Processing Statistics
+---------------------
+Total Instances: 9
+Successful: 9 (100.0%)
+Failed: 0 (0.0%)
+
+Failure Breakdown
+-----------------
+API Failures: 0
+Normalization Failures: 0
+Parsing Failures by Strategy:
+
+Performance Metrics
+-------------------
+Average Time per Instance: 10.45 seconds
+Total API Requests: 45
+Failed API Requests: 0 (0.0%)

@@ -50,6 +50,18 @@ except Exception:
 # hand-picked dependency-label subset which has no published precedent.
 CONTENT_POS = {"NOUN", "PROPN", "VERB", "ADJ", "ADV"}
 
+# Canonical-tokenization regexes for CF edit-ratio/diff (review P0.1). SST-2's curated
+# text is Treebank-pretokenized ("you 're", "scenes ,"); a model that writes normal
+# spacing ("you're", "scenes,") must NOT be charged phantom edits for that alone.
+# Splitting attached clitics and detaching punctuation BEFORE diffing makes both
+# spacing styles collapse to the identical token sequence. Hyphens/dashes are
+# excluded from the detach set (kept attached to their word) so a hyphenated
+# compound like "charm-less" still diffs down to one token, matching how
+# _extract_changed_tokens' final strip_chars pass treats hyphens as content, not a
+# word boundary — only the ASCII apostrophe is excluded (clitics handled above).
+_CLITIC_SUFFIX_RE = re.compile(r"(?<=[A-Za-z])(n't|'re|'ve|'ll|'d|'m|'s)\b", re.IGNORECASE)
+_DETACH_PUNCT_RE = re.compile(r"([^\w\s'‐‑‒–—―−-])")
+
 # spaCy model loaded lazily
 _nlp = None
 
@@ -357,6 +369,15 @@ class Parser:
             raise ParsingError("Counterfactual prediction did not flip")
         if rewritten.strip() == input_text.strip():
             raise ParsingError("Counterfactual text is identical to original")
+        # Canonical-identity check (review P0.1): a rewrite that only re-spaces or
+        # de-tokenizes the input (SST-2's curated text is Treebank-pretokenized) is
+        # semantically a non-edit, even though the raw strings differ. Catch it here
+        # with a clear message rather than falling through to the edit-ratio/diff
+        # machinery, where it would otherwise surface as a confusing "insertion-only"
+        # rejection (zero real tokens changed, but the raw string check above passed).
+        if self._canonical_tokens(rewritten) == self._canonical_tokens(input_text):
+            raise ParsingError("Counterfactual text is identical to original after "
+                               "canonicalizing spacing/tokenization")
         # Span-restricted CF: validate the protected prefix and narrow the ratio window.
         ratio_original, ratio_rewritten = input_text, rewritten
         if edit_span_marker and edit_span_marker in input_text:
@@ -390,14 +411,38 @@ class Parser:
         return rewritten, new_pred, from_tokens
 
     @staticmethod
+    def _canonical_tokens(text: str) -> List[str]:
+        """Tokenize text into a spacing/tokenization-invariant canonical form.
+
+        Splits clitics ('re, 've, n't, 's, 'll, 'd, 'm) off their host word and
+        detaches punctuation, so Treebank-pretokenized text ("you 're", "scenes ,")
+        and normally-spaced text ("you're", "scenes,") canonicalize to the IDENTICAL
+        token sequence. Casefolds. Used by both the edit-ratio Levenshtein and the
+        difflib change-attribution pass so neither is confounded by tokenization
+        style (review P0.1) — a de-tokenizing rewrite must cost ~0 edits, not ~0.6.
+        """
+        t = text.strip().lower()
+        t = _CLITIC_SUFFIX_RE.sub(r" \1", t)
+        t = _DETACH_PUNCT_RE.sub(r" \1 ", t)
+        return t.split()
+
+    @staticmethod
     def _extract_changed_tokens(original: str, rewritten: str) -> Set[str]:
-        """Use difflib to find original tokens that were changed or removed."""
-        orig_words = original.strip().split()
-        rew_words = rewritten.strip().split()
+        """Use difflib to find original tokens that were changed or removed.
+
+        Diffs over CANONICAL tokens (see _canonical_tokens) so a pure re-spacing or
+        de-tokenization rewrite produces identical sequences on both sides and
+        attributes NO tokens — instead of spuriously attributing every token
+        adjacent to a spacing difference as if it were a semantic edit.
+        """
+        orig_words = Parser._canonical_tokens(original)
+        rew_words = Parser._canonical_tokens(rewritten)
         matcher = difflib.SequenceMatcher(None, orig_words, rew_words)
         changed = set()
         # Strip surrounding punctuation including hyphens/unicode dashes so that an
         # edited token like "charm-less," diffs down to the bare word "charm-less".
+        # (Tokens are already casefolded by _canonical_tokens; .lower() stays for
+        # idempotence/safety.)
         strip_chars = string.punctuation + "‐‑‒–—―−"
         for tag, i1, i2, j1, j2 in matcher.get_opcodes():
             if tag in ('replace', 'delete'):
@@ -513,8 +558,11 @@ class Parser:
 
     @staticmethod
     def _word_edit_ratio(original: str, counterfactual: str) -> float:
-        orig_words = original.strip().split()
-        cf_words = counterfactual.strip().split()
+        # Canonical tokens (review P0.1): diffing raw whitespace-split words charges
+        # phantom edit distance for pure re-spacing/de-tokenization (SST-2's curated
+        # text is Treebank-pretokenized). See _canonical_tokens.
+        orig_words = Parser._canonical_tokens(original)
+        cf_words = Parser._canonical_tokens(counterfactual)
         if not orig_words and not cf_words:
             return 0.0
         if not orig_words or not cf_words:
@@ -531,5 +579,5 @@ class Parser:
                 dp[i][j] = min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + cost)
         distance = dp[n][m]
         # MiCE (Ross et al. 2021): normalize the word-level Levenshtein distance by the
-        # length of the ORIGINAL input, not max(n, m).
+        # length of the ORIGINAL input (now the CANONICAL-token length), not max(n, m).
         return distance / n if n > 0 else 0.0

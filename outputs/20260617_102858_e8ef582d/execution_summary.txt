@@ -1,0 +1,29 @@
+Execution Summary
+=================
+Run ID: e8ef582d
+Start Time: 2026-06-17 10:28:58
+End Time: 2026-06-17 10:29:20
+Duration: 22.04 seconds (0.37 minutes)
+
+Processing Statistics
+---------------------
+Total Instances: 2
+Successful: 2 (100.0%)
+Failed: 0 (0.0%)
+
+Failure Breakdown
+-----------------
+API Failures: 0
+Normalization Failures: 0
+Prompt Validation Failures: 0
+Parsing Failures by Strategy:
+
+Sampling Log:
+----------------------------------------
+  sst2: requested=2, sampled=2, wrong_pred=0
+
+Performance Metrics
+-------------------
+Average Time per Instance: 11.02 seconds
+Total API Requests: 10
+Failed API Requests: 0 (0.0%)

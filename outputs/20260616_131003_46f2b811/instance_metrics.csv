@@ -1,0 +1,12 @@
+instance_id,dataset,model,ground_truth_label,predicted_label,confidence,correct,model_refused,prompt_tokens,response_tokens,prompt_hash,jaccard_H_R,jaccard_H_CF,jaccard_H_RO,jaccard_R_CF,jaccard_R_RO,jaccard_CF_RO,kendall_H_RO,normalized_kendall_H_RO,ecs,cf_flip_verified,cf_actual_label,highlighting_parsed,rationale_parsed,counterfactual_parsed,rank_ordering_parsed,cc3_size,cc4_size
+sst2_validation_0000,sst2,llama-3.3-70b-versatile,negative,negative,0.0,True,False,331,59,b00a643964e1a260,,0.2,0.42857142857142855,,,0.2,1.0,1.0,0.2,True,positive,True,False,True,True,1,1
+sst2_validation_0001,sst2,llama-3.3-70b-versatile,positive,positive,0.0,True,False,346,73,9aba917cfb5449c7,0.2,0.2,0.25,0.0,0.0,0.2,,,0.12000000000000002,True,negative,True,True,True,True,1,0
+sst2_validation_0002,sst2,llama-3.3-70b-versatile,negative,negative,0.0,True,False,328,55,50f5b42b5c34d301,0.2,0.2,0.125,0.0,0.25,0.0,,,0.13,True,positive,True,True,True,True,1,0
+sst2_validation_0003,sst2,llama-3.3-70b-versatile,positive,positive,0.0,True,False,340,72,fd4efe262a8ab2d5,,,0.42857142857142855,,,,0.33333333333333337,0.6666666666666667,,False,positive,True,False,False,True,0,0
+mnli_validation_matched_0000,mnli,llama-3.3-70b-versatile,entailment,entailment,0.0,True,False,336,71,bd36af1ff07e9a2a,1.0,0.0,0.2,0.0,0.2,0.0,,,0.24,True,neutral,True,True,True,True,1,0
+mnli_validation_matched_0001,mnli,llama-3.3-70b-versatile,contradiction,contradiction,0.0,True,False,390,145,57b403d5df0447cc,,,,0.0,0.2222222222222222,0.2,,,0.14074074074074075,True,entailment,False,True,True,True,0,0
+mnli_validation_matched_0002,mnli,llama-3.3-70b-versatile,neutral,neutral,0.0,True,False,367,110,b00ef8ce8bce925d,0.4,,0.25,,0.0,,,,0.2,False,neutral,True,True,False,True,0,0
+ag_news_test_0000,ag_news,llama-3.3-70b-versatile,Sci/Tech,Sci/Tech,0.0,True,False,376,110,2d5cb1e4d9eca6c0,0.2,0.16666666666666666,0.25,0.5,0.2,0.16666666666666666,,,0.24666666666666667,True,Business,True,True,True,True,1,1
+ag_news_test_0001,ag_news,llama-3.3-70b-versatile,Sports,Sports,0.0,True,False,372,98,fbbe5e525705be07,0.0,,0.42857142857142855,,0.16666666666666666,,,,0.08333333333333333,False,Sports,True,True,False,True,0,0
+ag_news_test_0002,ag_news,llama-3.3-70b-versatile,World,World,0.0,True,False,367,95,77b3e5eec9068618,0.0,,0.125,,0.14285714285714285,,,,0.07142857142857142,False,World,True,True,False,True,0,0
+ag_news_test_0003,ag_news,llama-3.3-70b-versatile,Business,Business,0.0,True,False,371,96,0b86c33802b9ddb3,0.16666666666666666,,0.5,,0.5,,,,0.3333333333333333,False,Business,True,True,False,True,1,1

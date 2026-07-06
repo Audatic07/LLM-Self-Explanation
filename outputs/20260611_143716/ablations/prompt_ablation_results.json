@@ -1,0 +1,18 @@
+{
+  "highlighting_alt": {
+    "mean_ecs": 0.0,
+    "n_instances": 0
+  },
+  "rationale_alt": {
+    "mean_ecs": 0.0,
+    "n_instances": 0
+  },
+  "counterfactual_alt": {
+    "mean_ecs": 0.0,
+    "n_instances": 0
+  },
+  "rank_ordering_alt": {
+    "mean_ecs": 0.0,
+    "n_instances": 0
+  }
+}

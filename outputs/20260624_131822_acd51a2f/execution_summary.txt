@@ -1,0 +1,31 @@
+Execution Summary
+=================
+Run ID: acd51a2f
+Start Time: 2026-06-24 13:18:23
+End Time: 2026-06-24 13:33:49
+Duration: 926.41 seconds (15.44 minutes)
+
+Processing Statistics
+---------------------
+Total Instances: 30
+Successful: 23 (76.7%)
+Failed: 1 (23.3%)
+
+Failure Breakdown
+-----------------
+API Failures: 0
+Normalization Failures: 0
+Prompt Validation Failures: 0
+Parsing Failures by Strategy:
+
+Sampling Log:
+----------------------------------------
+  sst2: requested=10, sampled=10, wrong_pred=0
+  mnli: requested=10, sampled=10, wrong_pred=4
+  ag_news: requested=10, sampled=10, wrong_pred=0
+
+Performance Metrics
+-------------------
+Average Time per Instance: 40.28 seconds
+Total API Requests: 115
+Failed API Requests: 5 (4.3%)

@@ -52,6 +52,19 @@ NEGATION_CONTRACTIONS = {
 # Single polarity whitelist shared by every evidence-extraction path (H, R, CF, RO).
 # parser.py imports this — do NOT define a divergent copy elsewhere (that asymmetry
 # was review §8.4).
+#
+# DECISION (frozen 2026-07-05, review P2.1): degree/focus particles ("too", "only",
+# "enough") are DELIBERATELY NOT added here, despite being plausible sentiment cues
+# ("too long", "only redeeming quality"). Evidence from the pilot (90 instance-runs,
+# outputs/20260703_124843_013dd120): stopword-discarded RO rank items were "too"
+# (x5), "did" (x5), "up" (x4), "only" (x4), "doing" (x4), plus a handful of others —
+# but cross-referencing each discard against the model's own raw ranking position,
+# only ONE of these occurrences (a single "only") was ever the model's rank-1
+# (most-important) token; every other discard was a lower-ranked item. The
+# negation whitelist above is independently justified (negation categorically
+# reverses polarity); extending it to degree/focus particles on this weak evidence
+# is not. Do not add these words mid-study — changing the shared token space after
+# the pilot would invalidate pilot-to-full-run comparisons (review §8.2).
 POLARITY_WORDS = {"no", "not", "never", "nor", "neither", "none", "nobody", "nothing", "nowhere",
                    "every", "some", "any", "all"} | NEGATION_CONTRACTIONS
 FALLBACK_STOPWORDS = {

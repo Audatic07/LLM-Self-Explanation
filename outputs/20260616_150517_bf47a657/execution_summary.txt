@@ -1,0 +1,29 @@
+Execution Summary
+=================
+Run ID: bf47a657
+Start Time: 2026-06-16 15:05:17
+End Time: 2026-06-16 15:06:31
+Duration: 73.70 seconds (1.23 minutes)
+
+Processing Statistics
+---------------------
+Total Instances: 4
+Successful: 4 (100.0%)
+Failed: 0 (0.0%)
+
+Failure Breakdown
+-----------------
+API Failures: 0
+Normalization Failures: 0
+Prompt Validation Failures: 0
+Parsing Failures by Strategy:
+
+Sampling Log:
+----------------------------------------
+  ag_news: requested=5, sampled=4, wrong_pred=1
+
+Performance Metrics
+-------------------
+Average Time per Instance: 18.42 seconds
+Total API Requests: 20
+Failed API Requests: 0 (0.0%)

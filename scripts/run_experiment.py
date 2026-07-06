@@ -210,6 +210,7 @@ async def process_instance(
     class_prompt = format_prompt(prompts["classification"], clean_text, label_set)
     validate_prompt(class_prompt, label_set, context=f"classification for {instance_id}")
     class_result = await engine.classify(class_prompt)
+    engine.record_request("classification")
 
     predicted_label = ""
     classification_valid = False
@@ -275,25 +276,43 @@ async def process_instance(
 
     # Per-strategy output budget, sourced from config (with a sane floor). The engine
     # auto-expands on truncation, but a reasonable starting budget avoids needless retries.
-    # Highlighting scores every word, so it gets double the budget.
+    # Highlighting scores EVERY word (~6-10 output tokens per ["word", score] entry), so
+    # a flat doubled baseline is fine for short/medium inputs but silently truncates on
+    # long ones (MNLI runs up to 206 words -> 1,300-2,000+ tokens needed, vs the 2048
+    # a flat 2x baseline gives here) with truncation-retry hitting the SAME cap and
+    # failing again — invisible in the pilot (max sampled ~50 words), but it would bias
+    # "ECS by Input Length" by silently dropping exactly the long-input stratum (P0.2).
+    # H's budget is therefore length-proportional: max(flat 2x baseline, 12*n_words+200).
     base_max_tokens = max((getattr(config.inference, "max_tokens", 512) or 512), 800)
+    n_words_clean = len(clean_text.split())
+    h_max_tokens = max(base_max_tokens * 2, 12 * n_words_clean + 200)
     truncated_strategies = []
 
     # Verbalized confidence (0-100 -> [0,1]) — elicited BEFORE any explanation strategy,
     # so it is conditioned only on the committed label (Tian et al. 2023; Xiong et al.
     # 2024). Failure to parse leaves confidence=None (unknown), never a fake 0.
     confidence_value: Optional[float] = None
+    # Persisted regardless of outcome (review P1.4: confidence elicitation was
+    # invisible in instance_results.jsonl and the per-instance report — every other
+    # strategy's prompt/raw response is stored, but a paper claiming Tian/Xiong-style
+    # elicitation needs this one too). Set as soon as each piece exists, so a partial
+    # failure (e.g. API succeeds but parsing fails) still records what was sent/received.
+    confidence_prompt = ""
+    confidence_raw_response = ""
     if getattr(config, "confidence", None) is not None and config.confidence.enabled \
             and "confidence" in prompts:
         try:
             conf_prompt = format_explain_prompt(prompts["confidence"], predicted_label,
                                                 input_text=clean_text)
+            confidence_prompt = conf_prompt
             conf_messages = [
                 {"role": "user", "content": class_prompt},
                 {"role": "assistant", "content": class_result.raw_response},
                 {"role": "user", "content": conf_prompt},
             ]
             conf_raw, conf_usage = await engine.chat_with_usage(conf_messages, max_tokens=200)
+            confidence_raw_response = conf_raw or ""
+            engine.record_request("confidence")
             _acct(conf_usage)
             confidence_value = parser.parse_confidence(conf_raw)
         except (ParsingError, json.JSONDecodeError) as e:
@@ -365,8 +384,9 @@ async def process_instance(
             {"role": "user", "content": explain_prompt},
         ]
         try:
-            strat_max_tokens = base_max_tokens * 2 if strat_id == "H" else base_max_tokens
+            strat_max_tokens = h_max_tokens if strat_id == "H" else base_max_tokens
             raw, usage = await engine.chat_with_usage(messages, max_tokens=strat_max_tokens)
+            engine.record_request(strat_id)
             _acct(usage)
             raw_responses[strat_id] = raw or ""
             if usage.truncated:
@@ -375,6 +395,7 @@ async def process_instance(
             if raw is None or not raw.strip():
                 logger.warning(f"Empty response from model for {instance_id} strategy {strat_id}, retrying with max_tokens=2500...")
                 raw, usage = await engine.chat_with_usage(messages, max_tokens=2500)
+                engine.record_request(f"{strat_id}_empty_retry")
                 _acct(usage)
                 raw_responses[strat_id] = raw or ""
                 if raw is None or not raw.strip():
@@ -456,6 +477,7 @@ async def process_instance(
                         cf_class_prompt = format_prompt(prompts["classification"], cf_text_used, label_set)
                         validate_prompt(cf_class_prompt, label_set, context=f"CF re-classification for {instance_id}")
                         cf_class_result = await engine.classify(cf_class_prompt)
+                        engine.record_request("CF_verify")
                         _acct(cf_class_result.usage)
                         cf_actual_label = parser.parse_classification(cf_class_result.raw_response, label_set)
                         cf_flip_verified = (cf_actual_label != predicted_label)
@@ -481,6 +503,7 @@ async def process_instance(
                                 {"role": "user", "content": correction_prompt},
                             ]
                             correction_raw, _cf_corr_usage = await engine.chat_with_usage(correction_messages, max_tokens=base_max_tokens)
+                            engine.record_request("CF_correct")
                             _acct(_cf_corr_usage)
                             cf_raw_used = correction_raw
                             cf_json_obj2 = parser._extract_json(correction_raw)
@@ -541,6 +564,7 @@ async def process_instance(
                             {"role": "user", "content": correction_prompt},
                         ]
                         correction_raw, _ro_corr_usage = await engine.chat_with_usage(correction_messages, max_tokens=base_max_tokens)
+                        engine.record_request("RO_correct")
                         _acct(_ro_corr_usage)
                         ranked = parser.parse_rank_ordering(correction_raw, clean_text, normalizer)
                         ro_tokens = [t for t, r in ranked]
@@ -643,6 +667,14 @@ async def process_instance(
     else:
         logger.warning(f"Only {n_valid} valid strategies for {instance_id} — ECS not computed")
 
+    # ECS-adj (ECS_ROBUSTNESS_PLAN_2026-07-05.md): chance- and ceiling-adjusted,
+    # paradigm-balanced composite computed alongside legacy ECS (never replacing it
+    # pre-adoption). Independent of the n_valid>=3 gate above — it degrades
+    # gracefully per-component (a missing/degenerate pair just drops out of its
+    # component's mean), so it is attempted whenever the vocabulary is known.
+    ecs_adj_eps = getattr(getattr(config, "metrics", None), "ecs_adj_epsilon", 0.10)
+    ecs_adj_result = calc.compute_ecs_adjusted(explanations, vocab_size, eps=ecs_adj_eps)
+
     # D1: report ECS as LIFT over a random-selection baseline (chance agreement given
     # each strategy's set size and the instance content-vocabulary).
     ecs_random = None
@@ -710,6 +742,7 @@ async def process_instance(
                     {"role": "user", "content": cf_free_prompt},
                 ]
                 cf_free_raw, _cf_free_usage = await engine.chat_with_usage(cf_free_messages, max_tokens=base_max_tokens)
+                engine.record_request("CF_free")
                 _acct(_cf_free_usage)
                 # Unconstrained: no edit-ratio cap (skip_validation=True); a real flip and
                 # a non-empty change are still required. The span restriction (Premise
@@ -723,6 +756,7 @@ async def process_instance(
                 cf_contrast_minimality = len(cf_free_from) / max(len(clean_text.split()), 1)
                 cf_free_class_prompt = format_prompt(prompts["classification"], cf_free_text, label_set)
                 cf_free_class_result = await engine.classify(cf_free_class_prompt)
+                engine.record_request("CF_free_verify")
                 _acct(cf_free_class_result.usage)
                 cf_free_actual = parser.parse_classification(cf_free_class_result.raw_response, label_set)
                 cf_contrast_flip_verified = (cf_free_actual != predicted_label)
@@ -744,6 +778,8 @@ async def process_instance(
         ground_truth_label=instance.label,
         predicted_label=predicted_label,
         confidence=confidence_value,
+        confidence_prompt=confidence_prompt,
+        confidence_raw_response=confidence_raw_response,
         correct=correct,
         classification_prompt=class_prompt,
         classification_raw_response=class_result.raw_response,
@@ -817,6 +853,13 @@ async def process_instance(
         cf_contrast_tokens=cf_contrast_tokens,
         cf_contrast_text=cf_contrast_text,
         r_introduced_concept_rate=r_introduced_concept_rate,
+        ecs_adj_er=ecs_adj_result["ecs_adj_er"],
+        ecs_adj_ep=ecs_adj_result["ecs_adj_ep"],
+        ecs_adj_rp=ecs_adj_result["ecs_adj_rp"],
+        ecs_adj=ecs_adj_result["ecs_adj"],
+        ecs_adj_n_components=ecs_adj_result["ecs_adj_n_components"],
+        ecs_adj_complete=ecs_adj_result["ecs_adj_complete"],
+        n_degenerate_pairs=ecs_adj_result["n_degenerate_pairs"],
     )
 
     # Consensus cores over valid strategies only
@@ -847,6 +890,34 @@ async def process_instance(
     result.truncated_strategies = list(truncated_strategies)
 
     return result
+
+
+def compute_free_cf_sensitivity_ecs(results: List[InstanceResult], calc: MetricsCalculator) -> Tuple[float, int]:
+    """Sensitivity analysis (review P1.1): ECS recomputed with cf_contrast_tokens (the
+    unconstrained/free CF rewrite — ~82% validity in the pilot) substituted for the
+    canonical minimal-CF evidence (~28% validity, gated on counterfactual_valid) in
+    the H-CF/CF-RO/R-CF pairs. Pure post-processing over fields already stored on
+    every InstanceResult — zero additional API calls. Answers whether conclusions
+    survive when the perturbation paradigm isn't gated by the minimal-edit
+    constraint. Descriptive robustness check only: NOT a primary estimand, NOT
+    NHST-tested, and NOT used for complete-case selection anywhere else — minimal-CF
+    ECS remains primary precisely because minimality is part of the CF construct
+    (MiCE); this analysis exists to show the alternative doesn't overturn the story.
+    """
+    values = []
+    for r in results:
+        if not (r.highlighting_valid and r.rationale_valid and r.rank_ordering_valid
+                and r.cf_contrast_valid and r.cf_contrast_tokens):
+            continue
+        ro_set = {t for t, _ in r.rank_ordering_tokens}
+        explanations = {"H": r.highlighting_tokens, "R": r.rationale_tokens,
+                        "CF": r.cf_contrast_tokens, "RO": ro_set}
+        agreements = calc.compute_pairwise_agreements(explanations)
+        ecs = calc.compute_ecs(agreements)
+        if ecs is not None:
+            values.append(ecs)
+    import numpy as np
+    return (float(np.mean(values)) if values else 0.0), len(values)
 
 
 def compute_aggregate_metrics(results: List[InstanceResult], level: str, group: str,
@@ -912,6 +983,10 @@ def compute_aggregate_metrics(results: List[InstanceResult], level: str, group: 
         vals = [getattr(r, key) for r in results if getattr(r, key) is not None]
         return safe_mean(vals)
 
+    # Free-CF sensitivity analysis (review P1.1): descriptive robustness check, zero
+    # extra API cost — see compute_free_cf_sensitivity_ecs's docstring.
+    _free_cf_ecs, _n_free_cf = compute_free_cf_sensitivity_ecs(results, MetricsCalculator())
+
     # Stratify by length
     length_data = MetricsCalculator.compute_length_stratified_ecs(results)
     short_ecs = length_data.get("short", {}).get("mean_ecs", 0.0)
@@ -933,6 +1008,17 @@ def compute_aggregate_metrics(results: List[InstanceResult], level: str, group: 
     cc_metrics = MetricsCalculator.compute_complete_case_metrics(results)
     complete_mean_ecs = cc_metrics["complete_mean_ecs"]
     n_complete = cc_metrics["n_complete"]
+
+    # ECS-adj aggregation (ECS_ROBUSTNESS_PLAN_2026-07-05.md §3.4 missing-data policy):
+    # complete-case mean over ecs_adj_complete==True rows only (candidate primary
+    # estimand, mirrors the legacy n_valid_strategies==4 gate above), plus the
+    # available-component secondary over every row with a defined ecs_adj.
+    ecs_adj_values = [r.ecs_adj for r in results if r.ecs_adj is not None]
+    ecs_adj_complete_values = [r.ecs_adj for r in results if r.ecs_adj_complete and r.ecs_adj is not None]
+    ecs_adj_er_values = [r.ecs_adj_er for r in results if r.ecs_adj_er is not None]
+    ecs_adj_ep_values = [r.ecs_adj_ep for r in results if r.ecs_adj_ep is not None]
+    ecs_adj_rp_values = [r.ecs_adj_rp for r in results if r.ecs_adj_rp is not None]
+    n_degenerate_pairs_total = sum(r.n_degenerate_pairs for r in results)
 
     # D1 lift / D2 CF trade-off / D6 introduced-concept rate / correctness split
     ecs_lift_values = [r.ecs_lift for r in results if r.ecs_lift is not None]
@@ -962,21 +1048,30 @@ def compute_aggregate_metrics(results: List[InstanceResult], level: str, group: 
     ro_self_corrected_count = sum(1 for r in results if r.ro_self_corrected)
     # Verbalized-confidence <-> ECS association (Spearman + seeded bootstrap CI);
     # computed per cell over instances with both quantities present.
-    conf_pairs = [(r.confidence, r.ecs) for r in results
+    conf_pairs = [(r.confidence, r.ecs, r.instance_id) for r in results
                   if r.confidence is not None and r.ecs is not None]
     if len(conf_pairs) >= 3:
-        corr = compute_confidence_ecs_correlation([c for c, _ in conf_pairs],
-                                                  [e for _, e in conf_pairs])
+        # Pooled levels (overall/dataset) hold one row PER MODEL for the same
+        # instance; cluster the bootstrap by instance_id there so correlated rows
+        # aren't resampled as if independent (review P2.3 — the same fix already
+        # applied to the pooled ECS bootstrap CI below).
+        cluster_ids = [iid for _, _, iid in conf_pairs] if level in ("overall", "dataset") else None
+        corr = compute_confidence_ecs_correlation([c for c, _, _ in conf_pairs],
+                                                  [e for _, e, _ in conf_pairs],
+                                                  cluster_ids=cluster_ids)
         spearman_rho, spearman_p = corr.rho, corr.p_value
         corr_ci_lo, corr_ci_hi = corr.ci_lower, corr.ci_upper
+        kendall_tau_b_confidence = corr.kendall_tau_b
     else:
         spearman_rho, spearman_p, corr_ci_lo, corr_ci_hi = 0.0, 1.0, 0.0, 0.0
-    conf_values = [c for c, _ in conf_pairs]
+        kendall_tau_b_confidence = None
+    conf_values = [c for c, _, _ in conf_pairs]
     # Per-pair coverage: how many instances actually contributed to each pairwise mean
     # (a pooled pairwise mean over 3 instances reads very differently than over 300).
     pair_ns = {}
     for key in ("jaccard_H_R", "jaccard_H_CF", "jaccard_H_RO",
-                "jaccard_R_CF", "jaccard_R_RO", "jaccard_CF_RO"):
+                "jaccard_R_CF", "jaccard_R_RO", "jaccard_CF_RO",
+                "rbo_H_RO", "kendall_H_RO", "normalized_kendall_H_RO"):
         pair_ns[key] = sum(1 for r in results if getattr(r, key) is not None)
 
     return AggregateMetrics(
@@ -1001,7 +1096,7 @@ def compute_aggregate_metrics(results: List[InstanceResult], level: str, group: 
         n_short_vocab=n_short_vocab,
         requested_samples=sampling_log.requested if sampling_log else 0,
         sampled_samples=sampling_log.sampled if sampling_log else 0,
-        dropped_wrong_pred=sampling_log.wrong_predictions if sampling_log else 0,
+        wrong_pred_kept=sampling_log.wrong_predictions if sampling_log else 0,
         dropped_other=sampling_log.dropped_by_reason if sampling_log else {},
         std_ecs=float(np.std(ecs_values, ddof=1)) if len(ecs_values) > 1 else 0.0,
         median_ecs=float(np.median(ecs_values)) if ecs_values else 0.0,
@@ -1030,6 +1125,7 @@ def compute_aggregate_metrics(results: List[InstanceResult], level: str, group: 
         spearman_p_value=spearman_p,
         correlation_ci_lower=corr_ci_lo,
         correlation_ci_upper=corr_ci_hi,
+        kendall_tau_b_confidence=kendall_tau_b_confidence,
         n_confidence=len(conf_values),
         mean_confidence=safe_mean(conf_values),
         highlighting_success_rate=sum(1 for r in results if r.highlighting_parsed) / max(len(results), 1),
@@ -1055,11 +1151,44 @@ def compute_aggregate_metrics(results: List[InstanceResult], level: str, group: 
         mean_ecs_incorrect=safe_mean(ecs_incorrect_vals),
         n_incorrect=len(ecs_incorrect_vals),
         pair_ns=pair_ns,
+        mean_ecs_free_cf=_free_cf_ecs,
+        n_free_cf=_n_free_cf,
+        mean_ecs_adj=safe_mean(ecs_adj_values),
+        n_ecs_adj=len(ecs_adj_values),
+        mean_ecs_adj_complete=safe_mean(ecs_adj_complete_values),
+        n_ecs_adj_complete=len(ecs_adj_complete_values),
+        mean_ecs_adj_er=safe_mean(ecs_adj_er_values),
+        mean_ecs_adj_ep=safe_mean(ecs_adj_ep_values),
+        mean_ecs_adj_rp=safe_mean(ecs_adj_rp_values),
+        n_degenerate_pairs_total=n_degenerate_pairs_total,
     )
 
 
+def _load_checkpointed_results(output_dir: Path, dataset_name: str, model_name: str) -> List[InstanceResult]:
+    """Load already-completed instances for one (dataset, model) pair from an
+    existing run's checkpoint file, so a resumed run does not re-process them.
+
+    De-duplicates by instance_id (last occurrence wins) as a defensive guard —
+    normal operation never appends the same instance twice (see last_checkpointed
+    in _run_model_on_dataset), but a corrupted/hand-edited checkpoint must not
+    silently double-count an instance in the resumed aggregates.
+    """
+    cp_path = output_dir / f"checkpoint_{dataset_name}_{model_name}.jsonl"
+    if not cp_path.exists():
+        return []
+    by_id: Dict[str, InstanceResult] = {}
+    with open(cp_path, 'r', encoding='utf-8') as f:
+        for line in f:
+            if line.strip():
+                r = InstanceResult.from_dict(json.loads(line))
+                by_id[r.instance_id] = r
+    return list(by_id.values())
+
+
 async def _run_model_on_dataset(model_config, instances, prompts, dataset_config,
-                                parser, normalizer, calc, config, output_dir):
+                                parser, normalizer, calc, config, output_dir,
+                                existing_results: Optional[List[InstanceResult]] = None,
+                                force_restart: bool = False):
     """Run one model over every instance of one dataset and return a result bundle.
 
     Isolated so the models configured for a run can execute concurrently
@@ -1067,10 +1196,24 @@ async def _run_model_on_dataset(model_config, instances, prompts, dataset_config
     checkpoint file, and result list and shares no mutable state with its siblings.
     Instances within a model are processed in order; cross-model concurrency combined
     with each engine's own request semaphore bounds the total in-flight Bedrock calls.
+
+    ``existing_results`` (from a prior, interrupted process's checkpoint file) seeds
+    the result list and their instance_ids are skipped — this is what makes
+    scripts/resume_experiment.py's resume cheap: only genuinely unfinished instances
+    incur new API calls. ``force_restart`` discards them and clears the checkpoint
+    file instead (used by --force-restart).
     """
     dataset_name = dataset_config.name
     tag = f"{model_config.name}/{dataset_name}"
-    logger.info(f"Processing model: {model_config.name} on {dataset_name}")
+
+    seed_results = [] if force_restart else list(existing_results or [])
+    already_done = {r.instance_id for r in seed_results}
+    remaining_instances = [inst for inst in instances if inst.instance_id not in already_done]
+    if already_done:
+        logger.info(f"[{tag}] Resuming: {len(already_done)}/{len(instances)} instance(s) already "
+                    f"checkpointed, {len(remaining_instances)} remaining")
+    logger.info(f"Processing model: {model_config.name} on {dataset_name}"
+                + (" (resumed)" if already_done else ""))
 
     engine = InferenceEngine(
         model_name=model_config.model_id,
@@ -1079,13 +1222,17 @@ async def _run_model_on_dataset(model_config, instances, prompts, dataset_config
         context_window=getattr(model_config, "context_window", 8192),
     )
 
-    model_results: List[InstanceResult] = []
-    wrong_pred_count = 0
-    successful = 0
+    model_results: List[InstanceResult] = list(seed_results)
+    wrong_pred_count = sum(1 for r in seed_results if not r.correct)
+    successful = len(seed_results)
     failed = 0
     prompt_validation_failures = 0
-    cp = CheckpointManager(output_dir / f"checkpoint_{dataset_name}_{model_config.name}.jsonl")
-    last_checkpointed = 0
+    cp = CheckpointManager(output_dir / f"checkpoint_{dataset_name}_{model_config.name}.jsonl",
+                           force_restart=force_restart)
+    # Seeded results are already durably persisted from the prior process — start
+    # the "unflushed" offset past them so _flush_checkpoint never re-appends
+    # already-checkpointed lines (which would double-count them on the NEXT resume).
+    last_checkpointed = len(model_results)
 
     def _flush_checkpoint():
         nonlocal last_checkpointed
@@ -1094,8 +1241,9 @@ async def _run_model_on_dataset(model_config, instances, prompts, dataset_config
             cp.save_checkpoint([r.to_dict() for r in new_results])
             last_checkpointed = len(model_results)
 
-    for i, instance in enumerate(instances):
-        logger.info(f"[{model_config.name}] Processing {instance.instance_id} ({i+1}/{len(instances)})")
+    for i, instance in enumerate(remaining_instances):
+        progress = len(already_done) + i + 1
+        logger.info(f"[{model_config.name}] Processing {instance.instance_id} ({progress}/{len(instances)})")
         try:
             result = await process_instance(
                 instance, engine, parser, normalizer, calc, prompts, config, dataset_config
@@ -1105,11 +1253,19 @@ async def _run_model_on_dataset(model_config, instances, prompts, dataset_config
             if not result.correct:
                 wrong_pred_count += 1
         except RateLimitExhausted as e:
+            # A sustained rate/quota exhaustion (all configured retries+backoff already
+            # failed) will not clear up by immediately trying the NEXT instance — Bedrock
+            # daily-token-quota exhaustion persists for hours, so retrying instance after
+            # instance only burns wall-clock on guaranteed failures. Flush what succeeded
+            # and STOP this model's loop; scripts/resume_experiment.py continues later
+            # from exactly this point instead of the process churning through the rest.
             logger.error(f"[{model_config.name}] Rate limit exhausted for {instance.instance_id}: {e}")
             failed += 1
             _flush_checkpoint()
-            logger.info(f"[{model_config.name}] Partial output saved ({last_checkpointed} instances) after rate limit.")
-            continue
+            logger.warning(f"[{model_config.name}] Stopping early after sustained rate limiting — "
+                           f"{last_checkpointed}/{len(instances)} instances saved. Resume later with: "
+                           f"python scripts/resume_experiment.py {output_dir.name}")
+            break
         except PromptValidationError as e:
             logger.error(f"[{model_config.name}] Prompt validation failed for {instance.instance_id}: {e}")
             prompt_validation_failures += 1
@@ -1123,6 +1279,12 @@ async def _run_model_on_dataset(model_config, instances, prompts, dataset_config
         if (i + 1) % config.output.checkpoint_frequency == 0:
             _flush_checkpoint()
 
+    # Final flush: guarantees any tail batch smaller than checkpoint_frequency is
+    # durably on disk before this coroutine returns, not just held in memory pending
+    # run_experiment()'s end-of-run write — a crash between here and there must not
+    # lose newly-completed instances that a resume could otherwise have skipped.
+    _flush_checkpoint()
+
     # Cross-check: the engine's authoritative cumulative usage vs. the sum attributed
     # to per-instance records. A divergence flags an uncounted call path.
     engine_total = engine.total_prompt_tokens + engine.total_completion_tokens
@@ -1135,9 +1297,10 @@ async def _run_model_on_dataset(model_config, instances, prompts, dataset_config
                        f"engine={engine_total} vs per-instance={instance_total} — an API call path may be unaccounted.")
 
     # Per-(model,dataset) aggregate uses THIS model's own sampling log, so its
-    # dropped_wrong_pred reflects only this model rather than a cross-model tally.
+    # wrong_pred_kept reflects only this model rather than a cross-model tally.
     model_slog = SamplingLog(
         dataset=dataset_name,
+        model=model_config.name,
         requested=dataset_config.sample_size,
         sampled=len(instances),
         wrong_predictions=wrong_pred_count,
@@ -1152,22 +1315,52 @@ async def _run_model_on_dataset(model_config, instances, prompts, dataset_config
         "wrong_pred_count": wrong_pred_count,
         "successful": successful,
         "failed": failed,
+        "sampling_log": model_slog,
         "prompt_validation_failures": prompt_validation_failures,
+        # Real request accounting (review P0.4) — this model's own engine's authoritative
+        # counters, summed across all per-(dataset,model) engines by the caller.
+        "api_requests": engine.total_requests,
+        "api_requests_failed": engine.total_requests_failed,
+        "api_requests_by_category": dict(engine.requests_by_category),
     }
 
 
 async def run_experiment(config, args):
     ensure_spacy_available()  # fail fast, before any API calls, if R extraction would silently degrade
-    run_id = str(uuid.uuid4())[:8]
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_dir = Path(config.output.base_dir) / f"{timestamp}_{run_id}"
-    output_dir.mkdir(parents=True, exist_ok=True)
+
+    resume_dir = getattr(args, "resume_dir", None)
+    force_restart = bool(getattr(args, "force_restart", False))
+    if resume_dir:
+        output_dir = Path(resume_dir)
+        if not output_dir.exists():
+            raise FileNotFoundError(f"--resume-dir path does not exist: {output_dir}")
+        run_id = output_dir.name.rsplit("_", 1)[-1]
+    else:
+        run_id = str(uuid.uuid4())[:8]
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        output_dir = Path(config.output.base_dir) / f"{timestamp}_{run_id}"
+        output_dir.mkdir(parents=True, exist_ok=True)
 
     setup_logging(log_dir=output_dir / "logs", console_level=config.output.log_level)
-    logger.info(f"Starting experiment: {config.experiment.name} v{config.experiment.version}")
+    logger.info(f"{'Resuming' if resume_dir else 'Starting'} experiment: "
+                f"{config.experiment.name} v{config.experiment.version}")
     logger.info(f"Run ID: {run_id}")
     logger.info(f"Random seed: {config.experiment.seed}")
     logger.info(f"Output directory: {output_dir}")
+
+    # Provenance written EARLY (not just at the end of a successful run) so a
+    # crashed/interrupted run still has a durable record of exactly what config
+    # produced it — this is what lets scripts/resume_experiment.py resume from just
+    # the output directory name, without needing the live config/ (which may have
+    # changed since). Only written if absent: on resume this preserves the ORIGINAL
+    # run's provenance rather than overwriting it with the resume-time environment.
+    config_snapshot_path = output_dir / "config_snapshot.yaml"
+    if not config_snapshot_path.exists():
+        save_config_to_file(config, config_snapshot_path)
+    env_snapshot_path = output_dir / "environment_snapshot.json"
+    if not env_snapshot_path.exists() and (config.reproducibility.log_git_commit
+                                           or config.reproducibility.log_package_versions):
+        save_environment_snapshot(env_snapshot_path)
 
     loader = DatasetLoader(seed=config.experiment.seed)
     parser = Parser()
@@ -1190,7 +1383,8 @@ async def run_experiment(config, args):
 
     all_results: List[InstanceResult] = []
     aggregate_list: List[AggregateMetrics] = []
-    sampling_logs: List[SamplingLog] = []
+    sampling_logs: List[SamplingLog] = []          # dataset-pooled (feeds overall_slog)
+    per_model_sampling_logs: List[SamplingLog] = []  # one per (model,dataset) — feeds execution_summary.txt
     prompt_sources_by_dataset: Dict[str, Dict[str, str]] = {}
 
     for dataset_config in config.datasets:
@@ -1246,8 +1440,12 @@ async def run_experiment(config, args):
         logger.info(f"Running {len(config.models)} models concurrently on {dataset_name}: "
                     f"{', '.join(m.name for m in config.models)}")
         model_bundles = await asyncio.gather(*[
-            _run_model_on_dataset(model_config, instances, prompts, dataset_config,
-                                  parser, normalizer, calc, config, output_dir)
+            _run_model_on_dataset(
+                model_config, instances, prompts, dataset_config,
+                parser, normalizer, calc, config, output_dir,
+                existing_results=_load_checkpointed_results(output_dir, dataset_name, model_config.name),
+                force_restart=force_restart,
+            )
             for model_config in config.models
         ])
 
@@ -1260,6 +1458,20 @@ async def run_experiment(config, args):
             summary.failed_instances += bundle["failed"]
             summary.prompt_validation_failures += bundle["prompt_validation_failures"]
             dataset_wrong_pred += bundle["wrong_pred_count"]
+            # Real request accounting (review P0.4): sum each model's own engine's
+            # authoritative counters — replaces the end-of-run `len(all_results) * 5` guess.
+            summary.api_requests_total += bundle.get("api_requests", 0)
+            summary.api_requests_failed += bundle.get("api_requests_failed", 0)
+            for category, count in bundle.get("api_requests_by_category", {}).items():
+                summary.api_requests_by_category[category] = (
+                    summary.api_requests_by_category.get(category, 0) + count
+                )
+            # Per-(model,dataset) sampling log (review P1.3): requested/sampled/
+            # wrong_predictions are all THIS model's own numbers, so they read
+            # consistently together — unlike the dataset-pooled log below, whose
+            # wrong_predictions sums across models against a single model's sample size.
+            if bundle.get("sampling_log") is not None:
+                per_model_sampling_logs.append(bundle["sampling_log"])
 
         # Dataset-level sampling log (wrong_predictions summed across all models),
         # used for the dataset-level and overall aggregates below.
@@ -1327,6 +1539,34 @@ async def run_experiment(config, args):
         a.ecs_lift_p_value = p_raw
         a.ecs_lift_p_holm = p_adj
 
+    # Candidate test: mean ECS-adj > 0, per model×dataset cell (ECS_ROBUSTNESS_
+    # PLAN_2026-07-05.md §3.5). Same sign-flip machinery, but applied DIRECTLY to
+    # ecs_adj (no separate baseline subtraction — AJ's null is 0 by construction).
+    # A separate Holm family from (a) above: descriptive/candidate only until the
+    # Phase B validation gate (plan §6) adopts ECS-adj as the pre-registered primary.
+    adj_results_by_group = {
+        a.group_name: [r.ecs_adj for r in all_results
+                       if r.ecs_adj is not None
+                       and f"{next((m.name for m in config.models if m.model_id == r.model), r.model)}_{r.dataset}" == a.group_name]
+        for a in md_aggs
+    }
+    raw_adj_ps: List[Optional[float]] = []
+    for a in md_aggs:
+        adj_vals = adj_results_by_group.get(a.group_name, [])
+        if len(adj_vals) >= min_n:
+            p = sign_flip_permutation_test(adj_vals, n_permutations=n_perms,
+                                           seed=config.experiment.seed, alternative="greater")
+        else:
+            p = None
+        raw_adj_ps.append(p)
+    if getattr(config.metrics, "correction", "holm") == "holm":
+        adj_adj_ps = holm_correction(raw_adj_ps)
+    else:
+        adj_adj_ps = list(raw_adj_ps)
+    for a, p_raw, p_adj in zip(md_aggs, raw_adj_ps, adj_adj_ps):
+        a.ecs_adj_p_value = p_raw
+        a.ecs_adj_p_holm = p_adj
+
     # Cross-model same-strategy agreement (zero extra API calls): compares
     # within-model cross-strategy consensus against cross-model same-strategy
     # agreement — privileged-self-knowledge vs generic-task-prior (arXiv:2602.02639,
@@ -1336,11 +1576,11 @@ async def run_experiment(config, args):
         with open(output_dir / "cross_model_agreement.json", "w", encoding="utf-8") as f:
             json.dump(cross_model, f, indent=2)
 
-    # Save results
+    # Save results (config_snapshot.yaml / environment_snapshot.json were already
+    # written near the top of this function, before any API calls, so a crashed run
+    # still has them — not repeated here).
     save_instance_results(all_results, str(output_dir / "instance_results.jsonl"))
     save_aggregate_metrics(aggregate_list, str(output_dir / "aggregate_metrics.json"))
-
-    save_config_to_file(config, output_dir / "config_snapshot.yaml")
     save_metrics_csv(all_results, str(output_dir / "instance_metrics.csv"))
 
     # Machine-checkable prompt provenance: which prompt files (and content hashes)
@@ -1358,17 +1598,28 @@ async def run_experiment(config, args):
         "models", str(output_dir / "model_metadata.json")
     )
 
-    if config.reproducibility.log_git_commit or config.reproducibility.log_package_versions:
-        save_environment_snapshot(output_dir / "environment_snapshot.json")
-
     summary.end_time = datetime.now()
     summary.duration_seconds = (summary.end_time - summary.start_time).total_seconds()
-    summary.api_requests_total = len(all_results) * 5
-    summary.api_requests_failed = summary.failed_instances * 5
+    # api_requests_total/failed/by_category are already real (summed from each
+    # engine's authoritative counters in the merge loop above) — no longer computed
+    # here from a fabricated len(all_results) * 5 formula (review P0.4).
     summary.avg_time_per_instance = summary.duration_seconds / max(len(all_results), 1)
-    summary.sampling_logs = [s.to_dict() for s in sampling_logs]
+    # Per-(model,dataset) logs (review P1.3), not the dataset-pooled ones (those still
+    # feed overall_slog above) — each line's requested/sampled/wrong_predictions are
+    # all the SAME model's own numbers, so "requested=10, wrong_pred=12" (3 models'
+    # wrong counts vs 1 model's sample size) can no longer happen.
+    summary.sampling_logs = [s.to_dict() for s in per_model_sampling_logs]
+    # Parsing failures by strategy (review P1.3): counts of instances where that
+    # strategy's raw response could not be parsed at all (*_parsed == False) — the
+    # per-instance flags already recorded during collection, never surfaced here.
+    summary.parsing_failures = {
+        "H": sum(1 for r in all_results if not r.highlighting_parsed),
+        "R": sum(1 for r in all_results if not r.rationale_parsed),
+        "CF": sum(1 for r in all_results if not r.counterfactual_parsed),
+        "RO": sum(1 for r in all_results if not r.rank_ordering_parsed),
+    }
 
-    with open(output_dir / "execution_summary.txt", 'w') as f:
+    with open(output_dir / "execution_summary.txt", 'w', encoding='utf-8') as f:
         f.write(summary.generate_report())
 
     report_md = generate_md_report(aggregate_list, all_results, config, cross_model=cross_model)

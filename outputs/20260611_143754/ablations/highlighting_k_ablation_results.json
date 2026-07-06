@@ -1,0 +1,14 @@
+{
+  "k=2": {
+    "mean_ecs": 0.0,
+    "n_instances": 4
+  },
+  "k=3": {
+    "mean_ecs": 0.0,
+    "n_instances": 4
+  },
+  "k=5": {
+    "mean_ecs": 0.0,
+    "n_instances": 4
+  }
+}

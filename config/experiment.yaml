@@ -112,13 +112,25 @@ metrics:
   confidence_level: 0.95
   correction: "holm"
   min_n_for_test: 6  # below this many paired diffs in a cell, report the estimate and skip the test
+  # ECS-adj degeneracy guard (ECS_ROBUSTNESS_PLAN_2026-07-05.md §3.2), pre-registered
+  # before the 200-run: a pair's adjusted_jaccard is flagged degenerate (None) when
+  # J_max - E[J] < ecs_adj_epsilon.
+  ecs_adj_epsilon: 0.10
 
 # Validity / Erasure — a SEPARATE consistency axis (stated-vs-revealed input
 # sensitivity), explicitly NOT a faithfulness ground truth. Each record is
 # re-classified by the SAME model that produced its original prediction.
 validity:
+  # PILOT-INFORMED AMENDMENT (2026-07-05, IMPROVEMENT_PLAN_2026-07-04.md P0.4):
+  # cut from 10 to 5 random-baseline trials before the 200-run. The random control
+  # is the erasure pass's cost driver (n_random_baseline_trials x 2 operators x 2
+  # more for held-out CF verification math); 10 trials projected to ~50-55k calls
+  # (~13-14h) at real pilot rates, 5 trials saves ~18k calls (~9h) and the average
+  # over 5 draws remains a fine control. Recorded here as the pre-registered
+  # deviation from the pilot config, per the plan's decision-log requirement —
+  # this value must NOT be silently changed again without a matching note.
+  n_random_baseline_trials: 5           # random-erasure control draws, averaged
   masking_token: "[MASK]"
-  n_random_baseline_trials: 10          # random-erasure control draws, averaged
   erasure_operators: ["mask", "delete"] # run both; ICE (2026) shows operator choice flips conclusions
   heldout_cf_verification: true         # also re-verify CF flips with a DIFFERENT configured model
                                         # (judge-choice sensitivity: arXiv:2505.13972). Robustness

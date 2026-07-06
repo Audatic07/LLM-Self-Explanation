@@ -2,7 +2,7 @@ The text was classified as: {predicted_label}
 
 Text: "{input_text}"
 
-The text has a Premise and a Hypothesis. Edit only the Hypothesis so that the relationship is classified as {other_labels_quoted} instead. Make as few edits as possible, and keep the Premise unchanged.
+The text has a Premise and a Hypothesis. Edit only the Hypothesis so that the relationship is classified as {other_labels_quoted} instead. Make as few edits as possible, and keep the Premise unchanged. Keep the original spacing and punctuation style; only change the words you edit.
 
 Return the full text (unchanged Premise, edited Hypothesis) in the JSON.
 

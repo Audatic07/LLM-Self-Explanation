@@ -1,0 +1,30 @@
+Execution Summary
+=================
+Run ID: 85a5b3a2
+Start Time: 2026-07-01 15:38:00
+End Time: 2026-07-01 15:43:01
+Duration: 301.27 seconds (5.02 minutes)
+
+Processing Statistics
+---------------------
+Total Instances: 14
+Successful: 11 (78.6%)
+Failed: 1 (7.1%)
+
+Failure Breakdown
+-----------------
+API Failures: 0
+Normalization Failures: 0
+Prompt Validation Failures: 0
+Parsing Failures by Strategy:
+
+Sampling Log:
+----------------------------------------
+  sst2: requested=7, sampled=7, wrong_pred=0
+  mnli: requested=7, sampled=7, wrong_pred=2
+
+Performance Metrics
+-------------------
+Average Time per Instance: 27.39 seconds
+Total API Requests: 55
+Failed API Requests: 5 (9.1%)

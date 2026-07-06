@@ -1,0 +1,24 @@
+Execution Summary
+=================
+Run ID: 64cd1c03
+Start Time: 2026-06-12 09:52:44
+End Time: 2026-06-12 09:54:36
+Duration: 112.04 seconds (1.87 minutes)
+
+Processing Statistics
+---------------------
+Total Instances: 9
+Successful: 9 (100.0%)
+Failed: 0 (0.0%)
+
+Failure Breakdown
+-----------------
+API Failures: 0
+Normalization Failures: 0
+Parsing Failures by Strategy:
+
+Performance Metrics
+-------------------
+Average Time per Instance: 12.45 seconds
+Total API Requests: 45
+Failed API Requests: 0 (0.0%)

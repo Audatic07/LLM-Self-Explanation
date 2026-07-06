@@ -1,0 +1,31 @@
+Execution Summary
+=================
+Run ID: 81996b93
+Start Time: 2026-07-03 12:04:10
+End Time: 2026-07-03 12:05:39
+Duration: 88.84 seconds (1.48 minutes)
+
+Processing Statistics
+---------------------
+Total Instances: 9
+Successful: 9 (100.0%)
+Failed: 0 (0.0%)
+
+Failure Breakdown
+-----------------
+API Failures: 0
+Normalization Failures: 0
+Prompt Validation Failures: 0
+Parsing Failures by Strategy:
+
+Sampling Log:
+----------------------------------------
+  sst2: requested=1, sampled=1, wrong_pred=1
+  mnli: requested=1, sampled=1, wrong_pred=2
+  ag_news: requested=1, sampled=1, wrong_pred=0
+
+Performance Metrics
+-------------------
+Average Time per Instance: 9.87 seconds
+Total API Requests: 45
+Failed API Requests: 0 (0.0%)

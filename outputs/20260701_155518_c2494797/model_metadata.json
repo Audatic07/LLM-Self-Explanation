@@ -1,0 +1,15 @@
+{
+  "table": "models",
+  "entries": [
+    {
+      "name": "llama-3.3-70b-versatile",
+      "model_id": "llama-3.3-70b-versatile",
+      "description": "Llama 3.3 70B Versatile (via Groq)",
+      "context_window": 131072,
+      "default_temperature": 0,
+      "default_top_p": 1,
+      "supports_function_calling": true
+    }
+  ],
+  "timestamp": "2026-07-01T16:03:20.539152"
+}

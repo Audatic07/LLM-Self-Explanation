@@ -11,7 +11,7 @@ build/
 .env
 
 # Data and outputs
-outputs/
+
 logs/
 
 # Testing
@@ -25,3 +25,8 @@ logs/
 # Other
 pilot_results.md
 *.egg
+
+.argus/
+.claude
+graphify-out/
+claude_context/

@@ -1,0 +1,15 @@
+{
+  "table": "models",
+  "entries": [
+    {
+      "name": "llama-3.3-70b",
+      "model_id": "llama-3.3-70b-versatile",
+      "description": "Meta's Llama 3.3 70B parameter model (via Groq)",
+      "context_window": 8192,
+      "default_temperature": 0,
+      "default_top_p": 1,
+      "supports_function_calling": false
+    }
+  ],
+  "timestamp": "2026-06-16T13:15:07.025993"
+}

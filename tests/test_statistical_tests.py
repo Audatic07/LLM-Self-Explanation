@@ -18,6 +18,11 @@ class TestCorrelationResult:
         assert r.ci_lower == 0.1
         assert r.ci_upper == 0.8
         assert r.n == 10
+        assert r.kendall_tau_b is None  # defaults to None when not supplied
+
+    def test_kendall_tau_b_field(self):
+        r = CorrelationResult(rho=0.5, p_value=0.01, ci_lower=0.1, ci_upper=0.8, n=10, kendall_tau_b=0.4)
+        assert r.kendall_tau_b == 0.4
 
 
 class TestConfidenceEcsCorrelation:
@@ -27,6 +32,19 @@ class TestConfidenceEcsCorrelation:
         result = compute_confidence_ecs_correlation(confidences, ecs_values, n_bootstrap=50)
         assert result.rho > 0.9
         assert result.n == 8
+
+    def test_kendall_tau_b_computed_alongside_rho(self):
+        # Review P2.2: tau-b is a tie-robust companion to rho, always populated
+        # when rho itself is defined (not the degenerate n<3/constant-input cases).
+        confidences = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]
+        ecs_values = [0.15, 0.22, 0.35, 0.41, 0.55, 0.58, 0.72, 0.81]
+        result = compute_confidence_ecs_correlation(confidences, ecs_values, n_bootstrap=50)
+        assert result.kendall_tau_b is not None
+        assert result.kendall_tau_b > 0.9  # same near-perfect monotonic relationship
+
+    def test_kendall_tau_b_none_when_degenerate(self):
+        result = compute_confidence_ecs_correlation([0.5], [0.2], n_bootstrap=10)
+        assert result.kendall_tau_b is None
 
     def test_below_min_n_degenerate(self):
         result = compute_confidence_ecs_correlation([0.5], [0.2], n_bootstrap=10)
@@ -50,6 +68,46 @@ class TestConfidenceEcsCorrelation:
         r2 = compute_confidence_ecs_correlation(confidences, ecs_values, n_bootstrap=100, seed=7)
         assert r1.ci_lower == r2.ci_lower
         assert r1.ci_upper == r2.ci_upper
+
+    def test_cluster_ids_wrong_length_raises(self):
+        with pytest.raises(ValueError, match="cluster_ids"):
+            compute_confidence_ecs_correlation(
+                [0.1, 0.2, 0.3, 0.4], [0.1, 0.2, 0.3, 0.4],
+                n_bootstrap=10, cluster_ids=["a", "b"],
+            )
+
+    def test_cluster_bootstrap_reproducible(self):
+        confidences = [0.1, 0.4, 0.2, 0.9, 0.6, 0.3, 0.8, 0.5]
+        ecs_values = [0.2, 0.5, 0.1, 0.8, 0.7, 0.35, 0.75, 0.55]
+        # 4 instances, each appearing under 2 "models" (pooled-level shape).
+        cluster_ids = ["i0", "i0", "i1", "i1", "i2", "i2", "i3", "i3"]
+        r1 = compute_confidence_ecs_correlation(confidences, ecs_values, n_bootstrap=200,
+                                                seed=7, cluster_ids=cluster_ids)
+        r2 = compute_confidence_ecs_correlation(confidences, ecs_values, n_bootstrap=200,
+                                                seed=7, cluster_ids=cluster_ids)
+        assert r1.ci_lower == r2.ci_lower
+        assert r1.ci_upper == r2.ci_upper
+        # rho itself is unaffected by clustering (only the CI bootstrap changes).
+        plain = compute_confidence_ecs_correlation(confidences, ecs_values, n_bootstrap=200, seed=7)
+        assert r1.rho == plain.rho
+
+    def test_cluster_bootstrap_widens_ci_vs_naive_row_level(self):
+        # Duplicate each of 4 distinct points twice (simulating 2 models per
+        # instance with IDENTICAL values, the maximal-correlation case) — a
+        # cluster-aware bootstrap must show AT LEAST as much uncertainty as a
+        # naive row-level bootstrap that treats the 8 (duplicated) rows as
+        # independent evidence.
+        base_conf = [0.1, 0.4, 0.6, 0.9]
+        base_ecs = [0.15, 0.45, 0.55, 0.85]
+        confidences = base_conf + base_conf
+        ecs_values = base_ecs + base_ecs
+        cluster_ids = ["i0", "i1", "i2", "i3", "i0", "i1", "i2", "i3"]
+        clustered = compute_confidence_ecs_correlation(confidences, ecs_values, n_bootstrap=2000,
+                                                       seed=42, cluster_ids=cluster_ids)
+        naive = compute_confidence_ecs_correlation(confidences, ecs_values, n_bootstrap=2000, seed=42)
+        clustered_width = clustered.ci_upper - clustered.ci_lower
+        naive_width = naive.ci_upper - naive.ci_lower
+        assert clustered_width >= naive_width - 1e-9
 
 
 class TestSignFlipPermutationTest:

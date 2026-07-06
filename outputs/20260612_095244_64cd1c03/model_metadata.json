@@ -1,0 +1,15 @@
+{
+  "table": "models",
+  "entries": [
+    {
+      "name": "llama-3.1-8b",
+      "groq_model_id": "llama-3.1-8b-instant",
+      "description": "Meta's Llama 3.1 8B parameter model (via Groq)",
+      "context_window": 8192,
+      "default_temperature": 0,
+      "default_top_p": 1,
+      "supports_function_calling": false
+    }
+  ],
+  "timestamp": "2026-06-12T09:54:29.652376"
+}

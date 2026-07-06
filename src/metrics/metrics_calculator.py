@@ -146,6 +146,128 @@ class MetricsCalculator:
         values = [v for p, v in pairwise_agreements.items() if p not in excluded]
         return float(np.mean(values)) if values else None
 
+    @staticmethod
+    def expected_jaccard_exact(a_size: int, b_size: int, vocab_size: int) -> float:
+        """Exact E[Jaccard] between two sets of sizes a,b drawn uniformly without
+        replacement from a shared vocabulary of size V (ECS-adj plan §3.1, fixes W1).
+
+        Intersection size K ~ Hypergeometric(V, a, b); Jaccard at K=k is
+        k/(a+b-k). Summed in closed form over k in [max(0,a+b-V), min(a,b)]
+        (<=~10 terms in practice) instead of Monte-Carlo simulation — cheaper
+        and exact, no seed/cache machinery needed.
+        """
+        a = min(int(a_size), int(vocab_size))
+        b = min(int(b_size), int(vocab_size))
+        V = int(vocab_size)
+        if V <= 0 or a <= 0 or b <= 0:
+            return 0.0
+        k_lo = max(0, a + b - V)
+        k_hi = min(a, b)
+        total = 0.0
+        for k in range(k_lo, k_hi + 1):
+            pmf = scipy.stats.hypergeom.pmf(k, V, a, b)
+            union = a + b - k
+            j = (k / union) if union > 0 else 0.0
+            total += pmf * j
+        return float(total)
+
+    @staticmethod
+    def expected_overlap_exact(a_size: int, b_size: int, vocab_size: int) -> float:
+        """Exact E[Overlap coefficient] = E[K]/min(a,b) = a*b / (V*min(a,b)),
+        a one-liner from the hypergeometric mean E[K] = a*b/V (ECS-adj plan §3.1)."""
+        a = min(int(a_size), int(vocab_size))
+        b = min(int(b_size), int(vocab_size))
+        V = int(vocab_size)
+        smaller = min(a, b)
+        if V <= 0 or a <= 0 or b <= 0 or smaller <= 0:
+            return 0.0
+        return float(a * b) / (V * smaller)
+
+    def adjusted_jaccard(self, set1: Set[str], set2: Set[str], vocab_size: int,
+                         eps: float = 0.10) -> Tuple[Optional[float], bool]:
+        """Kappa-style chance- AND ceiling-adjusted Jaccard (ECS-adj plan §3.2,
+        fixes W2/W7): AJ = (J - E[J]) / (J_max - E[J]).
+
+        J_max = min(a,b)/max(a,b) is the ceiling attainable given the set sizes
+        (attained when the smaller set nests in the larger). 0 = chance,
+        1 = maximum agreement achievable given the sizes; below-chance values
+        go negative with an asymmetric floor of -E[J]/(J_max-E[J]) (not -1).
+        Unifies the current lift (chance-only) and overlap-ECS (ceiling-only)
+        patches into one estimator comparable across pair-size geometries.
+
+        Degeneracy guard: returns (None, True) when J_max - E[J] < eps — the
+        pair's geometry puts the ceiling too close to the chance floor for the
+        ratio to be a meaningful estimate (dividing by near-zero amplifies
+        noise). eps is pre-registered at 0.10 (plan §3.2).
+        """
+        a, b = len(set1), len(set2)
+        if a == 0 or b == 0 or vocab_size <= 0:
+            return None, True
+        j = self.compute_jaccard_similarity(set1, set2)
+        ej = self.expected_jaccard_exact(a, b, vocab_size)
+        j_max = min(a, b) / max(a, b)
+        denom = j_max - ej
+        if denom < eps:
+            return None, True
+        return (j - ej) / denom, False
+
+    def compute_ecs_adjusted(self, explanations: Dict[str, Set[str]], vocab_size: int,
+                             eps: float = 0.10) -> Dict[str, object]:
+        """Chance- and ceiling-adjusted ECS (ECS-adj, plan §3): paradigm-balanced
+        aggregation of adjusted_jaccard pairs, replacing the flat 5-pair mean
+        that let CF dominate 60% of the composite (fixes W3, W4).
+
+        Components (each is a mean over its sub-pairs, so paradigm weight stays
+        fixed at 1/3 regardless of how many sub-pairs survive):
+          E-R (extraction-rationalization)   = mean(AJ(H,R), AJ(RO,R))
+          E-P (extraction-perturbation)      = mean(AJ(H,CF), AJ(RO,CF))
+          R-P (rationalization-perturbation) =      AJ(R,CF)
+        ecs_adj = mean(E-R, E-P, R-P) over whichever components are defined
+        (the AVAILABLE-COMPONENT secondary, never silently the headline).
+        ecs_adj_complete (bool) flags whether ALL 3 components were defined —
+        callers filter on this flag to build the primary complete-case
+        estimand (mirroring the existing n_valid_strategies==4 gate for
+        legacy ECS), exactly as the plan's §3.4 missing-data policy specifies.
+
+        Returns: {ecs_adj_er, ecs_adj_ep, ecs_adj_rp, ecs_adj,
+                  ecs_adj_n_components (0-3), ecs_adj_complete (bool),
+                  n_degenerate_pairs (0-5)}.
+        """
+        pair_keys = [("H", "R"), ("RO", "R"), ("H", "CF"), ("RO", "CF"), ("R", "CF")]
+        aj: Dict[Tuple[str, str], float] = {}
+        n_degenerate = 0
+        for (s1, s2) in pair_keys:
+            set1, set2 = explanations.get(s1, set()), explanations.get(s2, set())
+            if not set1 or not set2:
+                continue
+            val, degenerate = self.adjusted_jaccard(set1, set2, vocab_size, eps)
+            if degenerate:
+                n_degenerate += 1
+            if val is not None:
+                aj[(s1, s2)] = val
+
+        def _mean_of(keys):
+            vals = [aj[k] for k in keys if k in aj]
+            return float(np.mean(vals)) if vals else None
+
+        er = _mean_of([("H", "R"), ("RO", "R")])
+        ep = _mean_of([("H", "CF"), ("RO", "CF")])
+        rp = aj.get(("R", "CF"))
+
+        components = [c for c in (er, ep, rp) if c is not None]
+        ecs_adj = float(np.mean(components)) if components else None
+        complete = er is not None and ep is not None and rp is not None
+
+        return {
+            "ecs_adj_er": er,
+            "ecs_adj_ep": ep,
+            "ecs_adj_rp": rp,
+            "ecs_adj": ecs_adj,
+            "ecs_adj_n_components": len(components),
+            "ecs_adj_complete": complete,
+            "n_degenerate_pairs": n_degenerate,
+        }
+
     def compute_ecs_overlap(self, pairwise_overlaps: Dict[Tuple[str, str], float]) -> Optional[float]:
         """Size-robust secondary ECS: mean Overlap Coefficient over the same 5
         cross-paradigm pairs the Jaccard ECS uses (H-RO excluded).
@@ -197,7 +319,7 @@ class MetricsCalculator:
         return jac_sum / n_sims
 
     @staticmethod
-    def compute_cross_model_agreement(results) -> Dict[str, Dict]:
+    def compute_cross_model_agreement(results, n_bootstrap: int = 1000, seed: int = 42) -> Dict[str, Dict]:
         """Cross-model SAME-strategy agreement: for each (dataset, instance) present
         under >=2 models, the pairwise Jaccard between different models' evidence
         sets for the SAME strategy — plus the within-model cross-strategy ECS of the
@@ -212,10 +334,22 @@ class MetricsCalculator:
         sets are already in the shared normalized token space, so the comparison is
         apples-to-apples. Zero extra API calls.
 
+        Also computes a PAIRED per-instance contrast (review P2.4): for each
+        multi-model instance, Δ = (that instance's own cross-model same-strategy
+        mean Jaccard) − (that instance's own within-model mean ECS across its
+        rows). This is a genuine paired estimate (unlike diffing the two dataset
+        means above, which are each averaged over a DIFFERENT set of pairs/rows)
+        with a seeded bootstrap CI, and an explicit stated direction — the report
+        previously cited both the "privileged self-knowledge" and "shared task
+        prior" hypotheses without ever saying which one the run's own data pointed to.
+
         Returns {dataset: {"strategies": {S: {mean_jaccard, n_pairs}},
                            "cross_model_same_strategy_mean": float|None,
                            "within_model_cross_strategy_mean_ecs": float|None,
-                           "n_instances_multi_model": int}}
+                           "n_instances_multi_model": int,
+                           "paired_contrast": {"mean_delta": float|None, "ci_lower": float,
+                                               "ci_upper": float, "n": int,
+                                               "direction": "cross_model_exceeds"|"within_model_exceeds"|"indeterminate"}}}
         """
         calc = MetricsCalculator()
         from collections import defaultdict
@@ -234,20 +368,30 @@ class MetricsCalculator:
         agg = defaultdict(lambda: defaultdict(list))   # dataset -> strategy -> [jaccards]
         within_ecs = defaultdict(list)                 # dataset -> [ecs values]
         multi_counts = defaultdict(set)                # dataset -> instance ids with >=2 models
+        deltas = defaultdict(list)                      # dataset -> [per-instance paired deltas]
 
         for (dataset, iid), rows in by_instance.items():
             if len(rows) < 2:
                 continue
             multi_counts[dataset].add(iid)
-            for r in rows:
-                if r.ecs is not None:
-                    within_ecs[dataset].append(r.ecs)
+            instance_ecs = [r.ecs for r in rows if r.ecs is not None]
+            for v in instance_ecs:
+                within_ecs[dataset].append(v)
+            instance_jaccards = []
             for s, getter in strategy_sets.items():
                 sets = [getter(r) for r in rows]
                 sets = [x for x in sets if x]
                 for i in range(len(sets)):
                     for j in range(i + 1, len(sets)):
-                        agg[dataset][s].append(calc.compute_jaccard_similarity(sets[i], sets[j]))
+                        jac = calc.compute_jaccard_similarity(sets[i], sets[j])
+                        agg[dataset][s].append(jac)
+                        instance_jaccards.append(jac)
+            # This instance's OWN paired contrast — both sides averaged over only
+            # THIS instance's rows/pairs, not the dataset's pooled sets.
+            if instance_jaccards and instance_ecs:
+                cross_model_this = float(np.mean(instance_jaccards))
+                within_model_this = float(np.mean(instance_ecs))
+                deltas[dataset].append(cross_model_this - within_model_this)
 
         for dataset in sorted(multi_counts.keys()):
             strategies = {}
@@ -259,12 +403,33 @@ class MetricsCalculator:
                     "n_pairs": len(vals),
                 }
                 all_vals.extend(vals)
+
+            d = deltas[dataset]
+            if d:
+                rng = np.random.default_rng(seed)
+                n = len(d)
+                boot_means = [float(np.mean(rng.choice(d, size=n, replace=True))) for _ in range(n_bootstrap)]
+                ci_lo, ci_hi = float(np.percentile(boot_means, 2.5)), float(np.percentile(boot_means, 97.5))
+                mean_delta = float(np.mean(d))
+                if ci_lo > 0:
+                    direction = "cross_model_exceeds"
+                elif ci_hi < 0:
+                    direction = "within_model_exceeds"
+                else:
+                    direction = "indeterminate"
+                paired_contrast = {"mean_delta": mean_delta, "ci_lower": ci_lo, "ci_upper": ci_hi,
+                                   "n": n, "direction": direction}
+            else:
+                paired_contrast = {"mean_delta": None, "ci_lower": 0.0, "ci_upper": 0.0,
+                                   "n": 0, "direction": "indeterminate"}
+
             per_dataset[dataset] = {
                 "strategies": strategies,
                 "cross_model_same_strategy_mean": float(np.mean(all_vals)) if all_vals else None,
                 "within_model_cross_strategy_mean_ecs": (
                     float(np.mean(within_ecs[dataset])) if within_ecs[dataset] else None),
                 "n_instances_multi_model": len(multi_counts[dataset]),
+                "paired_contrast": paired_contrast,
             }
         return per_dataset
 

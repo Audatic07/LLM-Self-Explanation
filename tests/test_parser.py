@@ -358,3 +358,109 @@ class TestRationaleInflectionAnchoring:
         _, evidence = parser.parse_rationale(raw, text, normalizer)
         norm = normalizer.normalize_tokens(evidence)
         assert "scene" in norm
+
+
+class TestCanonicalTokens:
+    """Review P0.1: SST-2's curated text is Treebank-pretokenized ("you 're",
+    "scenes ,"). A model that writes normal spacing ("you're", "scenes,") must
+    canonicalize identically, or CF edit-ratio/diff charges phantom edits for
+    spacing alone."""
+
+    def test_detokenized_and_tokenized_forms_match(self, parser):
+        tokenized = "you 're not going to enjoy this film ."
+        detokenized = "you're not going to enjoy this film."
+        assert parser._canonical_tokens(tokenized) == parser._canonical_tokens(detokenized)
+
+    def test_comma_detached_regardless_of_spacing(self, parser):
+        assert parser._canonical_tokens("scenes ,") == parser._canonical_tokens("scenes,")
+
+    def test_negation_contraction_preserved_as_single_token(self, parser):
+        # "n't" must survive as its own token (not fragmented into "n" + "'" + "t")
+        # since the normalizer's POLARITY_WORDS whitelist matches it literally.
+        assert parser._canonical_tokens("isn't") == ["is", "n't"]
+        assert parser._canonical_tokens("is n't") == ["is", "n't"]
+
+    def test_hyphenated_compound_kept_as_one_token(self, parser):
+        assert parser._canonical_tokens("charm-less,") == ["charm-less", ","]
+
+    def test_various_clitics_split_consistently(self, parser):
+        assert parser._canonical_tokens("I've") == parser._canonical_tokens("I 've")
+        assert parser._canonical_tokens("we'll") == parser._canonical_tokens("we 'll")
+        assert parser._canonical_tokens("it's") == parser._canonical_tokens("it 's")
+
+
+class TestCFTokenizationConfound:
+    """Review P0.1 acceptance criteria: CF edit-ratio/diff must not be confounded by
+    SST-2's Treebank pretokenization."""
+
+    def test_pure_detokenization_rewrite_raises_identical(self, parser, normalizer):
+        # A rewrite that ONLY de-tokenizes (no semantic edit) must be rejected as a
+        # non-edit via the canonical-identity check, not fall through to a confusing
+        # "insertion-only" message.
+        tokenized = "you 're not going to enjoy this film ."
+        detokenized_same = "you're not going to enjoy this film."
+        raw = json.dumps({"rewritten": detokenized_same, "new_prediction": "negative"})
+        with pytest.raises(ParsingError, match="identical"):
+            parser.parse_counterfactual(
+                raw, tokenized, "positive", ["positive", "negative"], normalizer,
+                skip_validation=True,
+            )
+
+    def test_edit_ratio_on_detokenized_rewrite_counts_only_real_edit(self, parser):
+        # One genuine word change ("enjoy"->"hate") plus a full de-tokenization must
+        # cost ~1/9, not the ~0.6 a raw-whitespace-split diff would charge.
+        tokenized = "you 're not going to enjoy this film ."
+        detokenized_edit = "you're not going to hate this film."
+        ratio = parser._word_edit_ratio(tokenized, detokenized_edit)
+        assert ratio < 0.2
+
+    def test_extract_changed_tokens_ignores_detokenization_noise(self, parser):
+        tokenized = "you 're not going to enjoy this film ."
+        detokenized_edit = "you're not going to hate this film."
+        changed = parser._extract_changed_tokens(tokenized, detokenized_edit)
+        assert changed == {"enjoy"}
+
+    def test_sst2_style_full_rewrite_passes_edit_ratio_threshold(self, parser, normalizer):
+        # Reproduces the pilot's sst2_validation_000665 shape: Treebank-tokenized
+        # original, a detokenized rewrite with ONE real content edit. Previously this
+        # kind of rewrite was rejected (ratio inflated by spacing alone); it must now
+        # pass the standard 0.3 threshold.
+        original = "you 're too old for this movie , you 've heard it all before ."
+        rewritten = "you're just right for this movie, you've heard it all before."
+        raw = json.dumps({"rewritten": rewritten, "new_prediction": "negative"})
+        cf_text, new_pred, from_tokens = parser.parse_counterfactual(
+            raw, original, "positive", ["positive", "negative"], normalizer,
+            max_edit_ratio=0.3,
+        )
+        assert new_pred == "negative"
+        assert "too" in from_tokens or "old" in from_tokens
+
+    def test_mnli_span_path_unaffected_by_canonicalization(self, parser, normalizer):
+        # MNLI span-restricted CF: Premise untouched, Hypothesis has a Treebank-style
+        # rewrite with exactly one real edit. Ratio must be computed over the
+        # editable span only, and canonicalization must not break span protection.
+        original = ('Premise: A man is playing a guitar on stage . '
+                    "Hypothesis: The man is n't performing music .")
+        rewritten = ('Premise: A man is playing a guitar on stage . '
+                    "Hypothesis: The man is performing music.")
+        raw = json.dumps({"rewritten": rewritten, "new_prediction": "entailment"})
+        cf_text, new_pred, from_tokens = parser.parse_counterfactual(
+            raw, original, "contradiction", ["entailment", "neutral", "contradiction"],
+            normalizer, max_edit_ratio=0.3, edit_span_marker="Hypothesis:",
+        )
+        assert new_pred == "entailment"
+        assert "n't" in from_tokens
+
+    def test_mnli_premise_edit_still_rejected_after_canonicalization(self, parser, normalizer):
+        # Editing the Premise must still be a rules violation, canonicalization must
+        # not accidentally make a changed Premise look "unchanged".
+        original = ('Premise: A man is playing a guitar on stage . '
+                    "Hypothesis: The man is n't performing music .")
+        rewritten = ('Premise: A woman is playing a guitar on stage . '
+                    "Hypothesis: The man is performing music.")
+        raw = json.dumps({"rewritten": rewritten, "new_prediction": "entailment"})
+        with pytest.raises(ParsingError, match="outside the allowed span"):
+            parser.parse_counterfactual(
+                raw, original, "contradiction", ["entailment", "neutral", "contradiction"],
+                normalizer, max_edit_ratio=0.3, edit_span_marker="Hypothesis:",
+            )

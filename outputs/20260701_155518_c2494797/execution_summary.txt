@@ -1,0 +1,31 @@
+Execution Summary
+=================
+Run ID: c2494797
+Start Time: 2026-07-01 15:55:21
+End Time: 2026-07-01 16:03:21
+Duration: 480.02 seconds (8.00 minutes)
+
+Processing Statistics
+---------------------
+Total Instances: 21
+Successful: 14 (66.7%)
+Failed: 1 (4.8%)
+
+Failure Breakdown
+-----------------
+API Failures: 0
+Normalization Failures: 0
+Prompt Validation Failures: 0
+Parsing Failures by Strategy:
+
+Sampling Log:
+----------------------------------------
+  sst2: requested=7, sampled=7, wrong_pred=0
+  mnli: requested=7, sampled=7, wrong_pred=2
+  ag_news: requested=7, sampled=7, wrong_pred=0
+
+Performance Metrics
+-------------------
+Average Time per Instance: 34.29 seconds
+Total API Requests: 70
+Failed API Requests: 5 (7.1%)

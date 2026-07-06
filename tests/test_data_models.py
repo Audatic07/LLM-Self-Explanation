@@ -9,11 +9,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from src.utils.data_models import (
     InstanceResult, AggregateMetrics, ValidityTestResult,
-    ExecutionSummary,
+    ExecutionSummary, SamplingLog,
     AggregateValidityResults,
     save_instance_results, load_instance_results,
     save_aggregate_metrics, load_aggregate_metrics,
     save_validity_results, load_validity_results,
+    extract_high_low_ecs_examples, save_environment_snapshot,
 )
 
 
@@ -49,6 +50,53 @@ class TestInstanceResult:
         assert restored.ecs == 0.5
         assert "good" in restored.highlighting_tokens
         assert restored.rank_ordering_tokens == [("good", 1), ("bad", 2)]
+
+    def test_confidence_prompt_and_response_round_trip(self):
+        """Review P1.4: confidence elicitation's own prompt/raw response must
+        persist through to_dict/from_dict like every other strategy's does."""
+        r = InstanceResult(
+            instance_id="1", dataset="sst2", model="llama",
+            timestamp=datetime.now(), text="great", ground_truth_label="pos",
+            predicted_label="pos", confidence=0.9, correct=True,
+            confidence_prompt="How confident are you?",
+            confidence_raw_response='{"confidence": 90}',
+        )
+        restored = InstanceResult.from_dict(r.to_dict())
+        assert restored.confidence_prompt == "How confident are you?"
+        assert restored.confidence_raw_response == '{"confidence": 90}'
+
+    def test_from_dict_input_length_fallback_uses_word_count(self):
+        """Review P2.7: legacy records missing input_length must fall back to a
+        WORD count (matching how input_length is set everywhere it's actually
+        computed: len(text.split())), not a character count."""
+        d = {
+            "instance_id": "1", "dataset": "sst2", "model": "llama",
+            "timestamp": datetime.now().isoformat(),
+            "text": "one two three four five",  # 5 words, 24 characters
+            "ground_truth_label": "pos", "predicted_label": "pos", "correct": True,
+            "raw_highlighting": "", "raw_rationale": "", "raw_counterfactual": "", "raw_rank_ordering": "",
+            "highlighting_tokens": [], "rationale_tokens": [], "counterfactual_tokens": [],
+            "rank_ordering_tokens": [], "cc3_tokens": [], "cc4_tokens": [], "cc3_size": 0, "cc4_size": 0,
+        }
+        assert "input_length" not in d
+        restored = InstanceResult.from_dict(d)
+        assert restored.input_length == 5
+
+    def test_confidence_prompt_defaults_to_empty_string(self):
+        r = InstanceResult(
+            instance_id="1", dataset="sst2", model="llama",
+            timestamp=datetime.now(), text="great", ground_truth_label="pos",
+            predicted_label="pos",
+        )
+        assert r.confidence_prompt == ""
+        assert r.confidence_raw_response == ""
+        # Old JSONL records (pre-P1.4) lack these keys entirely.
+        d = r.to_dict()
+        del d["confidence_prompt"]
+        del d["confidence_raw_response"]
+        restored = InstanceResult.from_dict(d)
+        assert restored.confidence_prompt == ""
+        assert restored.confidence_raw_response == ""
 
 
 class TestAggregateMetrics:
@@ -159,6 +207,94 @@ class TestExecutionSummary:
         # Should not crash with empty parsing_failures
         assert "API" in report
 
+    def test_sampling_log_shows_model_and_dataset_tag(self):
+        """Review P1.3: each line's requested/sampled/wrong_pred must all be the
+        SAME model's own numbers — previously dataset was shown alone while
+        wrong_pred was pooled across every configured model."""
+        s = ExecutionSummary(
+            start_time=datetime(2024, 1, 1, 10, 0, 0),
+            end_time=datetime(2024, 1, 1, 10, 5, 0),
+            duration_seconds=300, total_instances=20,
+            successful_instances=20, failed_instances=0,
+            sampling_logs=[
+                SamplingLog(dataset="mnli", model="nova-pro", requested=10, sampled=10, wrong_predictions=3).to_dict(),
+                SamplingLog(dataset="mnli", model="qwen3-235b", requested=10, sampled=10, wrong_predictions=4).to_dict(),
+            ],
+        )
+        report = s.generate_report()
+        assert "nova-pro/mnli: requested=10, sampled=10, wrong_pred=3" in report
+        assert "qwen3-235b/mnli: requested=10, sampled=10, wrong_pred=4" in report
+        # The old bug: 3+4=7 would never be printed against requested=10 as if it
+        # were one model's numbers — each line here is self-consistent.
+
+    def test_sampling_log_without_model_falls_back_to_dataset_only(self):
+        # Backward compatibility: older SamplingLog dicts (pre-model-field) or
+        # deliberately dataset-pooled ones must still render without a stray "/".
+        s = ExecutionSummary(
+            start_time=datetime(2024, 1, 1, 10, 0, 0),
+            end_time=datetime(2024, 1, 1, 10, 5, 0),
+            duration_seconds=300, total_instances=10,
+            successful_instances=10, failed_instances=0,
+            sampling_logs=[
+                SamplingLog(dataset="mnli", requested=10, sampled=10, wrong_predictions=3).to_dict(),
+            ],
+        )
+        report = s.generate_report()
+        assert "mnli: requested=10, sampled=10, wrong_pred=3" in report
+
+    def test_api_requests_by_category_rendered(self):
+        s = ExecutionSummary(
+            start_time=datetime(2024, 1, 1, 10, 0, 0),
+            end_time=datetime(2024, 1, 1, 10, 5, 0),
+            duration_seconds=300, total_instances=10,
+            successful_instances=10, failed_instances=0,
+            api_requests_total=90, api_requests_by_category={"classification": 10, "H": 10, "CF_verify": 5},
+        )
+        report = s.generate_report()
+        assert "classification: 10" in report
+        assert "CF_verify: 5" in report
+
+    def test_api_requests_by_category_round_trip(self):
+        s = ExecutionSummary(
+            start_time=datetime(2024, 1, 1, 10, 0, 0), end_time=datetime(2024, 1, 1, 10, 5, 0),
+            duration_seconds=300, total_instances=10, successful_instances=10, failed_instances=0,
+            api_requests_by_category={"H": 3},
+        )
+        restored = ExecutionSummary.from_dict(s.to_dict())
+        assert restored.api_requests_by_category == {"H": 3}
+
+
+class TestSamplingLog:
+    def test_round_trip_with_model_field(self):
+        s = SamplingLog(dataset="sst2", model="nova-pro", requested=200, sampled=200, wrong_predictions=12)
+        restored = SamplingLog.from_dict(s.to_dict())
+        assert restored.model == "nova-pro"
+        assert restored.dataset == "sst2"
+
+    def test_model_defaults_to_empty_string(self):
+        s = SamplingLog(dataset="sst2")
+        assert s.model == ""
+
+
+class TestSaveEnvironmentSnapshot:
+    """Review P1.4: git_dirty was absent — a run's provenance had no way to record
+    whether it launched from a clean working tree, which the pre-flight checklist
+    requires (git_dirty == false at launch)."""
+
+    def test_includes_git_dirty_flag(self, tmp_path):
+        out = tmp_path / "env.json"
+        save_environment_snapshot(out)
+        data = json.loads(out.read_text(encoding="utf-8"))
+        assert "git_dirty" in data
+        assert isinstance(data["git_dirty"], bool) or data["git_dirty"] == "unknown"
+
+    def test_still_includes_commit_and_packages(self, tmp_path):
+        out = tmp_path / "env.json"
+        save_environment_snapshot(out)
+        data = json.loads(out.read_text(encoding="utf-8"))
+        assert "git_commit" in data
+        assert "packages" in data
+
 
 class TestAggregateValidityResults:
     def test_round_trip(self):
@@ -236,6 +372,58 @@ class TestConvenienceFunctions:
         assert loaded[0].instance_id == "1"
 
 
+def _ecs_result(instance_id, ecs, model="m"):
+    return InstanceResult(
+        instance_id=instance_id, dataset="sst2", model=model,
+        timestamp=datetime.now(), text="t", ground_truth_label="pos", predicted_label="pos",
+        ecs=ecs,
+    )
+
+
+class TestExtractHighLowEcsExamples:
+    """Review P1.2 bug #7: the same instance_id under multiple models must not
+    appear twice (verbatim, with no distinguishing label) in the SAME extreme list."""
+
+    def test_basic_high_low_selection(self):
+        results = [_ecs_result(f"i{k}", ecs) for k, ecs in enumerate([0.1, 0.5, 0.9, 0.3, 0.7])]
+        extremes = extract_high_low_ecs_examples(results, n=2)
+        assert [r.ecs for r in extremes["low_ecs"]] == [0.1, 0.3]
+        assert [r.ecs for r in extremes["high_ecs"]] == [0.9, 0.7]
+
+    def test_dedupes_same_instance_across_models_within_one_list(self):
+        # Same instance_id appears twice (under 2 models) at two DIFFERENT low ECS
+        # values; only the MOST extreme (lowest) occurrence should survive in "low".
+        results = [
+            _ecs_result("shared", 0.05, model="model-a"),
+            _ecs_result("shared", 0.08, model="model-b"),
+            _ecs_result("other", 0.20, model="model-a"),
+        ]
+        extremes = extract_high_low_ecs_examples(results, n=2)
+        low_ids = [r.instance_id for r in extremes["low_ecs"]]
+        assert low_ids.count("shared") == 1  # deduped, not shown twice
+        low_shared = next(r for r in extremes["low_ecs"] if r.instance_id == "shared")
+        assert low_shared.model == "model-a"  # the lower (more extreme) of the two
+        assert low_shared.ecs == 0.05
+
+    def test_same_instance_can_appear_in_both_high_and_low_lists(self):
+        # A genuine cross-model disagreement: same instance, wildly different ECS
+        # under two models. Each list dedupes independently, so it may legitimately
+        # appear once in EACH list (not literally the same row twice in one list).
+        results = [
+            _ecs_result("contested", 0.02, model="model-a"),
+            _ecs_result("contested", 0.98, model="model-b"),
+        ]
+        extremes = extract_high_low_ecs_examples(results, n=1)
+        assert extremes["low_ecs"][0].model == "model-a"
+        assert extremes["high_ecs"][0].model == "model-b"
+
+    def test_instances_without_ecs_excluded(self):
+        results = [_ecs_result("i0", 0.5), _ecs_result("i1", None)]
+        extremes = extract_high_low_ecs_examples(results, n=5)
+        all_ids = {r.instance_id for r in extremes["low_ecs"] + extremes["high_ecs"]}
+        assert "i1" not in all_ids
+
+
 if __name__ == "__main__":
     import traceback
 
@@ -246,6 +434,7 @@ if __name__ == "__main__":
     test_classes = [
         TestInstanceResult, TestAggregateMetrics, TestValidityTestResult,
         TestExecutionSummary, TestAggregateValidityResults, TestConvenienceFunctions,
+        TestExtractHighLowEcsExamples, TestSamplingLog, TestSaveEnvironmentSnapshot,
     ]
 
     for cls in test_classes:

@@ -1,0 +1,15 @@
+{
+  "table": "models",
+  "entries": [
+    {
+      "name": "gpt-oss-120b",
+      "model_id": "openai/gpt-oss-120b:free",
+      "description": "OpenAI's GPT OSS model 120B (via OpenRouter)",
+      "context_window": 32768,
+      "default_temperature": 0,
+      "default_top_p": 1,
+      "supports_function_calling": false
+    }
+  ],
+  "timestamp": "2026-06-15T13:23:02.837970"
+}

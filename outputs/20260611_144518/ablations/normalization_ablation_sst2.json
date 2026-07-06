@@ -1,0 +1,34 @@
+{
+  "full": {
+    "mean_delta": 0.0,
+    "n_instances": 2,
+    "deltas": [
+      0.0,
+      0.0
+    ]
+  },
+  "no_lemmatization": {
+    "mean_delta": 0.0,
+    "n_instances": 2,
+    "deltas": [
+      0.0,
+      0.0
+    ]
+  },
+  "no_stopwords": {
+    "mean_delta": 0.0,
+    "n_instances": 2,
+    "deltas": [
+      0.0,
+      0.0
+    ]
+  },
+  "minimal": {
+    "mean_delta": 0.0,
+    "n_instances": 2,
+    "deltas": [
+      0.0,
+      0.0
+    ]
+  }
+}

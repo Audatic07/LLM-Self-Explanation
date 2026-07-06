@@ -1,0 +1,31 @@
+Execution Summary
+=================
+Run ID: da188f89
+Start Time: 2026-06-16 14:39:47
+End Time: 2026-06-16 14:44:45
+Duration: 297.58 seconds (4.96 minutes)
+
+Processing Statistics
+---------------------
+Total Instances: 11
+Successful: 11 (100.0%)
+Failed: 0 (0.0%)
+
+Failure Breakdown
+-----------------
+API Failures: 0
+Normalization Failures: 0
+Prompt Validation Failures: 0
+Parsing Failures by Strategy:
+
+Sampling Log:
+----------------------------------------
+  sst2: requested=5, sampled=4, wrong_pred=0
+  mnli: requested=5, sampled=3, wrong_pred=1
+  ag_news: requested=5, sampled=4, wrong_pred=1
+
+Performance Metrics
+-------------------
+Average Time per Instance: 27.05 seconds
+Total API Requests: 55
+Failed API Requests: 0 (0.0%)

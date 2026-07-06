@@ -5,7 +5,7 @@ from unittest.mock import patch
 from src.utils.config_loader import (
     load_yaml, _parse_config, ConfigValidator, apply_command_line_overrides,
     parse_command_line_args, save_config_to_file, load_and_validate_config,
-    load_experiment_config
+    load_experiment_config, load_config_from_snapshot
 )
 from src.utils.config import (
     ExperimentConfig, DatasetConfig, ModelConfig, InferenceConfig,
@@ -439,6 +439,14 @@ class TestParseCommandLineArgs:
         args = parse_command_line_args(["--force-restart"])
         assert args.force_restart is True
 
+    def test_resume_dir_default_none(self):
+        args = parse_command_line_args([])
+        assert args.resume_dir is None
+
+    def test_resume_dir(self):
+        args = parse_command_line_args(["--resume-dir", "outputs/20260703_124843_013dd120"])
+        assert args.resume_dir == "outputs/20260703_124843_013dd120"
+
     def test_skip_validation(self):
         args = parse_command_line_args(["--skip-validation"])
         assert args.skip_validation is True
@@ -558,6 +566,53 @@ class TestSaveConfigToFile:
         with open(out) as f:
             data = yaml.safe_load(f)
         assert data["experiment"]["name"] == "test"
+
+
+class TestLoadConfigFromSnapshot:
+    """Round-trip fidelity is what makes scripts/resume_experiment.py safe: a
+    resumed run must reconstruct the EXACT same instance sample (same seed, same
+    sample_size, same models) as the interrupted run that wrote the checkpoints."""
+
+    def _config(self, sample_size=200, seed=42):
+        return Config(
+            experiment=ExperimentConfig(name="llm-study", version="1.0", seed=seed),
+            datasets=[DatasetConfig(name="sst2", huggingface_id="stanfordnlp/sst2", split="validation",
+                                    sample_size=sample_size, labels=["negative", "positive"])],
+            models=[ModelConfig(name="nova-pro", model_id="eu.amazon.nova-pro-v1:0", context_window=300000)],
+            inference=InferenceConfig(max_tokens=1024, concurrent_requests=2),
+            explanation_strategies=[
+                ExplanationStrategyConfig(id="H", name="highlighting", prompt_file="prompts/highlighting_explain.txt", n_tokens=5),
+                ExplanationStrategyConfig(id="R", name="rationale", prompt_file="prompts/rationale_explain.txt"),
+                ExplanationStrategyConfig(id="CF", name="counterfactual", prompt_file="prompts/counterfactual_explain.txt"),
+                ExplanationStrategyConfig(id="RO", name="rank_ordering", prompt_file="prompts/rank_ordering_explain.txt", n_tokens=5),
+            ],
+            normalization=NormalizationConfig(use_lemmatization=True),
+            metrics=MetricsConfig(),
+            validity=ValidityConfig(),
+            ablations=AblationsConfig(),
+            output=OutputConfig(),
+            reproducibility=ReproducibilityConfig(),
+        )
+
+    def test_round_trip_preserves_fields_needed_for_resume(self, tmp_path):
+        original = self._config(sample_size=200, seed=42)
+        snapshot_path = tmp_path / "config_snapshot.yaml"
+        save_config_to_file(original, snapshot_path)
+
+        loaded = load_config_from_snapshot(snapshot_path)
+
+        assert loaded.experiment.seed == 42
+        assert loaded.datasets[0].sample_size == 200
+        assert loaded.datasets[0].name == "sst2"
+        assert loaded.models[0].model_id == "eu.amazon.nova-pro-v1:0"
+        assert loaded.inference.max_tokens == 1024
+        assert loaded.normalization.use_lemmatization is True
+
+    def test_loaded_config_passes_validation(self, tmp_path):
+        snapshot_path = tmp_path / "config_snapshot.yaml"
+        save_config_to_file(self._config(), snapshot_path)
+        loaded = load_config_from_snapshot(snapshot_path)
+        ConfigValidator().validate(loaded)  # must not raise
 
 
 class TestLoadAndValidateConfig:

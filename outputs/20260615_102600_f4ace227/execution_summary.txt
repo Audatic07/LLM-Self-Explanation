@@ -1,0 +1,31 @@
+Execution Summary
+=================
+Run ID: f4ace227
+Start Time: 2026-06-15 10:26:00
+End Time: 2026-06-15 10:26:21
+Duration: 21.15 seconds (0.35 minutes)
+
+Processing Statistics
+---------------------
+Total Instances: 27
+Successful: 0 (0.0%)
+Failed: 27 (100.0%)
+
+Failure Breakdown
+-----------------
+API Failures: 0
+Normalization Failures: 0
+Prompt Validation Failures: 27
+Parsing Failures by Strategy:
+
+Sampling Log:
+----------------------------------------
+  sst2: requested=10, sampled=10, wrong_pred=0
+  mnli: requested=10, sampled=9, wrong_pred=0
+  ag_news: requested=10, sampled=8, wrong_pred=0
+
+Performance Metrics
+-------------------
+Average Time per Instance: 21.15 seconds
+Total API Requests: 0
+Failed API Requests: 135 (100.0%)

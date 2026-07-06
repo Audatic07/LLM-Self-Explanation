@@ -1,0 +1,24 @@
+Execution Summary
+=================
+Run ID: 788ed431
+Start Time: 2026-06-11 12:39:57
+End Time: 2026-06-11 12:40:12
+Duration: 14.98 seconds (0.25 minutes)
+
+Processing Statistics
+---------------------
+Total Instances: 9
+Successful: 0 (0.0%)
+Failed: 9 (100.0%)
+
+Failure Breakdown
+-----------------
+API Failures: 0
+Normalization Failures: 0
+Parsing Failures by Strategy:
+
+Performance Metrics
+-------------------
+Average Time per Instance: 14.98 seconds
+Total API Requests: 0
+Failed API Requests: 45 (100.0%)

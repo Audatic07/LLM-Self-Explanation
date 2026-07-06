@@ -14,6 +14,7 @@ that make ECS a meaningful measurement:
   6. The weighted null degrades to the uniform null under uniform weights.
 """
 import math
+import numpy as np
 import pytest
 
 from src.normalization.normalizer import Normalizer, POLARITY_WORDS
@@ -297,3 +298,173 @@ class TestCrossModelAgreement:
             cc3_tokens=set(), cc4_tokens=set(), cc3_size=0, cc4_size=0,
         )
         assert MetricsCalculator.compute_cross_model_agreement([r]) == {}
+
+    def test_paired_contrast_cross_model_exceeds(self):
+        """Review P2.4: cross-model same-strategy agreement clearly EXCEEDS
+        within-model ECS for every instance -> direction must say so, with a CI
+        entirely above 0."""
+        from src.utils.data_models import InstanceResult
+        from datetime import datetime
+
+        def make(iid, model, h, ecs):
+            return InstanceResult(
+                instance_id=iid, dataset="sst2", model=model, timestamp=datetime.now(),
+                text="good movie", ground_truth_label="positive", predicted_label="positive",
+                correct=True, highlighting_tokens=set(h), highlighting_valid=True,
+                cc3_tokens=set(), cc4_tokens=set(), cc3_size=0, cc4_size=0,
+                ecs=ecs,
+            )
+
+        results = []
+        for i in range(8):
+            iid = f"i{i}"
+            # High cross-model H agreement (identical sets), LOW within-model ECS.
+            results.append(make(iid, "m1", {"good", "movie"}, ecs=0.05))
+            results.append(make(iid, "m2", {"good", "movie"}, ecs=0.05))
+
+        out = MetricsCalculator.compute_cross_model_agreement(results, n_bootstrap=200)
+        pc = out["sst2"]["paired_contrast"]
+        assert pc["n"] == 8
+        assert pc["mean_delta"] == pytest.approx(0.95, abs=0.01)  # 1.0 jaccard - 0.05 ecs
+        assert pc["ci_lower"] > 0
+        assert pc["direction"] == "cross_model_exceeds"
+
+    def test_paired_contrast_within_model_exceeds(self):
+        from src.utils.data_models import InstanceResult
+        from datetime import datetime
+
+        def make(iid, model, h, ecs):
+            return InstanceResult(
+                instance_id=iid, dataset="sst2", model=model, timestamp=datetime.now(),
+                text="t", ground_truth_label="positive", predicted_label="positive",
+                correct=True, highlighting_tokens=set(h), highlighting_valid=True,
+                cc3_tokens=set(), cc4_tokens=set(), cc3_size=0, cc4_size=0,
+                ecs=ecs,
+            )
+
+        results = []
+        for i in range(8):
+            iid = f"i{i}"
+            # DISJOINT sets across models (zero cross-model jaccard), HIGH within-model ECS.
+            results.append(make(iid, "m1", {f"word_a_{i}"}, ecs=0.9))
+            results.append(make(iid, "m2", {f"word_b_{i}"}, ecs=0.9))
+
+        out = MetricsCalculator.compute_cross_model_agreement(results, n_bootstrap=200)
+        pc = out["sst2"]["paired_contrast"]
+        assert pc["mean_delta"] == pytest.approx(-0.9, abs=0.01)
+        assert pc["ci_upper"] < 0
+        assert pc["direction"] == "within_model_exceeds"
+
+    def test_paired_contrast_empty_when_no_ecs(self):
+        from src.utils.data_models import InstanceResult
+        from datetime import datetime
+
+        def make(model, h):
+            return InstanceResult(
+                instance_id="i1", dataset="sst2", model=model, timestamp=datetime.now(),
+                text="t", ground_truth_label="positive", predicted_label="positive",
+                correct=True, highlighting_tokens=set(h), highlighting_valid=True,
+                cc3_tokens=set(), cc4_tokens=set(), cc3_size=0, cc4_size=0,
+                ecs=None,
+            )
+
+        results = [make("m1", {"good"}), make("m2", {"good"})]
+        out = MetricsCalculator.compute_cross_model_agreement(results)
+        pc = out["sst2"]["paired_contrast"]
+        assert pc["n"] == 0
+        assert pc["mean_delta"] is None
+        assert pc["direction"] == "indeterminate"
+
+
+class TestEcsAdjusted:
+    """ECS_ROBUSTNESS_PLAN_2026-07-05.md §6 property tests: the exact null must
+    agree with Monte-Carlo, AJ must be a true kappa-style normalization (0=chance,
+    1=ceiling), the degeneracy guard must fire exactly on the pre-registered
+    epsilon condition, and each paradigm contrast must carry equal (1/3) weight
+    regardless of how many of its sub-pairs happen to be available."""
+
+    def test_exact_jaccard_null_matches_monte_carlo(self, calc):
+        a, b, V = 4, 6, 30
+        exact = MetricsCalculator.expected_jaccard_exact(a, b, V)
+        mc, _ = MetricsCalculator.expected_random_overlap(a, b, V, n_sims=20000, seed=1)
+        assert exact == pytest.approx(mc, abs=0.01)
+
+    def test_exact_overlap_null_matches_monte_carlo(self, calc):
+        a, b, V = 3, 5, 25
+        exact = MetricsCalculator.expected_overlap_exact(a, b, V)
+        _, mc_ovl = MetricsCalculator.expected_random_overlap(a, b, V, n_sims=20000, seed=2)
+        assert exact == pytest.approx(mc_ovl, abs=0.01)
+
+    def test_nested_sets_score_aj_exactly_1(self, calc):
+        # The smaller set nests fully in the larger -> J attains its geometric
+        # ceiling J_max for these sizes -> AJ must be exactly 1 regardless of E[J].
+        small = {"a", "b"}
+        large = {"a", "b", "c", "d", "e", "f"}
+        aj, degenerate = calc.adjusted_jaccard(small, large, vocab_size=20)
+        assert not degenerate
+        assert aj == pytest.approx(1.0, abs=1e-9)
+
+    def test_aj_bounded_by_asymmetric_floor_and_one(self, calc):
+        geometries = [(2, 3, 10), (1, 5, 20), (4, 4, 15), (3, 7, 50)]
+        for a_size, b_size, V in geometries:
+            vocab = [f"t{i}" for i in range(V)]
+            set1 = set(vocab[:a_size])
+            set2 = set(vocab[a_size:a_size + b_size])
+            aj, degenerate = calc.adjusted_jaccard(set1, set2, V)
+            if degenerate:
+                continue
+            ej = MetricsCalculator.expected_jaccard_exact(a_size, b_size, V)
+            j_max = min(a_size, b_size) / max(a_size, b_size)
+            floor = -ej / (j_max - ej)
+            assert floor - 1e-9 <= aj <= 1.0 + 1e-9
+
+    def test_degenerate_guard_triggers_when_ceiling_meets_chance(self, calc):
+        # a = b = V: both sets equal the entire vocabulary, so intersection is
+        # deterministically the full set -> J_max = E[J] = 1 -> denom = 0 < eps.
+        vocab = {f"t{i}" for i in range(5)}
+        aj, degenerate = calc.adjusted_jaccard(vocab, vocab, vocab_size=5, eps=0.10)
+        assert degenerate
+        assert aj is None
+
+    def test_degenerate_guard_does_not_trigger_away_from_boundary(self, calc):
+        small = {"a", "b"}
+        large = {"a", "b", "c", "d", "e", "f"}
+        aj, degenerate = calc.adjusted_jaccard(small, large, vocab_size=20, eps=0.10)
+        assert not degenerate
+        assert aj is not None
+
+    def test_each_paradigm_contributes_one_third(self, calc):
+        # H, R, RO are identical sets; CF nests inside them. Every underlying pair
+        # therefore scores AJ=1 (each attains its own geometric ceiling), so all
+        # three paradigm components — and their mean — must equal 1.
+        explanations = {
+            "H": {"a", "b", "c", "d"}, "R": {"a", "b", "c", "d"},
+            "CF": {"a"}, "RO": {"a", "b", "c", "d"},
+        }
+        result = calc.compute_ecs_adjusted(explanations, vocab_size=20)
+        assert result["ecs_adj_er"] == pytest.approx(1.0)
+        assert result["ecs_adj_ep"] == pytest.approx(1.0)
+        assert result["ecs_adj_rp"] == pytest.approx(1.0)
+        assert result["ecs_adj_complete"] is True
+        assert result["ecs_adj_n_components"] == 3
+        assert result["ecs_adj"] == pytest.approx(
+            float(np.mean([result["ecs_adj_er"], result["ecs_adj_ep"], result["ecs_adj_rp"]])))
+
+    def test_ecs_adj_complete_false_when_a_component_is_missing(self, calc):
+        # CF empty -> both E-P sub-pairs and the R-P pair are undefined -> only
+        # E-R survives. ecs_adj (available-component) must equal E-R alone, and
+        # ecs_adj_complete (the primary-estimand gate) must be False.
+        explanations = {"H": {"a", "b"}, "R": {"a", "b"}, "CF": set(), "RO": {"a", "b"}}
+        result = calc.compute_ecs_adjusted(explanations, vocab_size=10)
+        assert result["ecs_adj_ep"] is None
+        assert result["ecs_adj_rp"] is None
+        assert result["ecs_adj_complete"] is False
+        assert result["ecs_adj_n_components"] == 1
+        assert result["ecs_adj"] == pytest.approx(result["ecs_adj_er"])
+
+    def test_ecs_adj_none_when_no_components_defined(self, calc):
+        explanations = {"H": set(), "R": set(), "CF": set(), "RO": set()}
+        result = calc.compute_ecs_adjusted(explanations, vocab_size=10)
+        assert result["ecs_adj"] is None
+        assert result["ecs_adj_complete"] is False
+        assert result["ecs_adj_n_components"] == 0

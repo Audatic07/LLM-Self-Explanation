@@ -1,0 +1,31 @@
+Execution Summary
+=================
+Run ID: 0c3e3fa3
+Start Time: 2026-07-02 10:53:23
+End Time: 2026-07-02 10:54:00
+Duration: 37.41 seconds (0.62 minutes)
+
+Processing Statistics
+---------------------
+Total Instances: 9
+Successful: 5 (55.6%)
+Failed: 4 (44.4%)
+
+Failure Breakdown
+-----------------
+API Failures: 0
+Normalization Failures: 0
+Prompt Validation Failures: 0
+Parsing Failures by Strategy:
+
+Sampling Log:
+----------------------------------------
+  sst2: requested=1, sampled=1, wrong_pred=0
+  mnli: requested=1, sampled=1, wrong_pred=1
+  ag_news: requested=1, sampled=1, wrong_pred=0
+
+Performance Metrics
+-------------------
+Average Time per Instance: 7.48 seconds
+Total API Requests: 25
+Failed API Requests: 20 (80.0%)

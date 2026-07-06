@@ -1,0 +1,24 @@
+Execution Summary
+=================
+Run ID: adb5abcf
+Start Time: 2026-06-11 15:21:41
+End Time: 2026-06-11 15:23:07
+Duration: 86.35 seconds (1.44 minutes)
+
+Processing Statistics
+---------------------
+Total Instances: 9
+Successful: 9 (100.0%)
+Failed: 0 (0.0%)
+
+Failure Breakdown
+-----------------
+API Failures: 0
+Normalization Failures: 0
+Parsing Failures by Strategy:
+
+Performance Metrics
+-------------------
+Average Time per Instance: 9.59 seconds
+Total API Requests: 45
+Failed API Requests: 0 (0.0%)

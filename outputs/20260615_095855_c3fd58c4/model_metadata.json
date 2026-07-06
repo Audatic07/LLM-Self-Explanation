@@ -1,0 +1,15 @@
+{
+  "table": "models",
+  "entries": [
+    {
+      "name": "llama-3.3-70b",
+      "groq_model_id": "llama-3.3-70b-versatile",
+      "description": null,
+      "context_window": 8192,
+      "default_temperature": 0.0,
+      "default_top_p": 1.0,
+      "supports_function_calling": false
+    }
+  ],
+  "timestamp": "2026-06-15T10:04:29.379891"
+}

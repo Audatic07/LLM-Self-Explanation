@@ -1,0 +1,44 @@
+{
+  "overall": {
+    "n": 2,
+    "operators": [
+      "mask",
+      "delete"
+    ],
+    "strategy_flip_rate": {
+      "H": {
+        "mask": 1.0,
+        "delete": 1.0
+      },
+      "R": {
+        "mask": 0.5,
+        "delete": 0.5
+      },
+      "CF": {
+        "mask": 0.5,
+        "delete": 0.5
+      },
+      "RO": {
+        "mask": 0.0,
+        "delete": 0.0
+      }
+    },
+    "cc3_flip_rate": {
+      "mask": 0.5,
+      "delete": 0.5
+    },
+    "cc4_flip_rate": {
+      "mask": 0.5,
+      "delete": 0.5
+    },
+    "random_flip_rate": {
+      "mask": 0.0,
+      "delete": 0.0
+    },
+    "cc3_minus_random": {
+      "mask": 0.5,
+      "delete": 0.5
+    }
+  },
+  "by_ecs_lift_tier": {}
+}

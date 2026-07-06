@@ -1,0 +1,29 @@
+Execution Summary
+=================
+Run ID: 1b6e9551
+Start Time: 2026-06-17 14:14:18
+End Time: 2026-06-17 14:14:54
+Duration: 35.88 seconds (0.60 minutes)
+
+Processing Statistics
+---------------------
+Total Instances: 2
+Successful: 2 (100.0%)
+Failed: 0 (0.0%)
+
+Failure Breakdown
+-----------------
+API Failures: 0
+Normalization Failures: 0
+Prompt Validation Failures: 0
+Parsing Failures by Strategy:
+
+Sampling Log:
+----------------------------------------
+  sst2: requested=2, sampled=2, wrong_pred=0
+
+Performance Metrics
+-------------------
+Average Time per Instance: 17.94 seconds
+Total API Requests: 10
+Failed API Requests: 0 (0.0%)

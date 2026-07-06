@@ -74,14 +74,35 @@ class TestSetupLogging:
     def test_logger_has_console_handler(self, tmp_path):
         """Test that logger has a console handler."""
         log_dir = tmp_path / "test_logs"
-        
+
         logger = setup_logging(log_dir=log_dir)
-        
+
         console_handlers = [
             h for h in logger.handlers
             if isinstance(h, logging.StreamHandler) and not isinstance(h, logging.handlers.RotatingFileHandler)
         ]
         assert len(console_handlers) == 1
+
+    def test_file_handler_uses_utf8_encoding(self, tmp_path):
+        """Review P1.4: the file handler must be UTF-8, not the platform default
+        (cp1252 on Windows), or messages containing em-dashes/arrows/section signs
+        (used throughout this codebase's log messages) corrupt to "�" on write."""
+        logger = setup_logging(log_dir=tmp_path, log_name="test.log")
+        file_handler = next(
+            h for h in logger.handlers
+            if isinstance(h, logging.handlers.RotatingFileHandler)
+        )
+        assert file_handler.encoding == "utf-8"
+
+    def test_special_characters_round_trip_through_log_file(self, tmp_path):
+        logger = setup_logging(log_dir=tmp_path, log_name="test.log", console_level="CRITICAL")
+        logger.info("em-dash — arrow → section § times × lte ≤")
+        for h in logger.handlers:
+            h.flush()
+        content = (tmp_path / "test.log").read_text(encoding="utf-8")
+        assert "—" in content
+        assert "→" in content
+        assert "§" in content
     
     def test_rotating_file_handler_config(self, tmp_path):
         """Test that rotating file handler has correct configuration."""

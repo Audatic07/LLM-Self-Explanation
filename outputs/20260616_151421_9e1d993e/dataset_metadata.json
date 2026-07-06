@@ -1,0 +1,22 @@
+{
+  "table": "datasets",
+  "entries": [
+    {
+      "name": "sst2",
+      "huggingface_id": "stanfordnlp/sst2",
+      "split": "validation",
+      "sample_size": 3,
+      "labels": [
+        "negative",
+        "positive"
+      ],
+      "text_field": "sentence",
+      "secondary_text_field": null,
+      "label_field": "label",
+      "cf_max_edit_ratio": 0.3,
+      "description": "Stanford Sentiment Treebank (binary classification)",
+      "task_type": "sentiment_analysis"
+    }
+  ],
+  "timestamp": "2026-06-16T15:15:02.385157"
+}

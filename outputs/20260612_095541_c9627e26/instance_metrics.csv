@@ -1,0 +1,10 @@
+instance_id,dataset,model,ground_truth_label,predicted_label,confidence,correct,model_refused,prompt_tokens,response_tokens,prompt_hash,jaccard_H_R,jaccard_H_CF,jaccard_H_RO,jaccard_R_CF,jaccard_R_RO,jaccard_CF_RO,kendall_H_RO,normalized_kendall_H_RO,ecs,highlighting_parsed,rationale_parsed,counterfactual_parsed,rank_ordering_parsed,cc3_size,cc4_size
+sst2_validation_0000,sst2,llama-3.1-8b-instant,positive,positive,0.85,True,False,228,33,8f7d9cf2630f205e,0.4,0.3333333333333333,0.3333333333333333,0.0,0.8,0.0,1.0,1.0,0.3111111111111111,True,True,True,True,2,0
+sst2_validation_0001,sst2,llama-3.1-8b-instant,negative,positive,0.82,False,False,222,40,d719c8a1feab36a1,0.6666666666666666,0.0,0.2,0.0,0.4,0.25,0.0,0.5,0.25277777777777777,True,True,True,True,1,0
+mnli_validation_matched_0000,mnli,llama-3.1-8b-instant,entailment,entailment,0.78,True,False,241,41,1a3d0d43bf23eaa5,0.75,,0.6,,0.8,,-1.0,0.0,0.7166666666666668,True,True,False,True,0,0
+mnli_validation_matched_0001,mnli,llama-3.1-8b-instant,neutral,neutral,0.78,True,False,254,43,7296da0bb0db7ae9,0.6,,0.3333333333333333,,0.25,,-1.0,0.0,0.39444444444444443,True,True,False,True,0,0
+mnli_validation_matched_0002,mnli,llama-3.1-8b-instant,contradiction,contradiction,0.85,True,False,251,47,b140cb50b73eff64,0.25,,0.75,,0.5,,-1.0,0.0,0.5,True,True,False,True,0,0
+ag_news_test_0000,ag_news,llama-3.1-8b-instant,World,World,0.8699999999999999,True,False,255,58,3213a8463d1fb713,0.6,,0.75,,0.8,,0.0,0.5,0.7166666666666668,True,True,True,True,3,0
+ag_news_test_0001,ag_news,llama-3.1-8b-instant,Sci/Tech,Sci/Tech,0.85,True,False,251,57,52a00be7254081bc,0.6,0.0,0.6,0.2,0.6666666666666666,0.2,1.0,1.0,0.37777777777777777,True,True,True,True,4,0
+ag_news_test_0002,ag_news,llama-3.1-8b-instant,Sports,Sports,0.85,True,False,262,73,0b567880791095e0,0.6,0.0,0.6,0.0,0.6666666666666666,0.0,0.0,0.5,0.3111111111111111,True,True,True,True,3,0
+ag_news_test_0003,ag_news,llama-3.1-8b-instant,Business,Business,0.8699999999999999,True,False,249,65,4f7abba953b122c1,0.3333333333333333,0.3333333333333333,0.3333333333333333,0.2,0.25,0.2,0.0,0.5,0.27499999999999997,True,True,True,True,1,1

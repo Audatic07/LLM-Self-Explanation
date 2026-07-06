@@ -46,7 +46,10 @@ def show_summary(out):
         if m["aggregation_level"] == "model_dataset":
             parts = m["group_name"].split("_", 1)
             ds = parts[1] if len(parts) > 1 else m["group_name"]
-            print(f"  {ds:<10} {m['requested_samples']:>3} {m['sampled_samples']:>3} {m['dropped_wrong_pred']:>5}")
+            # wrong_pred_kept is the current field name (review P1.3); dropped_wrong_pred
+            # is the pre-rename name in aggregate_metrics.json from older run directories.
+            wrong_pred = m.get('wrong_pred_kept', m.get('dropped_wrong_pred', 0))
+            print(f"  {ds:<10} {m['requested_samples']:>3} {m['sampled_samples']:>3} {wrong_pred:>5}")
 
     print("\n  -- Per Dataset --")
     print(f"  {'Dataset':<10} {'n':>3} {'ECS':>6} {'H':>4} {'R':>4} {'CF':>4} {'RO':>4}")

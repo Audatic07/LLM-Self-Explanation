@@ -1,0 +1,71 @@
+{
+  "ag_news": {
+    "strategies": {
+      "H": {
+        "mean_jaccard": 0.6203703703703703,
+        "n_pairs": 3
+      },
+      "R": {
+        "mean_jaccard": 0.513888888888889,
+        "n_pairs": 3
+      },
+      "CF": {
+        "mean_jaccard": null,
+        "n_pairs": 0
+      },
+      "RO": {
+        "mean_jaccard": 0.4444444444444444,
+        "n_pairs": 3
+      }
+    },
+    "cross_model_same_strategy_mean": 0.5262345679012346,
+    "within_model_cross_strategy_mean_ecs": 0.47883597883597884,
+    "n_instances_multi_model": 1
+  },
+  "mnli": {
+    "strategies": {
+      "H": {
+        "mean_jaccard": 1.0,
+        "n_pairs": 3
+      },
+      "R": {
+        "mean_jaccard": 0.5555555555555555,
+        "n_pairs": 3
+      },
+      "CF": {
+        "mean_jaccard": null,
+        "n_pairs": 0
+      },
+      "RO": {
+        "mean_jaccard": 0.6666666666666666,
+        "n_pairs": 3
+      }
+    },
+    "cross_model_same_strategy_mean": 0.7407407407407407,
+    "within_model_cross_strategy_mean_ecs": 0.3666666666666667,
+    "n_instances_multi_model": 1
+  },
+  "sst2": {
+    "strategies": {
+      "H": {
+        "mean_jaccard": 0.3333333333333333,
+        "n_pairs": 3
+      },
+      "R": {
+        "mean_jaccard": 0.47222222222222215,
+        "n_pairs": 3
+      },
+      "CF": {
+        "mean_jaccard": null,
+        "n_pairs": 0
+      },
+      "RO": {
+        "mean_jaccard": 0.7166666666666667,
+        "n_pairs": 3
+      }
+    },
+    "cross_model_same_strategy_mean": 0.5074074074074074,
+    "within_model_cross_strategy_mean_ecs": 0.3427777777777778,
+    "n_instances_multi_model": 1
+  }
+}

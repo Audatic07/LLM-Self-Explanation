@@ -1,0 +1,24 @@
+Execution Summary
+=================
+Run ID: 5000fae2
+Start Time: 2026-06-12 10:33:37
+End Time: 2026-06-12 10:35:26
+Duration: 109.04 seconds (1.82 minutes)
+
+Processing Statistics
+---------------------
+Total Instances: 9
+Successful: 8 (88.9%)
+Failed: 1 (11.1%)
+
+Failure Breakdown
+-----------------
+API Failures: 0
+Normalization Failures: 0
+Parsing Failures by Strategy:
+
+Performance Metrics
+-------------------
+Average Time per Instance: 13.63 seconds
+Total API Requests: 40
+Failed API Requests: 5 (12.5%)

@@ -222,6 +222,8 @@ class ConfigValidator:
             raise ConfigurationError(f"correction must be 'holm' or 'none', got '{metrics.correction}'")
         if metrics.min_n_for_test < 2:
             raise ConfigurationError("min_n_for_test must be >= 2 (a test below n=2 is undefined)")
+        if not (0.0 < metrics.ecs_adj_epsilon < 1.0):
+            raise ConfigurationError(f"ecs_adj_epsilon must be in range (0.0, 1.0), got {metrics.ecs_adj_epsilon}")
 
     def _validate_validity(self, validity: ValidityConfig) -> None:
         if not validity.masking_token:
@@ -267,6 +269,7 @@ def parse_command_line_args(args: Optional[List[str]] = None) -> argparse.Namesp
     parser.add_argument("--output-dir", type=str, help="Override output base directory")
     parser.add_argument("--log-level", type=str, choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"], help="Override logging level")
     parser.add_argument("--force-restart", action="store_true", help="Ignore checkpoints and restart from scratch")
+    parser.add_argument("--resume-dir", type=str, help="Resume an interrupted run: path to its existing output directory (checkpoints are loaded and only unfinished instances are processed)")
     parser.add_argument("--skip-validation", action="store_true", help="Skip configuration validation")
     return parser.parse_args(args)
 
@@ -312,6 +315,20 @@ def save_config_to_file(config: Config, output_path: Path) -> None:
     except Exception as e:
         logger.error(f"Failed to save configuration: {e}")
         raise ConfigurationError(f"Failed to save configuration: {e}")
+
+
+def load_config_from_snapshot(snapshot_path: Path) -> Config:
+    """Load a Config back from a config_snapshot.yaml written by save_config_to_file.
+
+    Used by scripts/resume_experiment.py: an interrupted run must resume with the
+    EXACT config that produced its existing checkpoints (seed, sample_size, models,
+    ...), not whatever the live config/ directory currently contains — which may
+    have drifted since the run started (see the pre-flight config-diff check).
+    to_dict()/_parse_config are exact inverses (same top-level key schema), so the
+    single combined snapshot file round-trips directly through _parse_config.
+    """
+    data = load_yaml(Path(snapshot_path))
+    return _parse_config(data)
 
 
 def load_and_validate_config(config_dir: Optional[str] = None, args: Optional[argparse.Namespace] = None) -> Config:

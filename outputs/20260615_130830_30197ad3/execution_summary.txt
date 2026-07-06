@@ -1,0 +1,31 @@
+Execution Summary
+=================
+Run ID: 30197ad3
+Start Time: 2026-06-15 13:08:30
+End Time: 2026-06-15 13:23:03
+Duration: 872.73 seconds (14.55 minutes)
+
+Processing Statistics
+---------------------
+Total Instances: 27
+Successful: 27 (100.0%)
+Failed: 0 (0.0%)
+
+Failure Breakdown
+-----------------
+API Failures: 0
+Normalization Failures: 0
+Prompt Validation Failures: 0
+Parsing Failures by Strategy:
+
+Sampling Log:
+----------------------------------------
+  sst2: requested=10, sampled=10, wrong_pred=1
+  mnli: requested=10, sampled=9, wrong_pred=2
+  ag_news: requested=10, sampled=8, wrong_pred=0
+
+Performance Metrics
+-------------------
+Average Time per Instance: 32.32 seconds
+Total API Requests: 135
+Failed API Requests: 0 (0.0%)
