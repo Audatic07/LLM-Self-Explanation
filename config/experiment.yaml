@@ -1,6 +1,6 @@
 # Experiment Configuration
 experiment:
-  name: "llm-explanation-agreement-study-pilot"
+  name: "llm-explanation-agreement-study"
   version: "1.0"
   seed: 42
 
@@ -9,12 +9,12 @@ datasets:
   - name: "sst2"
     huggingface_id: "stanfordnlp/sst2"
     split: "validation"
-    sample_size: 10
+    sample_size: 200
     labels: ["negative", "positive"]
   - name: "mnli"
     huggingface_id: "nyu-mll/multi_nli"
     split: "validation_matched"
-    sample_size: 10
+    sample_size: 200
     labels: ["entailment", "neutral", "contradiction"]
     # No cf_max_edit_ratio override: MNLI shares the same 0.3 minimal-edit cap as
     # SST2/AG News (run_experiment.py's getattr default) so CF-based ECS is
@@ -23,7 +23,7 @@ datasets:
   - name: "ag_news"
     huggingface_id: "fancyzhx/ag_news"
     split: "test"
-    sample_size: 10
+    sample_size: 200
     labels: ["World", "Sports", "Business", "Sci/Tech"]
 
 # Models — three distinct, NON-ANTHROPIC Bedrock model families (Amazon, Qwen, DeepSeek),
