@@ -1,0 +1,31 @@
+Execution Summary
+=================
+Run ID: 690abdc7
+Start Time: 2026-07-01 10:17:20
+End Time: 2026-07-01 10:30:04
+Duration: 764.03 seconds (12.73 minutes)
+
+Processing Statistics
+---------------------
+Total Instances: 21
+Successful: 21 (100.0%)
+Failed: 0 (0.0%)
+
+Failure Breakdown
+-----------------
+API Failures: 0
+Normalization Failures: 0
+Prompt Validation Failures: 0
+Parsing Failures by Strategy:
+
+Sampling Log:
+----------------------------------------
+  sst2: requested=7, sampled=7, wrong_pred=0
+  mnli: requested=7, sampled=7, wrong_pred=2
+  ag_news: requested=7, sampled=7, wrong_pred=2
+
+Performance Metrics
+-------------------
+Average Time per Instance: 36.38 seconds
+Total API Requests: 105
+Failed API Requests: 0 (0.0%)
