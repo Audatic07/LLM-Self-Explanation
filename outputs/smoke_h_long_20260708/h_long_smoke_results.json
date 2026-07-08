@@ -1,0 +1,84 @@
+{
+  "instance_id": "mnli_validation_matched_008238",
+  "gold_label": "contradiction",
+  "models": [
+    {
+      "model": "eu.amazon.nova-pro-v1:0",
+      "n_words": 206,
+      "h_max_tokens": 2672,
+      "classification": "neutral",
+      "base": {
+        "truncated": false,
+        "completion_tokens": 1684,
+        "finish_reason": "end_turn",
+        "json_parsed": true,
+        "salience_entries": 205,
+        "normalized_set_size": 41,
+        "parse_ok": true
+      },
+      "retest": {
+        "truncated": false,
+        "completion_tokens": 1675,
+        "finish_reason": "end_turn",
+        "json_parsed": true,
+        "salience_entries": 204,
+        "normalized_set_size": 41,
+        "parse_ok": true
+      },
+      "retest_jaccard": 0.9069767441860465,
+      "retest_identical": false
+    },
+    {
+      "model": "qwen.qwen3-235b-a22b-2507-v1:0",
+      "n_words": 206,
+      "h_max_tokens": 2672,
+      "classification": "neutral",
+      "base": {
+        "truncated": false,
+        "completion_tokens": 1214,
+        "finish_reason": "end_turn",
+        "json_parsed": true,
+        "salience_entries": 196,
+        "normalized_set_size": 41,
+        "parse_ok": true
+      },
+      "retest": {
+        "truncated": false,
+        "completion_tokens": 1304,
+        "finish_reason": "end_turn",
+        "json_parsed": true,
+        "salience_entries": 211,
+        "normalized_set_size": 41,
+        "parse_ok": true
+      },
+      "retest_jaccard": 0.8222222222222222,
+      "retest_identical": false
+    },
+    {
+      "model": "deepseek.v3-v1:0",
+      "n_words": 206,
+      "h_max_tokens": 2672,
+      "classification": "neutral",
+      "base": {
+        "truncated": false,
+        "completion_tokens": 1425,
+        "finish_reason": "end_turn",
+        "json_parsed": true,
+        "salience_entries": 196,
+        "normalized_set_size": 41,
+        "parse_ok": true
+      },
+      "retest": {
+        "truncated": false,
+        "completion_tokens": 1425,
+        "finish_reason": "end_turn",
+        "json_parsed": true,
+        "salience_entries": 196,
+        "normalized_set_size": 41,
+        "parse_ok": true
+      },
+      "retest_jaccard": 0.9069767441860465,
+      "retest_identical": false
+    }
+  ]
+}

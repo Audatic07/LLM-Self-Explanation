@@ -1,0 +1,63 @@
+{
+  "H_alt": {
+    "mean_delta": 0.12688492063492066,
+    "n_instances": 2,
+    "deltas": [
+      0.16349206349206352,
+      0.09027777777777779
+    ],
+    "self_consistency_aj_mean": 0.12519256755063618,
+    "self_consistency_aj_n": 2,
+    "self_consistency_aj_values": [
+      -0.3493975903614458,
+      0.5997827254627182
+    ],
+    "self_consistency_n_degenerate": 0,
+    "self_consistency_n_missing": 0
+  },
+  "R_alt": {
+    "mean_delta": 0.02341269841269844,
+    "n_instances": 2,
+    "deltas": [
+      -0.09523809523809523,
+      0.14206349206349211
+    ],
+    "self_consistency_aj_mean": 1.0,
+    "self_consistency_aj_n": 2,
+    "self_consistency_aj_values": [
+      1.0,
+      1.0
+    ],
+    "self_consistency_n_degenerate": 0,
+    "self_consistency_n_missing": 0
+  },
+  "CF_alt": {
+    "mean_delta": -0.1950396825396825,
+    "n_instances": 2,
+    "deltas": [
+      -0.19365079365079363,
+      -0.1964285714285714
+    ],
+    "self_consistency_aj_mean": null,
+    "self_consistency_aj_n": 0,
+    "self_consistency_aj_values": [],
+    "self_consistency_n_degenerate": 1,
+    "self_consistency_n_missing": 1
+  },
+  "RO_alt": {
+    "mean_delta": -0.010714285714285732,
+    "n_instances": 2,
+    "deltas": [
+      -0.021428571428571463,
+      0.0
+    ],
+    "self_consistency_aj_mean": 0.78287006910229,
+    "self_consistency_aj_n": 2,
+    "self_consistency_aj_values": [
+      1.0,
+      0.5657401382045799
+    ],
+    "self_consistency_n_degenerate": 0,
+    "self_consistency_n_missing": 0
+  }
+}
