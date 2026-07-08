@@ -13,6 +13,10 @@ spacy>=3.6.0
 #   python -m spacy download en_core_web_sm
 # Rationale (R) evidence extraction depends on it; run_experiment.py fails fast at
 # startup if it is missing (see parser.ensure_spacy_available).
+# The W6 soft-matching sensitivity (scripts/run_soft_match_sensitivity.py) additionally
+# needs the medium model with GloVe word vectors (pinned for reproducibility):
+#   python -m spacy download en_core_web_md   # en_core_web_md==3.8.0
+# It is OPTIONAL: only the offline soft-match sensitivity analysis uses it.
 
 # Numerical computing and statistics
 numpy>=1.24.0
