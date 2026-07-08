@@ -187,7 +187,15 @@ def run(results_dir: Path, tau: float, eps: float, mc_draws: int, seed: int,
         for t, sm in matchers.items():
             soft_ecs = sm.soft_ecs_adjusted(evidence, vocab_list)
             for pt, (s1, s2) in hard_pair_keys.items():
-                v = soft_ecs["pair_soft_aj"].get(f"{s1}_{s2}")
+                if pt == "H_RO":
+                    # H–RO is same-paradigm and excluded from ECS, so soft_ecs_adjusted
+                    # does not score it; compute it directly for the reference row.
+                    if evidence["H"] and evidence["RO"]:
+                        v, _, _ = sm.soft_adjusted_jaccard(evidence["H"], evidence["RO"], vocab_list)
+                    else:
+                        v = None
+                else:
+                    v = soft_ecs["pair_soft_aj"].get(f"{s1}_{s2}")
                 if v is not None:
                     pair_soft[t][pt].append(v)
             if soft_ecs["ecs_adj_complete"]:
