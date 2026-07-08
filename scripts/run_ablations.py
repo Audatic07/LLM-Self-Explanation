@@ -46,6 +46,46 @@ def load_prompt(filepath: str) -> str:
     return path.read_text(encoding="utf-8").strip() if path.exists() else ""
 
 
+# Structural markers excluded from the instance vocabulary — mirrors the vocab block
+# in scripts/run_experiment.py (they are prompt scaffolding, not content the
+# strategies can select).
+STRUCTURAL_LABELS = {"premise:", "hypothesis:", "sentence1:", "sentence2:", "text:", "label:"}
+
+
+def compute_self_consistency_aj(base_set: Set[str], alt_set: Set[str], text: str,
+                                normalizer: Normalizer, calc: MetricsCalculator,
+                                eps: float = 0.10) -> Tuple[Optional[float], bool]:
+    """Same-strategy paraphrase self-consistency on the AJ scale (ML review R1,
+    2026-07-08): AJ between the SAME strategy's evidence under the baseline wording
+    and under the paraphrased (*_alt.txt) wording, chance- and ceiling-corrected over
+    the instance's own content vocabulary.
+
+    This is the SELF-CONSISTENCY CEILING for ECS-adj: cross-strategy ECS-adj is only
+    interpretable relative to how much a single strategy agrees with itself under a
+    trivial re-elicitation. If cross-strategy ECS-adj ~= this ceiling, the paradigms
+    do not meaningfully disagree beyond elicitation noise; if it sits well below,
+    the cross-paradigm divergence is real. Zero extra API cost — both sets are
+    already collected by the prompt-paraphrase ablation.
+
+    Vocab = normalized content lemmas of the input (structural labels excluded)
+    unioned with both evidence sets (support closure, mirroring run_experiment P1.1).
+    Returns (aj, degenerate) exactly like MetricsCalculator.adjusted_jaccard;
+    (None, False) when either set is empty (missing, not degenerate).
+    """
+    if not base_set or not alt_set:
+        return None, False
+    from scripts.run_experiment import pre_clean_text
+    vocab_tokens = set()
+    for t in normalizer.normalize_input_text(pre_clean_text(text)).split():
+        if t in STRUCTURAL_LABELS:
+            continue
+        norm = normalizer.normalize(t)
+        if norm:
+            vocab_tokens.add(norm)
+    vocab_tokens |= base_set | alt_set
+    return calc.adjusted_jaccard(base_set, alt_set, len(vocab_tokens), eps)
+
+
 def format_class_prompt(template: str, input_text: str, label_set: List[str]) -> str:
     return template.format(input_text=input_text, label_set=", ".join(label_set))
 
@@ -247,6 +287,9 @@ async def run_ablations(config, args):
                     continue
 
                 deltas = []
+                sc_ajs = []          # R1: same-strategy AJ(base, alt) — self-consistency ceiling
+                sc_degenerate = 0
+                sc_missing = 0
                 for bd in baseline_data:
                     inst = bd["instance"]
                     alt_prompt = format_alt_prompt(alt_template, bd["predicted_label"],
@@ -271,13 +314,36 @@ async def run_ablations(config, args):
                     if variant_ecs is not None and bd["baseline_ecs"] is not None:
                         deltas.append(variant_ecs - bd["baseline_ecs"])
 
+                    # R1 self-consistency ceiling: same strategy, baseline vs paraphrase
+                    # wording, on the chance/ceiling-corrected AJ scale.
+                    base_set = bd["token_sets"].get(s, set())
+                    if not base_set or not alt_set:
+                        sc_missing += 1
+                    else:
+                        aj, degen = compute_self_consistency_aj(
+                            base_set, alt_set, inst.text, Normalizer(), calc)
+                        if degen:
+                            sc_degenerate += 1
+                        if aj is not None:
+                            sc_ajs.append(aj)
+
                 mean_delta = float(np.mean(deltas)) if deltas else 0.0
                 prompt_results[f"{s}_alt"] = {
                     "mean_delta": mean_delta,
                     "n_instances": len(deltas),
                     "deltas": deltas,
+                    # Same-strategy paraphrase stability (R1): the ceiling against which
+                    # cross-strategy ECS-adj is read. mean AJ(base_set, alt_set) over
+                    # instances where both wordings produced evidence.
+                    "self_consistency_aj_mean": (float(np.mean(sc_ajs)) if sc_ajs else None),
+                    "self_consistency_aj_n": len(sc_ajs),
+                    "self_consistency_aj_values": sc_ajs,
+                    "self_consistency_n_degenerate": sc_degenerate,
+                    "self_consistency_n_missing": sc_missing,
                 }
-                logger.info(f"  {s}_alt: mean delta = {mean_delta:.4f} ({len(deltas)} instances)")
+                sc_str = (f"{float(np.mean(sc_ajs)):.4f} (n={len(sc_ajs)})" if sc_ajs else "—")
+                logger.info(f"  {s}_alt: mean delta = {mean_delta:.4f} ({len(deltas)} instances); "
+                            f"self-consistency AJ = {sc_str}")
                 for d in deltas:
                     all_plot_data.append({
                         "Variation": f"prompt_{s}_alt",
