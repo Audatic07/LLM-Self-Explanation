@@ -245,13 +245,33 @@ def fig_F7(viz, df, aidx):
 @guard("F8 ablation robustness")
 def fig_F8(viz, ablation_path: Path):
     d = json.load(open(ablation_path, encoding="utf-8"))
-    rows = d.get("per_instance") or d.get("rows") or d
-    df = pd.DataFrame(rows)
-    # accept either an ECS_delta column (post-P0.2) or ECS
-    value_col = "ECS_delta" if "ECS_delta" in df.columns else ("ECS" if "ECS" in df.columns else None)
-    if value_col is None or "Variation" not in df.columns:
-        raise ValueError("ablation frame lacks Variation/ECS_delta columns")
-    viz.plot_robustness_analysis(df, value_col=value_col)
+    # Preferred: a pre-flattened long frame (per_instance/rows with Variation + ECS_delta).
+    rows = d.get("per_instance") or d.get("rows")
+    if rows:
+        df = pd.DataFrame(rows)
+        value_col = "ECS_delta" if "ECS_delta" in df.columns else ("ECS" if "ECS" in df.columns else None)
+        if value_col is None or "Variation" not in df.columns:
+            raise ValueError("ablation frame lacks Variation/ECS_delta columns")
+        viz.plot_robustness_analysis(df, value_col=value_col)
+        return
+    # Otherwise parse run_ablations.py's native schema: {dataset}_prompt ->
+    # {strategy}_alt -> {deltas: [...]}. Pool datasets; x = strategy paraphrased,
+    # y = per-instance ECS delta (baseline wording vs *_alt wording). Deltas
+    # centred on 0 => the ECS metric is robust to the prompt rewording.
+    long_rows = []
+    for group, strategies in d.items():
+        if not group.endswith("_prompt") or not isinstance(strategies, dict):
+            continue
+        for strat_key, payload in strategies.items():
+            if not isinstance(payload, dict):
+                continue
+            strat = strat_key.replace("_alt", "")
+            for delta in payload.get("deltas", []):
+                if delta is not None:
+                    long_rows.append({"Variation": strat, "ECS_delta": float(delta)})
+    if not long_rows:
+        raise ValueError("ablation JSON has no per-instance deltas to plot")
+    viz.plot_robustness_analysis(pd.DataFrame(long_rows), value_col="ECS_delta")
 
 
 # --------------------------------------------------------------------------- #
