@@ -1,0 +1,20 @@
+\begin{table}[t]
+\centering
+\caption{Primary results: ECS-adj complete-case per cell with the pre-registered complete-case sign-flip $p$ (raw + Holm). The available-component (a2) sensitivity estimate and its Holm $p$ are labelled companions; legacy ECS / ECS-lift for reference. * = complete-case N below the $N{=}6$ floor (no primary test).}
+\label{tab:primary}
+\begin{tabular}{lrrrrrrrr}
+\toprule
+Cell & N & ECS-adj (cc) & $p^{cc}$ & $p^{cc}_{Holm}$ & ECS-adj (avail) & $p^{a2}_{Holm}$ & ECS (legacy) & ECS-lift \\
+\midrule
+deepseek-v3/ag_news & 20 & 0.4425 & 0.0001 & 0.0008 & 0.5151 & 0.0009 & 0.3031 & 0.1981 \\
+deepseek-v3/mnli & 13 & 0.4139 & 0.0029 & 0.0116 & 0.4603 & 0.0009 & 0.2999 & 0.1541 \\
+deepseek-v3/sst2 & 34 & 0.6895 & 0.0001 & 0.0008 & 0.6199 & 0.0009 & 0.4442 & 0.1885 \\
+nova-pro/ag_news & 7 & 0.4289 & 0.0087 & 0.0243 & 0.4166 & 0.0009 & 0.2487 & 0.1673 \\
+nova-pro/mnli & 8 & 0.3211 & 0.0431 & 0.0431 & 0.5702 & 0.0009 & 0.3060 & 0.1984 \\
+nova-pro/sst2 & 28 & 0.4028 & 0.0001 & 0.0008 & 0.4134 & 0.0009 & 0.4383 & 0.1668 \\
+qwen3-235b/ag_news & 3* & 0.6265 & -- & -- & 0.5703 & 0.0009 & 0.4115 & 0.2603 \\
+qwen3-235b/mnli & 9 & 0.4296 & 0.0081 & 0.0243 & 0.5767 & 0.0009 & 0.3323 & 0.1813 \\
+qwen3-235b/sst2 & 31 & 0.5539 & 0.0001 & 0.0008 & 0.5276 & 0.0009 & 0.3825 & 0.1583 \\
+\bottomrule
+\end{tabular}
+\end{table}

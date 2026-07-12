@@ -1,0 +1,381 @@
+{
+  "per_model": {
+    "deepseek.v3-v1:0": {
+      "overall": {
+        "n": 150,
+        "operators": [
+          "mask",
+          "delete"
+        ],
+        "strategy_flip_rate": {
+          "H": {
+            "mask": 0.3835616438356164,
+            "delete": 0.35664335664335667
+          },
+          "R": {
+            "mask": 0.29285714285714287,
+            "delete": 0.3333333333333333
+          },
+          "CF": {
+            "mask": 0.24719101123595505,
+            "delete": 0.3258426966292135
+          },
+          "RO": {
+            "mask": 0.35374149659863946,
+            "delete": 0.34265734265734266
+          }
+        },
+        "cc3_flip_rate": {
+          "mask": 0.25874125874125875,
+          "delete": 0.3120567375886525
+        },
+        "cc4_flip_rate": {
+          "mask": 0.19166666666666668,
+          "delete": 0.25833333333333336
+        },
+        "random_flip_rate": {
+          "mask": 0.16223776223776226,
+          "delete": 0.17727272727272728
+        },
+        "cc3_minus_random": {
+          "mask": 0.09650349650349649,
+          "delete": 0.1347840103159252
+        },
+        "cf_flip_heldout_rate": 0.8809523809523809,
+        "n_cf_heldout_checked": 84,
+        "random_control_match_mode": [
+          "occurrences",
+          "types"
+        ],
+        "cc3_vs_random_test": {
+          "mask": {
+            "n_paired": 143,
+            "p_raw": 0.0007999200079992001,
+            "p_holm": 0.0007999200079992001
+          },
+          "delete": {
+            "n_paired": 141,
+            "p_raw": 9.999000099990002e-05,
+            "p_holm": 0.00019998000199980003
+          }
+        }
+      },
+      "by_ecs_lift_tier": {
+        "low": {
+          "n": 50,
+          "cc3_flip_mask": 0.2,
+          "random_flip_mask": 0.2177777777777778,
+          "gap_mask": -0.01777777777777778,
+          "cc3_flip_delete": 0.3111111111111111,
+          "random_flip_delete": 0.23000000000000004,
+          "gap_delete": 0.08111111111111108
+        },
+        "mid": {
+          "n": 50,
+          "cc3_flip_mask": 0.3469387755102041,
+          "random_flip_mask": 0.19183673469387755,
+          "gap_mask": 0.15510204081632653,
+          "cc3_flip_delete": 0.32653061224489793,
+          "random_flip_delete": 0.20816326530612245,
+          "gap_delete": 0.11836734693877549
+        },
+        "high": {
+          "n": 49,
+          "cc3_flip_mask": 0.22448979591836735,
+          "random_flip_mask": 0.08163265306122448,
+          "gap_mask": 0.14285714285714285,
+          "cc3_flip_delete": 0.2978723404255319,
+          "random_flip_delete": 0.09795918367346938,
+          "gap_delete": 0.1999131567520625
+        },
+        "_thresholds": {
+          "low<=": 0.10475000000000001,
+          "high>": 0.23620535714285895
+        }
+      }
+    },
+    "eu.amazon.nova-pro-v1:0": {
+      "overall": {
+        "n": 150,
+        "operators": [
+          "mask",
+          "delete"
+        ],
+        "strategy_flip_rate": {
+          "H": {
+            "mask": 0.3793103448275862,
+            "delete": 0.3561643835616438
+          },
+          "R": {
+            "mask": 0.3308270676691729,
+            "delete": 0.3382352941176471
+          },
+          "CF": {
+            "mask": 0.39622641509433965,
+            "delete": 0.43137254901960786
+          },
+          "RO": {
+            "mask": 0.30985915492957744,
+            "delete": 0.3333333333333333
+          }
+        },
+        "cc3_flip_rate": {
+          "mask": 0.2890625,
+          "delete": 0.30158730158730157
+        },
+        "cc4_flip_rate": {
+          "mask": 0.28695652173913044,
+          "delete": 0.2807017543859649
+        },
+        "random_flip_rate": {
+          "mask": 0.20153846153846153,
+          "delete": 0.2064885496183206
+        },
+        "cc3_minus_random": {
+          "mask": 0.08752403846153847,
+          "delete": 0.09509875196898096
+        },
+        "cf_flip_heldout_rate": 0.9821428571428571,
+        "n_cf_heldout_checked": 56,
+        "random_control_match_mode": [
+          "occurrences",
+          "types"
+        ],
+        "cc3_vs_random_test": {
+          "mask": {
+            "n_paired": 128,
+            "p_raw": 0.0006999300069993001,
+            "p_holm": 0.0013998600139986002
+          },
+          "delete": {
+            "n_paired": 126,
+            "p_raw": 0.000999900009999,
+            "p_holm": 0.0013998600139986002
+          }
+        }
+      },
+      "by_ecs_lift_tier": {
+        "low": {
+          "n": 48,
+          "cc3_flip_mask": 0.18421052631578946,
+          "random_flip_mask": 0.1842105263157895,
+          "gap_mask": -2.7755575615628914e-17,
+          "cc3_flip_delete": 0.23684210526315788,
+          "random_flip_delete": 0.18974358974358974,
+          "gap_delete": 0.047098515519568146
+        },
+        "mid": {
+          "n": 47,
+          "cc3_flip_mask": 0.3111111111111111,
+          "random_flip_mask": 0.2434782608695652,
+          "gap_mask": 0.06763285024154592,
+          "cc3_flip_delete": 0.29545454545454547,
+          "random_flip_delete": 0.24456521739130435,
+          "gap_delete": 0.05088932806324112
+        },
+        "high": {
+          "n": 46,
+          "cc3_flip_mask": 0.35555555555555557,
+          "random_flip_mask": 0.17391304347826086,
+          "gap_mask": 0.1816425120772947,
+          "cc3_flip_delete": 0.36363636363636365,
+          "random_flip_delete": 0.1826086956521739,
+          "gap_delete": 0.18102766798418973
+        },
+        "_thresholds": {
+          "low<=": 0.09432500000000466,
+          "high>": 0.22933055555555507
+        }
+      }
+    },
+    "qwen.qwen3-235b-a22b-2507-v1:0": {
+      "overall": {
+        "n": 150,
+        "operators": [
+          "mask",
+          "delete"
+        ],
+        "strategy_flip_rate": {
+          "H": {
+            "mask": 0.3469387755102041,
+            "delete": 0.4217687074829932
+          },
+          "R": {
+            "mask": 0.30985915492957744,
+            "delete": 0.3028169014084507
+          },
+          "CF": {
+            "mask": 0.2698412698412698,
+            "delete": 0.31746031746031744
+          },
+          "RO": {
+            "mask": 0.28859060402684567,
+            "delete": 0.30201342281879195
+          }
+        },
+        "cc3_flip_rate": {
+          "mask": 0.27205882352941174,
+          "delete": 0.3014705882352941
+        },
+        "cc4_flip_rate": {
+          "mask": 0.1885245901639344,
+          "delete": 0.21311475409836064
+        },
+        "random_flip_rate": {
+          "mask": 0.14411764705882354,
+          "delete": 0.14705882352941177
+        },
+        "cc3_minus_random": {
+          "mask": 0.1279411764705882,
+          "delete": 0.15441176470588233
+        },
+        "cf_flip_heldout_rate": 0.96875,
+        "n_cf_heldout_checked": 64,
+        "random_control_match_mode": [
+          "occurrences",
+          "types"
+        ],
+        "cc3_vs_random_test": {
+          "mask": {
+            "n_paired": 136,
+            "p_raw": 9.999000099990002e-05,
+            "p_holm": 0.00019998000199980003
+          },
+          "delete": {
+            "n_paired": 136,
+            "p_raw": 9.999000099990002e-05,
+            "p_holm": 0.00019998000199980003
+          }
+        }
+      },
+      "by_ecs_lift_tier": {
+        "low": {
+          "n": 49,
+          "cc3_flip_mask": 0.275,
+          "random_flip_mask": 0.17,
+          "gap_mask": 0.10500000000000001,
+          "cc3_flip_delete": 0.3,
+          "random_flip_delete": 0.175,
+          "gap_delete": 0.125
+        },
+        "mid": {
+          "n": 48,
+          "cc3_flip_mask": 0.2708333333333333,
+          "random_flip_mask": 0.15416666666666667,
+          "gap_mask": 0.11666666666666664,
+          "cc3_flip_delete": 0.2708333333333333,
+          "random_flip_delete": 0.1375,
+          "gap_delete": 0.1333333333333333
+        },
+        "high": {
+          "n": 48,
+          "cc3_flip_mask": 0.2708333333333333,
+          "random_flip_mask": 0.1125,
+          "gap_mask": 0.15833333333333333,
+          "cc3_flip_delete": 0.3333333333333333,
+          "random_flip_delete": 0.13333333333333333,
+          "gap_delete": 0.19999999999999998
+        },
+        "_thresholds": {
+          "low<=": 0.12183642857143037,
+          "high>": 0.2507111111111112
+        }
+      }
+    }
+  },
+  "pooled": {
+    "overall": {
+      "n": 450,
+      "operators": [
+        "mask",
+        "delete"
+      ],
+      "strategy_flip_rate": {
+        "H": {
+          "mask": 0.3698630136986301,
+          "delete": 0.37844036697247707
+        },
+        "R": {
+          "mask": 0.3108433734939759,
+          "delete": 0.324455205811138
+        },
+        "CF": {
+          "mask": 0.2926829268292683,
+          "delete": 0.3497536945812808
+        },
+        "RO": {
+          "mask": 0.317351598173516,
+          "delete": 0.3256880733944954
+        }
+      },
+      "cc3_flip_rate": {
+        "mask": 0.2727272727272727,
+        "delete": 0.3052109181141439
+      },
+      "cc4_flip_rate": {
+        "mask": 0.22128851540616246,
+        "delete": 0.25
+      },
+      "random_flip_rate": {
+        "mask": 0.1687041564792176,
+        "delete": 0.17658536585365855
+      },
+      "cc3_minus_random": {
+        "mask": 0.1040231162480551,
+        "delete": 0.12862555226048536
+      },
+      "cf_flip_heldout_rate": 0.9362745098039216,
+      "n_cf_heldout_checked": 204,
+      "random_control_match_mode": [
+        "occurrences",
+        "types"
+      ],
+      "cc3_vs_random_test": {
+        "mask": {
+          "n_paired": 407,
+          "p_raw": 9.999000099990002e-05,
+          "p_holm": 0.00019998000199980003
+        },
+        "delete": {
+          "n_paired": 403,
+          "p_raw": 9.999000099990002e-05,
+          "p_holm": 0.00019998000199980003
+        }
+      }
+    },
+    "by_ecs_lift_tier": {
+      "low": {
+        "n": 146,
+        "cc3_flip_mask": 0.22131147540983606,
+        "random_flip_mask": 0.19508196721311477,
+        "gap_mask": 0.02622950819672129,
+        "cc3_flip_delete": 0.28688524590163933,
+        "random_flip_delete": 0.20284552845528458,
+        "gap_delete": 0.08403971744635474
+      },
+      "mid": {
+        "n": 146,
+        "cc3_flip_mask": 0.31690140845070425,
+        "random_flip_mask": 0.19444444444444445,
+        "gap_mask": 0.1224569640062598,
+        "cc3_flip_delete": 0.2978723404255319,
+        "random_flip_delete": 0.18784722222222222,
+        "gap_delete": 0.11002511820330968
+      },
+      "high": {
+        "n": 143,
+        "cc3_flip_mask": 0.2727272727272727,
+        "random_flip_mask": 0.12027972027972028,
+        "gap_mask": 0.15244755244755243,
+        "cc3_flip_delete": 0.32857142857142857,
+        "random_flip_delete": 0.14265734265734267,
+        "gap_delete": 0.1859140859140859
+      },
+      "_thresholds": {
+        "low<=": 0.10605452380952518,
+        "high>": 0.23802500000000165
+      }
+    }
+  },
+  "_notes": "Second consistency axis (stated-vs-revealed input sensitivity), NOT faithfulness ground truth. Each record re-classified by its OWN model. per_model is the primary reporting unit; pooled mixes models/datasets and is descriptive. cc3_vs_random_test is the pre-registered family (b): one-sided sign-flip permutation on within-instance paired differences, Holm-corrected across operators. ECS-lift tiers are descriptive (data-dependent tertiles, no trend test)."
+}
