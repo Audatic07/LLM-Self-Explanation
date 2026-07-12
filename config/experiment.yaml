@@ -135,6 +135,20 @@ validity:
   heldout_cf_verification: true         # also re-verify CF flips with a DIFFERENT configured model
                                         # (judge-choice sensitivity: arXiv:2505.13972). Robustness
                                         # check only — the construct-defining flip stays self-verified.
+  # AUDIT AMENDMENT (2026-07-10, RESEARCH_AUDIT_2026-07-10.md F2): the random
+  # control now matches the CC3 arm's DESTROYED-TOKEN COUNT, not just its type
+  # count — CC3 lemma-types fan out to more surface occurrences (+14.5% tokens,
+  # p~1e-4 on N=25), a mechanical advantage for the treatment arm. The N=25 gap
+  # survives the no-advantage subsample under both operators, so the effect is
+  # real, but production runs use the matched control.
+  occurrence_matched_control: true
+  # AUDIT AMENDMENT (2026-07-10, F12): optional unknown-escape sensitivity arm —
+  # Madsen et al. (2401.07927, Fig. 5) warn the classifier that masked content
+  # may be present and allow an "unknown" answer, so successful evidence-erasure
+  # can surface as "cannot classify" instead of a forced coin-flip. Default OFF
+  # (doubles the CC3+random call volume); enable for the dedicated sensitivity
+  # re-run.
+  unknown_escape_sensitivity: false
 
 # Ablation Studies — exactly ONE pre-registered robustness ablation is kept:
 # prompt-paraphrase (the *_alt.txt wordings), run post-main-run on one model.

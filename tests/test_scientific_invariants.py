@@ -329,6 +329,40 @@ class TestCrossModelAgreement:
         assert pc["ci_lower"] > 0
         assert pc["direction"] == "cross_model_exceeds"
 
+    def test_paired_contrast_aj_matched_excludes_cf_and_uses_er(self):
+        """Audit F3 (RESEARCH_AUDIT_2026-07-10): the strategy-matched contrast
+        compares {H,R,RO} cross-model AJ pairs against the within-model
+        er-component only — same strategy support on both sides. CF evidence
+        must not enter the matched cross side."""
+        from src.utils.data_models import InstanceResult
+        from datetime import datetime
+
+        def make(iid, model):
+            return InstanceResult(
+                instance_id=iid, dataset="sst2", model=model, timestamp=datetime.now(),
+                text="good movie great fun", ground_truth_label="positive",
+                predicted_label="positive", correct=True,
+                highlighting_tokens={"good", "movie"}, highlighting_valid=True,
+                counterfactual_tokens={"good"}, counterfactual_valid=True,
+                cc3_tokens=set(), cc4_tokens=set(), cc3_size=0, cc4_size=0,
+                ecs=0.05, ecs_adj=0.05, ecs_adj_er=0.10, vocab_size=20,
+            )
+
+        results = []
+        for i in range(8):
+            results.append(make(f"i{i}", "m1"))
+            results.append(make(f"i{i}", "m2"))
+
+        out = MetricsCalculator.compute_cross_model_agreement(results, n_bootstrap=200)
+        pcm = out["sst2"]["paired_contrast_aj_matched"]
+        assert pcm["n"] == 8
+        # cross side: identical H sets at V=20 -> AJ = 1.0; within er = 0.10
+        assert pcm["mean_delta"] == pytest.approx(0.90, abs=0.02)
+        assert pcm["ci_lower"] > 0
+        assert pcm["direction"] == "cross_model_exceeds"
+        # unmatched contrast still present alongside
+        assert "paired_contrast_aj" in out["sst2"]
+
     def test_paired_contrast_within_model_exceeds(self):
         from src.utils.data_models import InstanceResult
         from datetime import datetime

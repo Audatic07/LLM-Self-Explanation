@@ -1,0 +1,180 @@
+{
+  "results_dir": "outputs\\20260708_191145_0fe76508",
+  "n_instances": 225,
+  "provenance": {
+    "embedder": "en_core_web_lg==3.8.0 (static 300d vectors, 684830 keys/342918 vectors)",
+    "primary_tau": 0.8,
+    "eps": 0.1,
+    "mc_draws": 1000,
+    "seed": 42,
+    "thresholds_swept": [
+      0.7,
+      0.8,
+      0.9
+    ],
+    "vocab_reconstruction_match_rate": 1.0,
+    "note": "Sensitivity analysis only (ECS_ROBUSTNESS_PLAN \u00a75) \u2014 never the headline metric. Soft-matching introduces an embedding-model confound; reported to BOUND the lexical-variation share of the R-pair gap, not to replace exact-token ECS-adj."
+  },
+  "primary_threshold": "0.80",
+  "thresholds": {
+    "0.70": {
+      "pair_types": {
+        "H_R": {
+          "hard_aj_mean": 0.45741242184908015,
+          "soft_aj_mean": 0.44138306232729846,
+          "delta_soft_minus_hard": -0.016029359521781694,
+          "n": 200
+        },
+        "RO_R": {
+          "hard_aj_mean": 0.4983998888104771,
+          "soft_aj_mean": 0.48064418343926957,
+          "delta_soft_minus_hard": -0.01775570537120752,
+          "n": 201
+        },
+        "H_CF": {
+          "hard_aj_mean": 0.6164379091256244,
+          "soft_aj_mean": 0.6375526793681017,
+          "delta_soft_minus_hard": 0.02111477024247732,
+          "n": 69
+        },
+        "RO_CF": {
+          "hard_aj_mean": 0.5652304380262074,
+          "soft_aj_mean": 0.5839366075576664,
+          "delta_soft_minus_hard": 0.018706169531458983,
+          "n": 84
+        },
+        "R_CF": {
+          "hard_aj_mean": 0.3821859998892635,
+          "soft_aj_mean": 0.4229023198115037,
+          "delta_soft_minus_hard": 0.04071631992224023,
+          "n": 68
+        },
+        "H_RO": {
+          "hard_aj_mean": 0.6112088671939586,
+          "soft_aj_mean": 0.6079473940789796,
+          "delta_soft_minus_hard": -0.003261473114979041,
+          "n": 216
+        }
+      },
+      "complete_case_ecs_adj_hard_mean": 0.48666951765255806,
+      "complete_case_ecs_adj_soft_mean": 0.5081885319653754,
+      "complete_case_n": 68,
+      "lexical_share": {
+        "ep_pairs_hard_mean": 0.5908341735759159,
+        "r_pairs_hard_mean": 0.4459994368496069,
+        "gap_hard": 0.14483473672630903,
+        "ep_pairs_soft_mean": 0.610744643462884,
+        "r_pairs_soft_mean": 0.44830985519269057,
+        "gap_soft": 0.16243478827019348,
+        "gap_closed_by_soft_matching": -0.017600051543884443,
+        "lexical_share_of_gap": -0.12151816575013263
+      }
+    },
+    "0.80": {
+      "pair_types": {
+        "H_R": {
+          "hard_aj_mean": 0.45741242184908015,
+          "soft_aj_mean": 0.4516057479894545,
+          "delta_soft_minus_hard": -0.005806673859625633,
+          "n": 201
+        },
+        "RO_R": {
+          "hard_aj_mean": 0.4983998888104771,
+          "soft_aj_mean": 0.49109343393142607,
+          "delta_soft_minus_hard": -0.007306454879051016,
+          "n": 202
+        },
+        "H_CF": {
+          "hard_aj_mean": 0.6164379091256244,
+          "soft_aj_mean": 0.6412867379803906,
+          "delta_soft_minus_hard": 0.024848828854766247,
+          "n": 69
+        },
+        "RO_CF": {
+          "hard_aj_mean": 0.5652304380262074,
+          "soft_aj_mean": 0.5735992797188723,
+          "delta_soft_minus_hard": 0.00836884169266483,
+          "n": 84
+        },
+        "R_CF": {
+          "hard_aj_mean": 0.3821859998892635,
+          "soft_aj_mean": 0.40654792208433593,
+          "delta_soft_minus_hard": 0.02436192219507244,
+          "n": 69
+        },
+        "H_RO": {
+          "hard_aj_mean": 0.6112088671939586,
+          "soft_aj_mean": 0.6117244300067154,
+          "delta_soft_minus_hard": 0.0005155628127567757,
+          "n": 216
+        }
+      },
+      "complete_case_ecs_adj_hard_mean": 0.48666951765255806,
+      "complete_case_ecs_adj_soft_mean": 0.502884419126267,
+      "complete_case_n": 68,
+      "lexical_share": {
+        "ep_pairs_hard_mean": 0.5908341735759159,
+        "r_pairs_hard_mean": 0.4459994368496069,
+        "gap_hard": 0.14483473672630903,
+        "ep_pairs_soft_mean": 0.6074430088496314,
+        "r_pairs_soft_mean": 0.4497490346684055,
+        "gap_soft": 0.15769397418122594,
+        "gap_closed_by_soft_matching": -0.012859237454916905,
+        "lexical_share_of_gap": -0.08878558932458806
+      }
+    },
+    "0.90": {
+      "pair_types": {
+        "H_R": {
+          "hard_aj_mean": 0.45741242184908015,
+          "soft_aj_mean": 0.4590904298311578,
+          "delta_soft_minus_hard": 0.0016780079820776228,
+          "n": 201
+        },
+        "RO_R": {
+          "hard_aj_mean": 0.4983998888104771,
+          "soft_aj_mean": 0.5005489858637366,
+          "delta_soft_minus_hard": 0.002149097053259552,
+          "n": 202
+        },
+        "H_CF": {
+          "hard_aj_mean": 0.6164379091256244,
+          "soft_aj_mean": 0.614169208803922,
+          "delta_soft_minus_hard": -0.002268700321702344,
+          "n": 70
+        },
+        "RO_CF": {
+          "hard_aj_mean": 0.5652304380262074,
+          "soft_aj_mean": 0.5664348274326549,
+          "delta_soft_minus_hard": 0.0012043894064475147,
+          "n": 84
+        },
+        "R_CF": {
+          "hard_aj_mean": 0.3821859998892635,
+          "soft_aj_mean": 0.38012401195814033,
+          "delta_soft_minus_hard": -0.002061987931123166,
+          "n": 69
+        },
+        "H_RO": {
+          "hard_aj_mean": 0.6112088671939586,
+          "soft_aj_mean": 0.6111175553676099,
+          "delta_soft_minus_hard": -9.13118263486945e-05,
+          "n": 217
+        }
+      },
+      "complete_case_ecs_adj_hard_mean": 0.48666951765255806,
+      "complete_case_ecs_adj_soft_mean": 0.48623659279887527,
+      "complete_case_n": 68,
+      "lexical_share": {
+        "ep_pairs_hard_mean": 0.5908341735759159,
+        "r_pairs_hard_mean": 0.4459994368496069,
+        "gap_hard": 0.14483473672630903,
+        "ep_pairs_soft_mean": 0.5903020181182885,
+        "r_pairs_soft_mean": 0.44658780921767827,
+        "gap_soft": 0.14371420890061026,
+        "gap_closed_by_soft_matching": 0.0011205278256987694,
+        "lexical_share_of_gap": 0.007736595867994056
+      }
+    }
+  }
+}

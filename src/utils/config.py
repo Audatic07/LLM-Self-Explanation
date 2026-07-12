@@ -115,6 +115,14 @@ class ValidityConfig:
     # Re-verify CF flips with a DIFFERENT configured model (judge-choice sensitivity,
     # arXiv:2505.13972). Robustness check; the construct-defining flip is self-verified.
     heldout_cf_verification: bool = True
+    # Audit F2 (RESEARCH_AUDIT_2026-07-10): match the random control on destroyed
+    # token OCCURRENCES — CC3 lemma-types erase more surface tokens than the same
+    # number of random surface types (+14.5% on N=25), a mechanical treatment-arm
+    # advantage the type-matched control missed.
+    occurrence_matched_control: bool = True
+    # Audit F12: unknown-escape sensitivity arm (Madsen 2401.07927 Fig. 5 protocol).
+    # OFF by default — doubles the CC3+random call volume when enabled.
+    unknown_escape_sensitivity: bool = False
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
 

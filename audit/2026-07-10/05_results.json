@@ -1,0 +1,160 @@
+{
+  "A_calibration": {
+    "deepseek-v3_ag_news": {
+      "n_complete": 7,
+      "reps": 400,
+      "type_I_at_0.05": 0.0275,
+      "h0_mean": 0.0005758401458531693,
+      "h0_skew": 1.0247813439381348
+    },
+    "deepseek-v3_mnli": {
+      "n_complete": 8,
+      "reps": 400,
+      "type_I_at_0.05": 0.0475,
+      "h0_mean": -0.006082304605069858,
+      "h0_skew": 0.3245954947316496
+    },
+    "deepseek-v3_sst2": {
+      "n_complete": 17,
+      "reps": 400,
+      "type_I_at_0.05": 0.03,
+      "h0_mean": -0.00016812084824345595,
+      "h0_skew": 0.6447061209810659
+    },
+    "nova-pro_sst2": {
+      "n_complete": 8,
+      "reps": 400,
+      "type_I_at_0.05": 0.035,
+      "h0_mean": 0.00282526719990907,
+      "h0_skew": 0.5498380069646989
+    },
+    "qwen3-235b_mnli": {
+      "n_complete": 6,
+      "reps": 400,
+      "type_I_at_0.05": 0.025,
+      "h0_mean": 0.003642633641570936,
+      "h0_skew": 0.6168603698513878
+    },
+    "qwen3-235b_sst2": {
+      "n_complete": 13,
+      "reps": 400,
+      "type_I_at_0.05": 0.0325,
+      "h0_mean": -0.0012942765677388067,
+      "h0_skew": 0.675423801613267
+    }
+  },
+  "B_mnar": {
+    "er_component": {
+      "complete_mean": 0.4745686870618588,
+      "incomplete_mean": 0.49215984176704847,
+      "n_complete": 68,
+      "n_incomplete": 140,
+      "mannwhitney_p": 0.8649481912180232
+    },
+    "text_len": {
+      "complete_mean": 28.38235294117647,
+      "incomplete_mean": 29.78343949044586,
+      "n_complete": 68,
+      "n_incomplete": 157,
+      "mannwhitney_p": 0.3109242902414787
+    },
+    "vocab_size": {
+      "complete_mean": 14.529411764705882,
+      "incomplete_mean": 15.94267515923567,
+      "n_complete": 68,
+      "n_incomplete": 157,
+      "mannwhitney_p": 0.2872749395856582
+    },
+    "H_size": {
+      "complete_mean": 5.544117647058823,
+      "incomplete_mean": 5.961290322580645,
+      "n_complete": 68,
+      "n_incomplete": 155,
+      "mannwhitney_p": 0.11145791157375487
+    },
+    "R_size": {
+      "complete_mean": 3.9558823529411766,
+      "incomplete_mean": 4.45945945945946,
+      "n_complete": 68,
+      "n_incomplete": 148,
+      "mannwhitney_p": 0.22037533170637658
+    },
+    "accuracy": {
+      "complete_mean": 0.8970588235294118,
+      "incomplete_mean": 0.8726114649681529,
+      "n_complete": 68,
+      "n_incomplete": 157,
+      "mannwhitney_p": 0.606493877208844
+    }
+  },
+  "C_power": {
+    "deepseek-v3_ag_news": {
+      "cc_rate_n25": 0.28,
+      "projected_n_cc_at_200": 56,
+      "power_raw": 1.0,
+      "power_bonf9": 0.9999999999999999,
+      "mean": 0.37147375922300163,
+      "sd": 0.2588406164889817
+    },
+    "deepseek-v3_mnli": {
+      "cc_rate_n25": 0.32,
+      "projected_n_cc_at_200": 64,
+      "power_raw": 0.9999999100178669,
+      "power_bonf9": 0.999992359354232,
+      "mean": 0.43568189768148036,
+      "sd": 0.5078041103407623
+    },
+    "deepseek-v3_sst2": {
+      "cc_rate_n25": 0.68,
+      "projected_n_cc_at_200": 136,
+      "power_raw": 1.0,
+      "power_bonf9": 1.0,
+      "mean": 0.6708131004607992,
+      "sd": 0.3946713903397386
+    },
+    "nova-pro_ag_news": {
+      "cc_rate_n25": 0.08,
+      "projected_n_cc_at_200": 16
+    },
+    "nova-pro_mnli": {
+      "cc_rate_n25": 0.12,
+      "projected_n_cc_at_200": 24,
+      "power_raw": 0.9793724379026701,
+      "power_bonf9": 0.8742318008819085,
+      "mean": 0.33281821508806464,
+      "sd": 0.4423639396519761
+    },
+    "nova-pro_sst2": {
+      "cc_rate_n25": 0.32,
+      "projected_n_cc_at_200": 64,
+      "power_raw": 1.0,
+      "power_bonf9": 1.0,
+      "mean": 0.6132557602446649,
+      "sd": 0.2629436490631722
+    },
+    "qwen3-235b_ag_news": {
+      "cc_rate_n25": 0.16,
+      "projected_n_cc_at_200": 32,
+      "power_raw": 0.963928108031989,
+      "power_bonf9": 0.816970086554297,
+      "mean": 0.2752985860801831,
+      "sd": 0.4523076781830133
+    },
+    "qwen3-235b_mnli": {
+      "cc_rate_n25": 0.24,
+      "projected_n_cc_at_200": 48,
+      "power_raw": 0.9999531571332175,
+      "power_bonf9": 0.9987025832042814,
+      "mean": 0.3181957852159744,
+      "sd": 0.39712282482148664
+    },
+    "qwen3-235b_sst2": {
+      "cc_rate_n25": 0.52,
+      "projected_n_cc_at_200": 104,
+      "power_raw": 1.0,
+      "power_bonf9": 0.9999999999999978,
+      "mean": 0.4602643185680949,
+      "sd": 0.45224023939721325
+    }
+  }
+}

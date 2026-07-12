@@ -117,3 +117,58 @@ def test_rank_ordering_json_format_wanted():
     prompt = load_prompt("prompts/rank_ordering_explain.txt")
     assert "JSON" in prompt
     assert "ranking" in prompt
+
+
+# --- Paraphrase (*_alt.txt) prompts: guards for the self-consistency ceiling ---
+# The ceiling AJ(base, alt) is only interpretable if the alt is a SURFACE paraphrase of
+# its base (same task, reworded), and if it renders with no unrendered placeholders.
+# Regressions here silently corrupt the ceiling (PROMPT_LITERATURE_VERIFICATION_2026-07-09.md).
+
+_ALT_FILES = ["highlighting_alt.txt", "rationale_alt.txt",
+              "counterfactual_alt.txt", "rank_ordering_alt.txt"]
+_PLACEHOLDERS = ["{predicted_label}", "{input_text}", "{label_set}",
+                 "{other_labels}", "{other_labels_quoted}"]
+
+
+def test_alt_prompts_render_with_no_unrendered_placeholders():
+    for name in _ALT_FILES:
+        prompt = load_prompt(f"prompts/{name}")
+        rendered = format_explain_prompt(prompt, "positive")
+        for ph in _PLACEHOLDERS:
+            assert ph not in rendered, f"Unrendered {ph} in {name}: {rendered}"
+        assert "positive" in rendered, f"Label not injected in {name}"
+
+
+def test_alt_prompts_do_not_reference_label_set():
+    # {label_set} conditioning was a task change vs the base prompts (which condition on
+    # {predicted_label}); all alts were rewritten to drop it.
+    for name in _ALT_FILES:
+        prompt = load_prompt(f"prompts/{name}")
+        assert "{label_set}" not in prompt, f"{name} still references {{label_set}}"
+
+
+def test_rank_ordering_uses_fixed_k_not_a_range():
+    # Literature (Huang et al.) fixes k by protocol; a model-chosen range ("3-5") is
+    # off-convention. Base and alt must request the SAME fixed count of WORDS.
+    base = load_prompt("prompts/rank_ordering_explain.txt")
+    alt = load_prompt("prompts/rank_ordering_alt.txt")
+    for name, prompt in [("base", base), ("alt", alt)]:
+        assert "3-5" not in prompt and "3 to 5" not in prompt, f"RO {name} must not request a range"
+        assert "5 most important words" in prompt, f"RO {name} must request a fixed 5 words"
+        assert "tokens" not in prompt, f"RO {name} must ask for words, not tokens"
+
+
+def test_rationale_alt_is_rationale_only():
+    # The alt must NOT request an 'evidence' array — parse_rationale never reads it, and
+    # it drifts R toward feature-attribution. Evidence is POS-extracted from the prose in
+    # BOTH arms, so base and alt differ only in surface wording.
+    prompt = load_prompt("prompts/rationale_alt.txt")
+    assert "rationale" in prompt
+    assert "evidence" not in prompt, "R alt must not request an evidence list"
+
+
+def test_counterfactual_alt_keeps_minimality_and_pinned_target():
+    prompt = load_prompt("prompts/counterfactual_alt.txt")
+    assert "third of the words" in prompt, "CF alt must keep the MiCE-style edit cap"
+    assert "{other_labels_quoted}" in prompt, "CF alt must pin the target label(s)"
+    assert "new_prediction" in prompt

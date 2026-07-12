@@ -139,18 +139,30 @@ async def flip_after_erasure(engine, parser, class_prompt, text, tokens, operato
     return pred != original
 
 
-async def random_flip_rate(engine, parser, class_prompt, text, n, operator,
-                           label_set, original, trials, seed,
-                           normalizer: Optional[Normalizer] = None) -> Optional[float]:
-    """Flip rate when erasing `n` RANDOM unique CONTENT-word tokens, averaged over
-    `trials`. The control must be matched in token type to what it's compared
-    against: CC tokens are normalized content-word lemmas (stopwords/discourse
-    words already excluded), not raw surface words. Drawing the random sample from
-    ALL surface words — including "the", "a", "is" — makes stopword draws common;
-    stopwords rarely carry the prediction, so the random flip rate is
-    under-estimated and the CC-minus-random gap is inflated. Restricting the pool
-    to words that survive the same content-word filter (normalizer.normalize)
-    removes that mismatch.
+def erased_token_count(text: str, tokens: Set[str], normalizer: Optional[Normalizer] = None) -> int:
+    """Number of word occurrences `erase()` would destroy — the same 3-tier match
+    as `erase()` itself, counted instead of rewritten (audit F2)."""
+    return len(text.split()) - len(erase(text, tokens, "delete", normalizer).split())
+
+
+def random_control_samples(text: str, n: int, trials: int, seed: int,
+                           normalizer: Optional[Normalizer] = None,
+                           match_occurrences: Optional[int] = None) -> List[Set[str]]:
+    """The random-control token samples, one set per trial.
+
+    Pool = unique surface CONTENT words (normalizer.normalize survivors): CC
+    tokens are content lemmas, so a control drawn from all surface words —
+    stopwords included — under-estimates the random flip rate and inflates the
+    CC-minus-random gap.
+
+    Matching (audit F2, RESEARCH_AUDIT_2026-07-10): with
+    ``match_occurrences=None`` each sample has ``n`` types (legacy type-matched
+    control). But CC3 tokens are fixed-point lemmas whose 3-tier matching erases
+    every inflectional variant, destroying ~14.5% more tokens than n random
+    surface types (N=25 measurement) — a mechanical advantage for the treatment
+    arm. With ``match_occurrences`` set, each trial adds random types until the
+    sample would destroy at least that many occurrences (or the pool is
+    exhausted), so both arms remove comparable amounts of text.
     """
     surface_words = list(dict.fromkeys(w.strip(_PUNCT).lower() for w in text.split() if w.strip(_PUNCT)))
     if normalizer is not None:
@@ -158,12 +170,34 @@ async def random_flip_rate(engine, parser, class_prompt, text, n, operator,
     else:
         words = surface_words
     if n <= 0 or not words:
-        return None
+        return []
     rng = random.Random(seed)
-    k = min(n, len(words))
-    flips = []
+    samples: List[Set[str]] = []
     for _ in range(trials):
-        sample = set(rng.sample(words, k))
+        if match_occurrences is None:
+            samples.append(set(rng.sample(words, min(n, len(words)))))
+            continue
+        order = rng.sample(words, len(words))
+        sample: Set[str] = set()
+        for w in order:
+            sample.add(w)
+            if erased_token_count(text, sample, normalizer) >= match_occurrences:
+                break
+        samples.append(sample)
+    return samples
+
+
+async def random_flip_rate(engine, parser, class_prompt, text, n, operator,
+                           label_set, original, trials, seed,
+                           normalizer: Optional[Normalizer] = None,
+                           match_occurrences: Optional[int] = None) -> Optional[float]:
+    """Flip rate over the random-control samples (see `random_control_samples`
+    for the pool and the occurrence-matching semantics), averaged over trials."""
+    samples = random_control_samples(text, n, trials, seed, normalizer, match_occurrences)
+    if not samples:
+        return None
+    flips = []
+    for sample in samples:
         pred = await classify(engine, parser, class_prompt, erase(text, sample, operator, normalizer), label_set)
         if pred:
             flips.append(1 if pred != original else 0)
@@ -182,7 +216,9 @@ def _ro_tokens(data: Dict[str, Any]) -> List[str]:
 async def process_instance_erasure(data, engine, parser, class_prompt, label_set,
                                    operators, trials, seed,
                                    normalizer: Optional[Normalizer] = None,
-                                   heldout_engine: Optional[InferenceEngine] = None) -> Dict[str, Any]:
+                                   heldout_engine: Optional[InferenceEngine] = None,
+                                   occurrence_matched: bool = True,
+                                   unknown_prompt: Optional[str] = None) -> Dict[str, Any]:
     text = data["text"]
     original = data.get("predicted_label", "")
     strat_sets = {
@@ -224,9 +260,53 @@ async def process_instance_erasure(data, engine, parser, class_prompt, label_set
                                                    original, normalizer)
 
     n_random = len(cc3) if cc3 else len(cc4)
+    cc_set = cc3 if cc3 else cc4
+    # Audit F2: match the control on destroyed-token count, not just type count.
+    target_occ = erased_token_count(text, cc_set, normalizer) if (occurrence_matched and cc_set) else None
+    rec["random_cc3"]["match_mode"] = "occurrences" if target_occ is not None else "types"
+    if target_occ is not None:
+        rec["random_cc3"]["target_occurrences"] = target_occ
     for op in operators:
         rec["random_cc3"][f"{op}_rate"] = await random_flip_rate(
-            engine, parser, class_prompt, text, n_random, op, label_set, original, trials, seed, normalizer)
+            engine, parser, class_prompt, text, n_random, op, label_set, original, trials, seed,
+            normalizer, match_occurrences=target_occ)
+
+    # Audit F12: unknown-escape sensitivity arm (Madsen Fig. 5 protocol) — the
+    # classifier is told masked content may be present and may answer "unknown";
+    # "unknown" counts as NON-flip in the flip fields and is tracked separately.
+    # Perfectly paired with the primary arm: identical erased texts (cc3) and
+    # identical control samples (same seed -> same draws).
+    if unknown_prompt is not None and original:
+        unk_labels = list(label_set) + ["unknown"]
+
+        async def unknown_classify(erased_text: str) -> str:
+            prompt = unknown_prompt.format(input_text=erased_text,
+                                           label_set=", ".join(label_set))
+            try:
+                resp = await engine._make_request(prompt, max_tokens=50)
+                return parser.parse_classification(resp, unk_labels)
+            except Exception as e:
+                logger.warning(f"unknown-arm classify failed ({type(e).__name__}: {str(e)[:120]})")
+                return ""
+
+        rec["unknown_arm"] = {}
+        for op in operators:
+            entry: Dict[str, Any] = {}
+            if cc3:
+                pred = await unknown_classify(erase(text, cc3, op, normalizer))
+                entry["cc3_flip"] = (pred not in ("", "unknown") and pred != original) if pred else None
+                entry["cc3_unknown"] = (pred == "unknown") if pred else None
+            samples = random_control_samples(text, n_random, trials, seed, normalizer,
+                                             match_occurrences=target_occ)
+            flips, unknowns = [], []
+            for sample in samples:
+                pred = await unknown_classify(erase(text, sample, op, normalizer))
+                if pred:
+                    flips.append(1 if (pred != "unknown" and pred != original) else 0)
+                    unknowns.append(1 if pred == "unknown" else 0)
+            entry["random_flip_rate"] = (sum(flips) / len(flips)) if flips else None
+            entry["random_unknown_rate"] = (sum(unknowns) / len(unknowns)) if unknowns else None
+            rec["unknown_arm"][op] = entry
 
     # Held-out CF flip verification (judge-choice robustness, arXiv:2505.13972):
     # does a DIFFERENT model also classify the self-verified counterfactual away
@@ -293,6 +373,29 @@ def aggregate(records: List[Dict[str, Any]], operators: List[str],
     heldout_vals = [r.get("cf_flip_heldout") for r in records]
     overall["cf_flip_heldout_rate"] = _rate(heldout_vals)
     overall["n_cf_heldout_checked"] = sum(1 for v in heldout_vals if v is not None)
+
+    # Unknown-escape sensitivity arm (audit F12) — reported only when records carry it.
+    unk_records = [r for r in records if r.get("unknown_arm")]
+    if unk_records:
+        overall["unknown_arm"] = {}
+        for op in operators:
+            entries = [r["unknown_arm"].get(op, {}) for r in unk_records]
+            cc_flip = _rate([e.get("cc3_flip") for e in entries])
+            cc_unknown = _rate([e.get("cc3_unknown") for e in entries])
+            rnd_flip = _mean([e.get("random_flip_rate") for e in entries])
+            rnd_unknown = _mean([e.get("random_unknown_rate") for e in entries])
+            overall["unknown_arm"][op] = {
+                "n": len(entries),
+                "cc3_flip_rate": cc_flip,
+                "cc3_unknown_rate": cc_unknown,
+                "random_flip_rate": rnd_flip,
+                "random_unknown_rate": rnd_unknown,
+                "cc3_minus_random": (cc_flip - rnd_flip)
+                if (cc_flip is not None and rnd_flip is not None) else None,
+            }
+    # Random-control matching mode provenance (audit F2).
+    modes = {r.get("random_cc3", {}).get("match_mode", "types") for r in records}
+    overall["random_control_match_mode"] = sorted(modes)
 
     # Pre-registered test family (b): CC3-erasure vs random control, per operator.
     # One-sided sign-flip permutation on within-instance paired differences; Holm
@@ -422,6 +525,18 @@ async def run(config, args):
             prompt_cache[ds] = p.read_text(encoding="utf-8")
         return prompt_cache[ds]
 
+    # Audit F2 / F12 flags (RESEARCH_AUDIT_2026-07-10).
+    occurrence_matched = bool(getattr(config.validity, "occurrence_matched_control", True))
+    unknown_prompt: Optional[str] = None
+    if bool(getattr(config.validity, "unknown_escape_sensitivity", False)):
+        up = Path("prompts/classification_erasure_unknown.txt")
+        if up.exists():
+            unknown_prompt = up.read_text(encoding="utf-8")
+            logger.info("Unknown-escape sensitivity arm ENABLED (audit F12)")
+        else:
+            logger.warning("unknown_escape_sensitivity=true but prompts/classification_erasure_unknown.txt missing — arm skipped")
+    logger.info(f"Random control matching: {'occurrences (audit F2)' if occurrence_matched else 'types (legacy)'}")
+
     records = []
     i_global = 0
     for mid in ordered_ids:
@@ -437,7 +552,8 @@ async def run(config, args):
             rec = await process_instance_erasure(
                 data, engine, parser, class_prompt_for(ds), label_set,
                 operators, trials, seed=config.experiment.seed + i_global,
-                normalizer=normalizer, heldout_engine=heldout_for.get(mid))
+                normalizer=normalizer, heldout_engine=heldout_for.get(mid),
+                occurrence_matched=occurrence_matched, unknown_prompt=unknown_prompt)
             records.append(rec)
             i_global += 1
             logger.info(f"[{i_global}/{len(instances)}] {rec['instance_id']} ({mid}) erasure done")

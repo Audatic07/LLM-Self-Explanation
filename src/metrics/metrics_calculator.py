@@ -389,6 +389,13 @@ class MetricsCalculator:
         multi_counts = defaultdict(set)                    # dataset -> instance ids with >=2 models
         deltas = defaultdict(list)                          # dataset -> [per-instance raw paired deltas]
         deltas_aj = defaultdict(list)                       # dataset -> [per-instance AJ paired deltas]
+        # Audit F3 (RESEARCH_AUDIT_2026-07-10): the headline paired Δ mixes
+        # compositions — CF is nearly absent from the cross side (it parses ~40%)
+        # while CF-bearing components hold 2/3 of the within side's weight. The
+        # STRATEGY-MATCHED contrast compares {H,R,RO} same-strategy cross-model
+        # pairs against the within-model er-component (the cross-paradigm pairs
+        # among the same three strategies) — same strategy support on both sides.
+        deltas_aj_matched = defaultdict(list)
 
         for (dataset, iid), rows in by_instance.items():
             if len(rows) < 2:
@@ -402,6 +409,7 @@ class MetricsCalculator:
                 within_ecs_adj[dataset].append(v)
             instance_jaccards = []
             instance_ajs = []
+            instance_ajs_matched = []          # {H,R,RO} cross pairs only (audit F3)
             for s, getter in strategy_sets.items():
                 pairs = [getter(r) for r in rows]
                 pairs = [x for x in pairs if x and x[0]]
@@ -420,12 +428,21 @@ class MetricsCalculator:
                         if aj is not None:
                             agg_aj[dataset][s].append(aj)
                             instance_ajs.append(aj)
+                            if s != "CF":
+                                instance_ajs_matched.append(aj)
             # This instance's OWN paired contrasts — both sides averaged over only
             # THIS instance's rows/pairs, not the dataset's pooled sets.
             if instance_jaccards and instance_ecs:
                 deltas[dataset].append(float(np.mean(instance_jaccards)) - float(np.mean(instance_ecs)))
             if instance_ajs and instance_ecs_adj:
                 deltas_aj[dataset].append(float(np.mean(instance_ajs)) - float(np.mean(instance_ecs_adj)))
+            # Strategy-matched paired contrast (audit F3): within side = this
+            # instance's er components (cross-paradigm pairs among {H,R,RO}).
+            instance_er = [v for v in (getattr(r, "ecs_adj_er", None) for r in rows)
+                           if v is not None]
+            if instance_ajs_matched and instance_er:
+                deltas_aj_matched[dataset].append(
+                    float(np.mean(instance_ajs_matched)) - float(np.mean(instance_er)))
 
         def _paired(d):
             if not d:
@@ -470,6 +487,10 @@ class MetricsCalculator:
                 "within_model_cross_strategy_mean_ecs_adj": (
                     float(np.mean(within_ecs_adj[dataset])) if within_ecs_adj[dataset] else None),
                 "paired_contrast_aj": _paired(deltas_aj[dataset]),
+                # Audit F3: same-support contrast ({H,R,RO} cross vs within er).
+                # On the N=25 run this is CI-separated in 1 of 3 datasets (sst2);
+                # quote THIS field when claiming a cross-model direction.
+                "paired_contrast_aj_matched": _paired(deltas_aj_matched[dataset]),
             }
         return per_dataset
 

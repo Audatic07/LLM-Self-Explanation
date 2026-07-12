@@ -303,21 +303,28 @@ def table_T3(tdir, aidx, min_n):
             continue
         n = e.get("n_ecs_adj_complete", 0)
         star = "*" if n < min_n else ""
+        # Audit F1 (RESEARCH_AUDIT_2026-07-10): the PRIMARY table's p columns must
+        # come from the complete-case family (ecs_adj_complete_p_*) — the population
+        # the caption promises — never the available-component (a2) sensitivity
+        # family, whose Holm p is shown only as a labelled companion.
         rows.append([cell_label(grp), f"{n}{star}",
                      _fmt(e.get("mean_ecs_adj_complete"), 4),
-                     _fmt(e.get("ecs_adj_p_value"), 4),
-                     _fmt(e.get("ecs_adj_p_holm"), 4),
+                     _fmt(e.get("ecs_adj_complete_p_value"), 4),
+                     _fmt(e.get("ecs_adj_complete_p_holm"), 4),
                      _fmt(e.get("mean_ecs_adj"), 4),
+                     _fmt(e.get("ecs_adj_p_holm"), 4),
                      _fmt(e.get("mean_ecs_complete"), 4),
                      _fmt(e.get("mean_ecs_lift"), 4)])
     write_booktabs(tdir / "T3_primary.tex",
-                   ("Primary results: ECS-adj complete-case per cell with sign-flip $p$ "
-                    "(raw + Holm). Available-component ECS-adj and the previously-defined "
-                    "legacy ECS / ECS-lift shown for reference. * = below the $N{=}%d$ test floor."
+                   ("Primary results: ECS-adj complete-case per cell with the "
+                    "pre-registered complete-case sign-flip $p$ (raw + Holm). The "
+                    "available-component (a2) sensitivity estimate and its Holm $p$ are "
+                    "labelled companions; legacy ECS / ECS-lift for reference. "
+                    "* = complete-case N below the $N{=}%d$ floor (no primary test)."
                     % min_n),
                    "tab:primary",
-                   ["Cell", "N", "ECS-adj (cc)", "$p$", "$p_{Holm}$",
-                    "ECS-adj (avail)", "ECS (legacy)", "ECS-lift"], rows)
+                   ["Cell", "N", "ECS-adj (cc)", "$p^{cc}$", "$p^{cc}_{Holm}$",
+                    "ECS-adj (avail)", "$p^{a2}_{Holm}$", "ECS (legacy)", "ECS-lift"], rows)
 
 
 @guard("T4 paradigm components")
@@ -406,10 +413,15 @@ def write_numbers(out: Path, aidx, cross_model, erasure_path):
         "legacy_mean_ecs_complete": overall.get("mean_ecs_complete"),
         "legacy_mean_ecs_lift": overall.get("mean_ecs_lift"),
     }
+    # Audit F1: per-cell p's carry BOTH families under explicit names; the bare
+    # "p_holm" alias now points at the complete-case (primary) family so legacy
+    # consumers inherit the pre-registered test, not the a2 sensitivity.
     nums["per_cell"] = {
         g: {"mean_ecs_adj_complete": e.get("mean_ecs_adj_complete"),
             "n": e.get("n_ecs_adj_complete"),
-            "p_holm": e.get("ecs_adj_p_holm")}
+            "p_holm": e.get("ecs_adj_complete_p_holm"),
+            "p_holm_complete": e.get("ecs_adj_complete_p_holm"),
+            "p_holm_available": e.get("ecs_adj_p_holm")}
         for (l, g), e in aidx.items() if l == "model_dataset"
     }
     nums["cross_model_delta"] = {

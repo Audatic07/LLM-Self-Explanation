@@ -1,8 +1,8 @@
 The text was classified as: {predicted_label}
 
-Explain why the following text belongs to one of these categories: {label_set}. Focus on specific evidence tokens.
-
 Text: "{input_text}"
 
+In a single sentence, describe why this text was assigned the label {predicted_label}.
+
 Return only valid JSON:
-{{"rationale":"<one sentence explanation>","evidence":["word1","word2","..."]}}
+{{"rationale": "<one-sentence explanation>"}}

@@ -22,6 +22,15 @@ from src.plots.visualization_generator import VisualizationGenerator
 from src.utils.config_loader import load_and_validate_config, parse_command_line_args
 from src.utils.logging_config import setup_logging
 from src.utils.exceptions import APIError, ParsingError
+# Reuse the main run's prompt resolution + formatting so the ablation's BASELINE
+# elicitation is byte-identical to the study's (PROMPT_LITERATURE_VERIFICATION_2026-07-09.md §1).
+from scripts.run_experiment import (
+    create_prompt_map,
+    format_explain_prompt,
+    format_prompt,
+    pre_clean_text,
+    quote_labels,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -86,34 +95,45 @@ def compute_self_consistency_aj(base_set: Set[str], alt_set: Set[str], text: str
     return calc.adjusted_jaccard(base_set, alt_set, len(vocab_tokens), eps)
 
 
-def format_class_prompt(template: str, input_text: str, label_set: List[str]) -> str:
-    return template.format(input_text=input_text, label_set=", ".join(label_set))
+def build_baseline_explain_prompt(strategy_id: str, prompts: Dict[str, str],
+                                  predicted_label: str, clean_text: str,
+                                  label_set: List[str]) -> str:
+    """Format a strategy's BASELINE explain prompt byte-identically to the main run
+    (run_experiment.process_instance): CF selects the multiclass variant when the label
+    set has >2 classes and receives the other_labels / other_labels_quoted target slots;
+    every other strategy gets predicted_label + input_text.
+
+    The prior implementation passed the RAW, UNFORMATTED template — the model literally
+    received `{predicted_label}` / `{input_text}` braces, so every self-consistency
+    ceiling and prompt-ablation delta compared an unformatted baseline against a
+    formatted paraphrase (PROMPT_LITERATURE_VERIFICATION_2026-07-09.md §1)."""
+    if strategy_id == "CF":
+        cf_prompt_key = "CF_explain"
+        if len(label_set) > 2 and "CF_explain_multiclass" in prompts:
+            cf_prompt_key = "CF_explain_multiclass"
+        cf_targets = [l for l in label_set if l != predicted_label]
+        return format_explain_prompt(
+            prompts[cf_prompt_key], predicted_label, input_text=clean_text,
+            other_labels=", ".join(cf_targets),
+            other_labels_quoted=quote_labels(cf_targets),
+        )
+    return format_explain_prompt(prompts[f"{strategy_id}_explain"], predicted_label,
+                                 input_text=clean_text)
 
 
-def format_explain_prompt(template: str, predicted_label: str) -> str:
-    return template.format(predicted_label=predicted_label)
-
-
-def format_alt_prompt(template: str, predicted_label: str, input_text: str, label_set: List[str]) -> str:
+def format_alt_prompt(template: str, predicted_label: str, input_text: str,
+                      label_set: List[str]) -> str:
+    """Format a paraphrase (*_alt.txt) prompt. Supplies the CF target slots
+    (other_labels / other_labels_quoted) so the CF alt pins the same target(s) as its
+    base; str.format ignores the extras for the H/R/RO alts, which reference only
+    predicted_label + input_text (no alt references {label_set} any more)."""
+    cf_targets = [l for l in label_set if l != predicted_label]
     return template.format(
         predicted_label=predicted_label,
         input_text=input_text,
-        label_set=", ".join(label_set),
+        other_labels=", ".join(cf_targets),
+        other_labels_quoted=quote_labels(cf_targets),
     )
-
-
-def load_strategy_explain_prompts(config) -> Dict[str, str]:
-    # config prompt_file now names the executed *_explain.txt file directly.
-    return {s.id: load_prompt(s.prompt_file) for s in config.explanation_strategies}
-
-
-def load_classification_prompt(config, dataset_name: str = None) -> str:
-    class_path = "prompts/classification.txt"
-    if dataset_name:
-        ds_path = f"prompts/classification_{dataset_name}.txt"
-        if Path(ds_path).exists():
-            class_path = ds_path
-    return load_prompt(class_path)
 
 
 def parse_raw_tokens(strategy_id: str, raw: str, text: str,
@@ -154,6 +174,29 @@ def compute_ecs_from_token_sets(sets: Dict[str, Set[str]], calc: MetricsCalculat
     explanations = {s: sets.get(s, set()) for s in STRATEGY_IDS}
     agreements = calc.compute_pairwise_agreements(explanations)
     return calc.compute_ecs(agreements)
+
+
+def compute_ecs_adj_from_token_sets(sets: Dict[str, Set[str]], text: str,
+                                    normalizer: Normalizer, calc: MetricsCalculator) -> Optional[float]:
+    """ECS-adj (available-component) over the instance's own vocabulary — audit F10
+    (RESEARCH_AUDIT_2026-07-10): the paraphrase deltas were reported only on the
+    legacy raw-Jaccard ECS while the ceilings in the same report are AJ; this puts
+    the deltas on the primary metric's scale too. Vocab mirrors
+    compute_self_consistency_aj: normalized input lemmas (structural labels
+    excluded) unioned with every evidence set (support closure)."""
+    explanations = {s: sets.get(s, set()) for s in STRATEGY_IDS}
+    vocab_tokens = set()
+    for t in normalizer.normalize_input_text(pre_clean_text(text)).split():
+        if t in STRUCTURAL_LABELS:
+            continue
+        norm = normalizer.normalize(t)
+        if norm:
+            vocab_tokens.add(norm)
+    for ev in explanations.values():
+        vocab_tokens |= ev
+    if not vocab_tokens:
+        return None
+    return calc.compute_ecs_adjusted(explanations, len(vocab_tokens)).get("ecs_adj")
 
 
 async def run_classify(engine, class_prompt, parser, label_set):
@@ -228,17 +271,21 @@ async def run_ablations(config, args):
             )
             logger.info(f"Loaded {len(instances)} sampled instances for {dataset_config.name} ablation")
 
-        class_prompt_template = load_classification_prompt(config, dataset_config.name)
-        strategy_prompts = load_strategy_explain_prompts(config)
+        # Resolve prompts through the SAME path as the live run (dataset-specific and
+        # multiclass variants, CF-free, classification) so the baseline elicitation the
+        # ablation sends is byte-identical to the study's.
+        prompts, _prompt_sources = create_prompt_map(config, dataset_config.name)
         label_set = dataset_config.labels
 
         # --- Step 1: Compute baseline for all instances ---
-        # baseline_data[i] = {predicted_label, class_raw, class_prompt,
+        # baseline_data[i] = {predicted_label, class_raw, class_prompt, clean_text,
         #                     raw_tokens: {s: [str]}, baseline_ecs}
         baseline_data = []
         for instance in instances:
-            text = instance.text
-            class_prompt = format_class_prompt(class_prompt_template, text, label_set)
+            # Mirror the live run: pre-clean HTML/markup before prompting, and format the
+            # classification prompt with the cleaned text (run_experiment.process_instance).
+            clean_text = pre_clean_text(instance.text)
+            class_prompt = format_prompt(prompts["classification"], clean_text, label_set)
 
             try:
                 predicted_label, class_raw = await run_classify(engine, class_prompt, parser, label_set)
@@ -255,10 +302,12 @@ async def run_ablations(config, args):
             raw_tokens = {}
             for s in STRATEGY_IDS:
                 try:
+                    explain_prompt = build_baseline_explain_prompt(
+                        s, prompts, predicted_label, clean_text, label_set)
                     raw_response = await run_explain(engine, class_prompt, class_raw,
-                                                     strategy_prompts[s],
-                                                     max_tokens=strategy_max_tokens(s, text))
-                    raw_tokens[s] = parse_raw_tokens(s, raw_response, text, predicted_label,
+                                                     explain_prompt,
+                                                     max_tokens=strategy_max_tokens(s, clean_text))
+                    raw_tokens[s] = parse_raw_tokens(s, raw_response, clean_text, predicted_label,
                                                      label_set, parser, normalizer)
                 except (APIError, ParsingError, json.JSONDecodeError) as e:
                     logger.debug(f"  {s} failed for {instance.instance_id}: {e}")
@@ -266,15 +315,18 @@ async def run_ablations(config, args):
 
             token_sets = {s: normalize_token_list(raw_tokens[s], normalizer) for s in STRATEGY_IDS}
             baseline_ecs = compute_ecs_from_token_sets(token_sets, calc)
+            baseline_ecs_adj = compute_ecs_adj_from_token_sets(token_sets, clean_text, normalizer, calc)
 
             baseline_data.append({
                 "instance": instance,
+                "clean_text": clean_text,
                 "predicted_label": predicted_label,
                 "class_raw": class_raw,
                 "class_prompt": class_prompt,
                 "raw_tokens": raw_tokens,
                 "token_sets": token_sets,
                 "baseline_ecs": baseline_ecs,
+                "baseline_ecs_adj": baseline_ecs_adj,
             })
 
         # --- Step 2: Prompt Ablation ---
@@ -287,20 +339,22 @@ async def run_ablations(config, args):
                     continue
 
                 deltas = []
+                deltas_aj = []       # audit F10: same contrast on the primary (AJ) scale
                 sc_ajs = []          # R1: same-strategy AJ(base, alt) — self-consistency ceiling
                 sc_degenerate = 0
                 sc_missing = 0
                 for bd in baseline_data:
                     inst = bd["instance"]
+                    clean_text = bd["clean_text"]
                     alt_prompt = format_alt_prompt(alt_template, bd["predicted_label"],
-                                                   inst.text, label_set)
+                                                   clean_text, label_set)
 
                     try:
                         raw_alt = await run_explain(engine, bd["class_prompt"],
                                                     bd["class_raw"], alt_prompt,
-                                                    max_tokens=strategy_max_tokens(s, inst.text))
+                                                    max_tokens=strategy_max_tokens(s, clean_text))
                         alt_raw_tokens = parse_raw_tokens(
-                            s, raw_alt, inst.text, bd["predicted_label"],
+                            s, raw_alt, clean_text, bd["predicted_label"],
                             label_set, parser, Normalizer())
                         alt_normalizer = Normalizer()
                         alt_set = normalize_token_list(alt_raw_tokens, alt_normalizer)
@@ -313,6 +367,10 @@ async def run_ablations(config, args):
                     variant_ecs = compute_ecs_from_token_sets(variant_sets, calc)
                     if variant_ecs is not None and bd["baseline_ecs"] is not None:
                         deltas.append(variant_ecs - bd["baseline_ecs"])
+                    variant_ecs_adj = compute_ecs_adj_from_token_sets(
+                        variant_sets, clean_text, Normalizer(), calc)
+                    if variant_ecs_adj is not None and bd.get("baseline_ecs_adj") is not None:
+                        deltas_aj.append(variant_ecs_adj - bd["baseline_ecs_adj"])
 
                     # R1 self-consistency ceiling: same strategy, baseline vs paraphrase
                     # wording, on the chance/ceiling-corrected AJ scale.
@@ -321,7 +379,7 @@ async def run_ablations(config, args):
                         sc_missing += 1
                     else:
                         aj, degen = compute_self_consistency_aj(
-                            base_set, alt_set, inst.text, Normalizer(), calc)
+                            base_set, alt_set, clean_text, Normalizer(), calc)
                         if degen:
                             sc_degenerate += 1
                         if aj is not None:
@@ -332,6 +390,12 @@ async def run_ablations(config, args):
                     "mean_delta": mean_delta,
                     "n_instances": len(deltas),
                     "deltas": deltas,
+                    # Audit F10: the same paraphrase contrast on the PRIMARY metric's
+                    # (ECS-adj, available-component) scale — mean_delta above is on the
+                    # legacy raw-Jaccard ECS scale and is NOT comparable to AJ ceilings.
+                    "mean_delta_aj": (float(np.mean(deltas_aj)) if deltas_aj else None),
+                    "n_instances_aj": len(deltas_aj),
+                    "deltas_aj": deltas_aj,
                     # Same-strategy paraphrase stability (R1): the ceiling against which
                     # cross-strategy ECS-adj is read. mean AJ(base_set, alt_set) over
                     # instances where both wordings produced evidence.
@@ -358,6 +422,17 @@ async def run_ablations(config, args):
 
     # Save combined results BEFORE plotting (P0.2): the plot must never be able to lose
     # the results JSON if it raises after all the API spend.
+    # Audit F10: stamp scope + scales so single-model provenance and the
+    # legacy-vs-AJ delta scales are explicit in the artifact itself.
+    all_results["_meta"] = {
+        "model": config.models[0].model_id,
+        "single_model_scope": True,
+        "delta_scales": {
+            "mean_delta": "legacy raw-Jaccard ECS (5 cross-paradigm pairs)",
+            "mean_delta_aj": "ECS-adj, available-component (primary metric's scale)",
+        },
+        "audit": "RESEARCH_AUDIT_2026-07-10 F10",
+    }
     with open(output_dir / "ablation_results.json", "w") as f:
         json.dump(all_results, f, indent=2)
     logger.info(f"Ablation results saved to {output_dir / 'ablation_results.json'}")

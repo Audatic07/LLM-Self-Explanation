@@ -2,7 +2,7 @@ The text was classified as: {predicted_label}
 
 Text: "{input_text}"
 
-Identify the 3-5 most important words for this classification, ranked from most to least important. Each item must be a single word copied from the text.
+Identify the 5 most important words for this classification, ranked from most to least important. Each item must be a single word copied from the text.
 
 Return only valid JSON:
-{{"ranking": ["word1", "word2", "word3"]}}
+{{"ranking": ["word1", "word2", "word3", "word4", "word5"]}}

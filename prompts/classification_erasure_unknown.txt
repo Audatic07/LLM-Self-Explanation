@@ -1,0 +1,8 @@
+Some words in the text below may have been masked with [MASK] or removed entirely.
+
+Classify the text into one of these categories: {label_set}. If the remaining text no longer determines the category, answer "unknown".
+
+Text: "{input_text}"
+
+Return only valid JSON:
+{{"label":"<one of: {label_set}, or unknown>"}}

@@ -1,8 +1,8 @@
 The text was classified as: {predicted_label}
 
-For the text below, list the 5 most important tokens for classification into {label_set}, in decreasing order of importance.
+For the text below, list the 5 most important words for this classification, in decreasing order of importance. Each entry must be a single word taken from the text.
 
 Text: "{input_text}"
 
 Return only valid JSON:
-{{"ranking":["token1","token2","token3","token4","token5"]}}
+{{"ranking": ["word1", "word2", "word3", "word4", "word5"]}}

@@ -1,0 +1,141 @@
+{
+  "overall": {
+    "n_instances": 225,
+    "mean_ecs_adj_complete": 0.48666951765255806,
+    "n_ecs_adj_complete": 68,
+    "mean_ecs_adj_available": 0.4923448832498576,
+    "ecs_adj_p_value": null,
+    "ecs_adj_p_holm": null,
+    "mean_ecs_adj_er": 0.486408887344198,
+    "mean_ecs_adj_ep": 0.5777055534454973,
+    "mean_ecs_adj_rp": 0.3821859998892635,
+    "legacy_mean_ecs_complete": 0.3722721874053517,
+    "legacy_mean_ecs_lift": 0.1917298031738436
+  },
+  "per_cell": {
+    "nova-pro_sst2": {
+      "mean_ecs_adj_complete": 0.6132557602446649,
+      "n": 8,
+      "p_holm": 0.015998400159984,
+      "p_holm_complete": 0.015998400159984,
+      "p_holm_available": 0.0008999100089991002
+    },
+    "qwen3-235b_sst2": {
+      "mean_ecs_adj_complete": 0.4602643185680949,
+      "n": 13,
+      "p_holm": 0.015998400159984,
+      "p_holm_complete": 0.015998400159984,
+      "p_holm_available": 0.0103989601039896
+    },
+    "deepseek-v3_sst2": {
+      "mean_ecs_adj_complete": 0.6708131004607992,
+      "n": 17,
+      "p_holm": 0.0005999400059994001,
+      "p_holm_complete": 0.0005999400059994001,
+      "p_holm_available": 0.0008999100089991002
+    },
+    "nova-pro_mnli": {
+      "mean_ecs_adj_complete": 0.33281821508806464,
+      "n": 3,
+      "p_holm": null,
+      "p_holm_complete": null,
+      "p_holm_available": 0.0008999100089991002
+    },
+    "qwen3-235b_mnli": {
+      "mean_ecs_adj_complete": 0.3181957852159744,
+      "n": 6,
+      "p_holm": 0.0785921407859214,
+      "p_holm_complete": 0.0785921407859214,
+      "p_holm_available": 0.0008999100089991002
+    },
+    "deepseek-v3_mnli": {
+      "mean_ecs_adj_complete": 0.43568189768148036,
+      "n": 8,
+      "p_holm": 0.05959404059594041,
+      "p_holm_complete": 0.05959404059594041,
+      "p_holm_available": 0.0008999100089991002
+    },
+    "nova-pro_ag_news": {
+      "mean_ecs_adj_complete": 0.352813536152091,
+      "n": 2,
+      "p_holm": null,
+      "p_holm_complete": null,
+      "p_holm_available": 0.0008999100089991002
+    },
+    "qwen3-235b_ag_news": {
+      "mean_ecs_adj_complete": 0.2752985860801831,
+      "n": 4,
+      "p_holm": null,
+      "p_holm_complete": null,
+      "p_holm_available": 0.0008999100089991002
+    },
+    "deepseek-v3_ag_news": {
+      "mean_ecs_adj_complete": 0.37147375922300163,
+      "n": 7,
+      "p_holm": 0.0260973902609739,
+      "p_holm_complete": 0.0260973902609739,
+      "p_holm_available": 0.0008999100089991002
+    }
+  },
+  "cross_model_delta": {
+    "ag_news": 0.19185775677630024,
+    "mnli": 0.21347083166733938,
+    "sst2": 0.23442620726232094
+  },
+  "erasure": {
+    "deepseek.v3-v1:0": {
+      "cc3_minus_random": {
+        "mask": 0.13529411764705881,
+        "delete": 0.14491978609625666
+      },
+      "cc3_vs_random_test": {
+        "mask": {
+          "n_paired": 68,
+          "p_raw": 0.0012998700129987,
+          "p_holm": 0.0017998200179982
+        },
+        "delete": {
+          "n_paired": 66,
+          "p_raw": 0.0008999100089991,
+          "p_holm": 0.0017998200179982
+        }
+      }
+    },
+    "eu.amazon.nova-pro-v1:0": {
+      "cc3_minus_random": {
+        "mask": 0.15929443690637718,
+        "delete": 0.13885261194029852
+      },
+      "cc3_vs_random_test": {
+        "mask": {
+          "n_paired": 66,
+          "p_raw": 0.0014998500149985001,
+          "p_holm": 0.0023997600239976003
+        },
+        "delete": {
+          "n_paired": 64,
+          "p_raw": 0.0011998800119988001,
+          "p_holm": 0.0023997600239976003
+        }
+      }
+    },
+    "qwen.qwen3-235b-a22b-2507-v1:0": {
+      "cc3_minus_random": {
+        "mask": 0.09393939393939393,
+        "delete": 0.11515151515151514
+      },
+      "cc3_vs_random_test": {
+        "mask": {
+          "n_paired": 66,
+          "p_raw": 0.011698830116988301,
+          "p_holm": 0.023397660233976603
+        },
+        "delete": {
+          "n_paired": 66,
+          "p_raw": 0.0136986301369863,
+          "p_holm": 0.023397660233976603
+        }
+      }
+    }
+  }
+}

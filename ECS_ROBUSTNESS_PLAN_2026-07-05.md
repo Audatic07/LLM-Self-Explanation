@@ -297,3 +297,37 @@ brevity/short-vocab confounds visible in raw ECS are a property of the deprecate
 are evidence FOR the adjustment. The `short_vocab` flag is retained for provenance only —
 post-P0.1 it flags the majority of SST-2/MNLI instances (median normalized vocab ~9–11), so
 the "conservative-estimate filter" framing is dropped.
+
+## §G. AUDIT AMENDMENT (2026-07-10, pre-launch) — power-informed family structure + instrument fixes
+
+Dated pre-registration amendment, recorded BEFORE the 200-instance production run
+(RESEARCH_AUDIT_2026-07-10.md; power projections in audit/2026-07-10/05_results.json).
+
+1. **Per-dataset complete-case family added as CO-PRIMARY.** Projected complete-case n at
+   N=200 from the N=25 CF-validity rates: nova-ag_news ≈ 16 (cc-rate 0.08; its N=25 cc n=2
+   makes even the projection unstable) and qwen-ag_news ≈ 32 (power ≈ 0.82 at the
+   Bonferroni-9 floor); all other cells ≥ 48 with power ≈ 1.0. Decision: family (a) is
+   tested at TWO pre-declared granularities — (a-cell) the existing 9 model×dataset cells,
+   and (a-dataset) the 3 per-dataset complete-case pools (Holm within each family, as
+   before). **nova-ag_news is pre-declared expected-underpowered** at the cell granularity;
+   its cell estimate is reported descriptively either way.
+2. **Erasure control occurrence-matched (audit F2).** The random control now matches the
+   CC3 arm's destroyed-token count, not only its type count (+14.5% destruction advantage
+   measured at N=25; the CC3-vs-random gap survives the no-advantage subsample under both
+   operators, so this is an instrument upgrade, not a rescue). `validity.occurrence_matched_control: true`.
+3. **Unknown-escape erasure sensitivity arm pre-specified (audit F12,** Madsen Fig. 5
+   protocol**)** behind `validity.unknown_escape_sensitivity` — "unknown" counts as
+   non-flip in the primary fields and is reported separately. Sensitivity only.
+4. **Frequency-weighted null sensitivity for AJ (audit F4)** via
+   `scripts/run_weighted_null_sensitivity.py` — the primary stays the uniform exact
+   hypergeometric null; the weighted variant is a shipped robustness companion
+   (N=25: pooled complete-case 0.4867 → 0.4635, all cells positive).
+5. **W6 instrument repaired (audit F7/F8):** embedder `en_core_web_md` (pruned 34×;
+   antonyms at cosine 1.0) → `en_core_web_lg` (full table); soft-null MC draws 200 → 1000
+   with per-call decorrelated seeding. W6 stays a sensitivity arm; its conclusion (the
+   R-pair gap is evidential, not lexical) is unchanged and now τ-robust with the repaired
+   instrument (lexical share of the gap: −0.12 / −0.09 / +0.01 at τ = 0.7 / 0.8 / 0.9).
+6. **Cross-model contrast: strategy-matched variant is the quotable direction claim
+   (audit F3)** — `paired_contrast_aj_matched` ({H,R,RO} cross-model pairs vs the within
+   er-component). The unmatched Δ mixes CF representation (0.5–14% of cross pairs vs a
+   fixed 2/3 of within weight) and is retained descriptively.

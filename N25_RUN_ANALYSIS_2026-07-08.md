@@ -1,5 +1,31 @@
 # N=25 End-to-End Run — Full Analysis (2026-07-08)
 
+> **AUDIT CORRECTIONS (2026-07-10, RESEARCH_AUDIT_2026-07-10.md).** All numbers below were
+> independently recomputed bit-exact (audit V1–V4); the following READINGS are corrected:
+> 1. **Per-cell significance (F1):** the paper assets quoted the available-component (a2)
+>    family's p-values as if they were the primary test. The pre-registered COMPLETE-CASE
+>    family's true N=25 picture: significant after Holm in deepseek-sst2 (.0006),
+>    nova-sst2 (.016), qwen-sst2 (.016), deepseek-ag_news (.026); NOT significant in
+>    deepseek-mnli (.060) and qwen-mnli (.079); untestable (n<6) in the other 3 cells.
+>    `generate_paper_assets.py` is fixed; regenerate assets before quoting T3/numbers.json.
+> 2. **"Decays monotonically with paradigm distance" (F9):** at N=25 only the top-vs-bottom
+>    rung is CI-separated (E-P − R-P = +0.208 [+0.056,+0.361]); E-P vs E-R and E-R vs R-P are
+>    not. Present the ladder as a point-estimate ordering until N=200.
+> 3. **W6 (F7/F8):** the original artifact used a 34×-pruned vector table (antonyms at
+>    cosine 1.0) and a correlated MC null (±0.03 seed swing). Regenerated with
+>    en_core_web_lg + decorrelated 1000-draw null: CF-pairs gain from soft matching
+>    (+0.02), R-pairs stay flat — lexical share of the E-P↔R gap is −0.12/−0.09/+0.01 at
+>    τ=0.7/0.8/0.9. The §"evidential, not lexical" conclusion STRENGTHENS.
+> 4. **Cross-model contrast (F3):** "cross-model exceeds within-model in all 3 datasets"
+>    holds only under mixed composition; the strategy-matched contrast is CI-separated in
+>    sst2 only (+0.230 [+0.042,+0.448]). Quote `paired_contrast_aj_matched`.
+> 5. **Erasure (F2):** the type-matched random control gave CC3 a +14.5% destroyed-token
+>    advantage (ag_news/mnli); the gap survives the no-advantage subsample under both
+>    operators (mask +0.098 p=4e-4; delete +0.133 p=1e-4), so the finding stands; the
+>    occurrence-matched control is now default for future runs.
+> 6. **Confidence (F11/R6):** descriptively reported only; the unsourced anti-hedge line was
+>    removed from the prompt post-N=25.
+
 **What this document is.** A complete read of everything the study produces end-to-end, run at
 N=25 per model×dataset cell as a full-pipeline rehearsal of the 200-run: main collection →
 erasure validity pass → ablation + self-consistency ceiling → W6 soft-match sensitivity →

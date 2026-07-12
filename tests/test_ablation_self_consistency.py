@@ -62,3 +62,21 @@ class TestSelfConsistencyAj:
         aj, degen = compute_self_consistency_aj(base, alt, TEXT, normalizer, calc)
         assert not degen
         assert aj is not None and 0.0 < aj < 1.0
+
+
+class TestEcsAdjFromTokenSets:
+    """Audit F10 (RESEARCH_AUDIT_2026-07-10): paraphrase deltas are also reported on
+    the primary metric's (ECS-adj) scale via compute_ecs_adj_from_token_sets."""
+
+    def test_identical_strategy_sets_score_positive(self, calc, normalizer):
+        from scripts.run_ablations import compute_ecs_adj_from_token_sets
+        s = {"brilliant", "moving", "unforgettable"}
+        sets = {"H": set(s), "R": set(s), "CF": set(s), "RO": set(s)}
+        val = compute_ecs_adj_from_token_sets(sets, TEXT, normalizer, calc)
+        assert val is not None
+        assert val == pytest.approx(1.0)
+
+    def test_empty_sets_give_none(self, calc, normalizer):
+        from scripts.run_ablations import compute_ecs_adj_from_token_sets
+        sets = {"H": set(), "R": set(), "CF": set(), "RO": set()}
+        assert compute_ecs_adj_from_token_sets(sets, TEXT, normalizer, calc) is None

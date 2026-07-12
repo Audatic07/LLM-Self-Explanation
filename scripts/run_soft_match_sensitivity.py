@@ -138,7 +138,7 @@ def run(results_dir: Path, tau: float, eps: float, mc_draws: int, seed: int,
         normalizer = Normalizer(use_lemmatization=True, remove_stopwords=True, lemmatizer="wordnet")
 
     calc = MetricsCalculator()
-    logger.info("Loading pinned offline embedder (en_core_web_md)...")
+    logger.info("Loading pinned offline embedder (full-vector table, audit F7)...")
     embedder = SpacyVectorEmbedder()
     logger.info(f"Embedder: {embedder.descriptor}")
 
@@ -322,7 +322,8 @@ def main():
     ap.add_argument("--results-dir", required=True, help="Run directory with instance_results.jsonl")
     ap.add_argument("--tau", type=float, default=0.8, help="Pre-registered cosine threshold (default 0.8)")
     ap.add_argument("--eps", type=float, default=0.10, help="Degeneracy guard epsilon (default 0.10)")
-    ap.add_argument("--mc-draws", type=int, default=200, help="Monte-Carlo draws for the soft null")
+    ap.add_argument("--mc-draws", type=int, default=1000,
+                    help="Monte-Carlo draws for the soft null (raised 200->1000, audit F8)")
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--thresholds", default="0.7,0.8,0.9",
                     help="Comma-separated diagnostic sweep (primary stays --tau)")

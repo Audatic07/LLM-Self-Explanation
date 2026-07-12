@@ -1,0 +1,84 @@
+{
+  "A_cosines": {
+    "antonyms": {
+      "good/bad": 1.0,
+      "positive/negative": 1.0,
+      "rise/fall": 0.50137859582901,
+      "increase/decrease": 1.0000001192092896,
+      "win/lose": 0.3812965452671051,
+      "happy/sad": 0.4797082543373108,
+      "best/worst": 0.24021629989147186,
+      "love/hate": 1.0,
+      "up/down": 0.2732236981391907,
+      "buy/sell": 0.32884645462036133
+    },
+    "near_synonyms": {
+      "movie/film": 0.5190860033035278,
+      "big/large": 1.0,
+      "company/firm": 0.47384169697761536,
+      "profit/earnings": 0.7624581456184387,
+      "game/match": 0.2254359871149063,
+      "great/excellent": 1.0000001192092896,
+      "rise/climb": 0.4049396216869354,
+      "say/state": 0.2590934634208679,
+      "buy/purchase": 0.7889221906661987,
+      "war/conflict": 0.4565528631210327
+    },
+    "summary": {
+      "antonym_mean": 0.6204669967293739,
+      "antonym_max": 1.0000001192092896,
+      "antonyms_in_0.6_0.8": 0,
+      "antonyms_ge_0.8": 4,
+      "synonym_mean": 0.5890330091118813,
+      "synonyms_ge_0.8": 2,
+      "synonyms_in_0.6_0.8": 2
+    }
+  },
+  "B_mc_noise": {
+    "H_R_soft_aj_mean_seed42": 0.4295490930849158,
+    "n_seed42": 199,
+    "H_R_soft_aj_mean_seed43": 0.46097033522200487,
+    "n_seed43": 199,
+    "abs_shift": 0.03142124213708908,
+    "artifact_value_tau_0.80": 0.4295490930849158
+  },
+  "C_ladder": {
+    "means": {
+      "E-R": {
+        "point": 0.4779570082664553,
+        "ci_lower": 0.4114948259346535,
+        "ci_upper": 0.5435548892711495
+      },
+      "E-P": {
+        "point": 0.5885065612532152,
+        "ci_lower": 0.49094401902569224,
+        "ci_upper": 0.6852477460966335
+      },
+      "R-P": {
+        "point": 0.3821859998892635,
+        "ci_lower": 0.22927577028820806,
+        "ci_upper": 0.5318622001718395
+      }
+    },
+    "differences": {
+      "E-P minus E-R": {
+        "point": 0.1100235142993639,
+        "ci_lower": -0.004526936002495725,
+        "ci_upper": 0.2303809358843184,
+        "excludes_0": false
+      },
+      "E-R minus R-P": {
+        "point": 0.09808920187317026,
+        "ci_lower": -0.048900315950428354,
+        "ci_upper": 0.23897032144582314,
+        "excludes_0": false
+      },
+      "E-P minus R-P": {
+        "point": 0.20811271617253416,
+        "ci_lower": 0.05585508019929764,
+        "ci_upper": 0.3606282806535388,
+        "excludes_0": true
+      }
+    }
+  }
+}

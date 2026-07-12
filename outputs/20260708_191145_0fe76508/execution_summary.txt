@@ -1,0 +1,53 @@
+Execution Summary
+=================
+Run ID: 0fe76508
+Start Time: 2026-07-08 19:11:48
+End Time: 2026-07-08 19:56:19
+Duration: 2670.75 seconds (44.51 minutes)
+
+Processing Statistics
+---------------------
+Total Instances: 225
+Successful: 225 (100.0%)
+Failed: 0 (0.0%)
+
+Failure Breakdown
+-----------------
+API Failures: 0
+Normalization Failures: 0
+Prompt Validation Failures: 0
+Parsing Failures by Strategy:
+  CF: 136
+  H: 2
+  R: 9
+  RO: 4
+
+Sampling Log:
+----------------------------------------
+  nova-pro/sst2: requested=25, sampled=25, wrong_pred=2
+  qwen3-235b/sst2: requested=25, sampled=25, wrong_pred=1
+  deepseek-v3/sst2: requested=25, sampled=25, wrong_pred=1
+  nova-pro/mnli: requested=25, sampled=25, wrong_pred=4
+  qwen3-235b/mnli: requested=25, sampled=25, wrong_pred=4
+  deepseek-v3/mnli: requested=25, sampled=25, wrong_pred=6
+  nova-pro/ag_news: requested=25, sampled=25, wrong_pred=2
+  qwen3-235b/ag_news: requested=25, sampled=25, wrong_pred=3
+  deepseek-v3/ag_news: requested=25, sampled=25, wrong_pred=4
+
+Performance Metrics
+-------------------
+Average Time per Instance: 11.87 seconds
+Total API Requests: 2346
+Failed API Requests: 330 (14.1%)
+API Requests by Category:
+  CF: 225
+  CF_correct: 42
+  CF_free: 225
+  CF_free_verify: 221
+  CF_verify: 161
+  H: 225
+  R: 225
+  RO: 225
+  RO_correct: 17
+  classification: 225
+  confidence: 225

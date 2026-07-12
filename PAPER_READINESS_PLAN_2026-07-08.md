@@ -1,5 +1,17 @@
 # Paper-Readiness Plan — 2026-07-08
 
+> **AUDIT UPDATE (2026-07-10).** `RESEARCH_AUDIT_2026-07-10.md` supersedes this document's
+> claim-caveat map on six points: (F1) T3/numbers.json now carry the complete-case primary
+> p's (regenerate assets; the a2 family is a labelled companion); (F3) the cross-model
+> direction claim must quote `paired_contrast_aj_matched` (sst2-only separation at N=25);
+> (F9) the consistency ladder is a point-estimate ordering with one CI-separated rung at
+> N=25; (F11) confidence is descriptive-only and the prompt's anti-hedge line is removed;
+> (F2/F12) erasure runs with an occurrence-matched control and an optional unknown-escape
+> arm (both need the production re-run); (§G) the pre-registration adds a per-dataset
+> co-primary family and pre-declares nova-ag_news underpowered. The audit's §7 limitations
+> paragraph is the drop-in for the paper. The launch runbook below otherwise stands; add
+> `scripts/run_weighted_null_sensitivity.py` to the post-run offline steps.
+
 **Purpose:** the single document that takes the study from "pre-200-run fixes landed" to
 "the 200-run's outputs are directly draftable into the paper." It consolidates: (1) the
 executed P0.4 smoke results (all three PASS, run live on Bedrock today), (2) the

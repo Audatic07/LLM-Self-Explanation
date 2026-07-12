@@ -113,3 +113,78 @@ class TestErase:
         assert _tier(0.05, 0.1, 0.2) == "low"
         assert _tier(0.15, 0.1, 0.2) == "mid"
         assert _tier(0.25, 0.1, 0.2) == "high"
+
+
+class TestOccurrenceMatchedControl:
+    """Audit F2 (RESEARCH_AUDIT_2026-07-10): the random control can match the CC3
+    arm's destroyed-token count, not just its type count."""
+
+    def test_erased_token_count_matches_erase(self):
+        norm = Normalizer(use_lemmatization=True, remove_stopwords=True)
+        text = "The movies were great and the movie score was great fun"
+        tokens = {"movie", "great"}
+        n = rvt.erased_token_count(text, tokens, norm)
+        destroyed = len(text.split()) - len(erase(text, tokens, "delete", norm).split())
+        assert n == destroyed
+        assert n >= 4  # movies, movie, great, great (lemma fan-out counts occurrences)
+
+    def test_type_matched_legacy_mode(self):
+        norm = Normalizer(use_lemmatization=True, remove_stopwords=True)
+        text = "alpha bravo charlie delta echo foxtrot golf hotel"
+        samples = rvt.random_control_samples(text, n=3, trials=4, seed=7,
+                                             normalizer=norm, match_occurrences=None)
+        assert len(samples) == 4
+        assert all(len(s) == 3 for s in samples)
+
+    def test_occurrence_matched_mode_reaches_target(self):
+        norm = Normalizer(use_lemmatization=True, remove_stopwords=True)
+        # 'alpha' repeats: matching 3 occurrences may need fewer types than 3
+        text = "alpha alpha alpha bravo charlie delta echo foxtrot"
+        target = 3
+        samples = rvt.random_control_samples(text, n=2, trials=6, seed=11,
+                                             normalizer=norm, match_occurrences=target)
+        assert len(samples) == 6
+        # the pool (8 tokens over 6 types, 'alpha' x3) can always reach 3 occurrences
+        for s in samples:
+            assert rvt.erased_token_count(text, s, norm) >= target
+
+    def test_occurrence_matched_is_deterministic(self):
+        norm = Normalizer(use_lemmatization=True, remove_stopwords=True)
+        text = "alpha bravo charlie delta echo foxtrot golf hotel india juliet"
+        a = rvt.random_control_samples(text, 3, 5, seed=42, normalizer=norm, match_occurrences=4)
+        b = rvt.random_control_samples(text, 3, 5, seed=42, normalizer=norm, match_occurrences=4)
+        assert a == b
+
+
+class TestUnknownArmAggregation:
+    """Audit F12: unknown-escape sensitivity arm surfaces in aggregate() only when
+    records carry it; 'unknown' answers are tracked separately from flips."""
+
+    def test_aggregate_reports_unknown_arm(self):
+        recs = []
+        for i, (flip, unk, rflip, runk) in enumerate(
+                [(True, False, 0.2, 0.4), (False, True, 0.0, 0.6), (None, None, 0.2, 0.2)]):
+            r = _rec(f"i{i}", "m1", cc3_mask=True, rand_mask=0.2,
+                     cc3_delete=False, rand_delete=0.0)
+            r["unknown_arm"] = {"mask": {"cc3_flip": flip, "cc3_unknown": unk,
+                                         "random_flip_rate": rflip,
+                                         "random_unknown_rate": runk},
+                                "delete": {"cc3_flip": False, "cc3_unknown": False,
+                                           "random_flip_rate": 0.0,
+                                           "random_unknown_rate": 0.0}}
+            recs.append(r)
+        agg = aggregate(recs, ["mask", "delete"], n_permutations=200, min_n_for_test=2)
+        ua = agg["overall"]["unknown_arm"]["mask"]
+        assert ua["n"] == 3
+        assert ua["cc3_flip_rate"] == pytest.approx(0.5)      # True, False (None dropped)
+        assert ua["cc3_unknown_rate"] == pytest.approx(0.5)
+        assert ua["random_flip_rate"] == pytest.approx((0.2 + 0.0 + 0.2) / 3)
+        assert agg["overall"]["random_control_match_mode"] == ["types"]
+
+    def test_no_unknown_arm_key_when_absent(self):
+        recs = [_rec("i0", "m1", cc3_mask=True, rand_mask=0.2,
+                     cc3_delete=True, rand_delete=0.4),
+                _rec("i1", "m1", cc3_mask=False, rand_mask=0.0,
+                     cc3_delete=False, rand_delete=0.2)]
+        agg = aggregate(recs, ["mask", "delete"], n_permutations=200, min_n_for_test=2)
+        assert "unknown_arm" not in agg["overall"]

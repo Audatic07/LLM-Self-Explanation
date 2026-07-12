@@ -1,8 +1,8 @@
 The text was classified as: {predicted_label}
 
-Rewrite the text below so that a classifier would assign it a different category from these: {label_set}. Change as few words as possible.
-
 Text: "{input_text}"
 
-Return only valid JSON:
-{{"rewritten": "<edited text>", "new_prediction": "<the new category, one of: {label_set}>"}}
+Revise the text so a classifier would instead label it as one of: {other_labels_quoted}. Change as few words as you can — edit no more than a third of the words, and add no new sentences. Preserve the original spacing and punctuation, altering only the words you change.
+
+Return only valid JSON (exactly one JSON object, one rewrite):
+{{"rewritten": "<edited text>", "new_prediction": "<one of: {other_labels}>"}}

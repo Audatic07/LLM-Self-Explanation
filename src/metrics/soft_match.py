@@ -35,6 +35,7 @@ Design guarantees (asserted in ``tests/test_soft_match.py``):
   * the embedder is injectable, so the estimator is testable without loading spaCy.
 """
 
+import zlib
 from functools import lru_cache
 from typing import Dict, List, Optional, Sequence, Set, Tuple
 
@@ -43,30 +44,60 @@ from scipy.optimize import linear_sum_assignment
 
 
 class SpacyVectorEmbedder:
-    """Pinned, offline GloVe embedder backed by the ``en_core_web_md`` static
-    vectors. Loaded lazily; only the vector table is needed, so the tagger,
+    """Pinned, offline static-vector embedder backed by a spaCy model's vector
+    table. Loaded lazily; only the vector table is needed, so the tagger,
     parser, NER, lemmatizer and attribute-ruler pipes are disabled.
 
-    Pinning: the model package version (``en_core_web_md==3.8.0``) IS the
-    provenance — record :attr:`descriptor` in the sensitivity output so the
-    embedding model is reproducible and the analysis is not a moving target.
+    Default model is ``en_core_web_lg`` — a FULL per-key vector table. The
+    previous default ``en_core_web_md`` is a 34x PRUNED table (684,830 keys
+    mapped onto 20,000 unique vectors, per the official release metadata),
+    under which measured cosines are bucket identities, not semantics:
+    'increase'/'decrease' share one vector row and 'good'/'bad' score 1.0000
+    while the synonym pair 'good'/'great' scores 0.52 (RESEARCH_AUDIT_2026-07-10
+    F7). A pruned table therefore credits antonyms at ANY tau and rejects
+    synonyms at tau=0.8 — exactly backwards for sentiment evidence. md remains
+    loadable for comparison but triggers the pruning warning below.
+
+    Pinning: the resolved model package version IS the provenance — record
+    :attr:`descriptor` (which now includes the measured keys/vectors shape) in
+    the sensitivity output so the analysis is not a moving target.
     """
 
-    MODEL = "en_core_web_md"
+    MODEL = "en_core_web_lg"
     VERSION = "3.8.0"
 
-    def __init__(self) -> None:
+    def __init__(self, model: Optional[str] = None) -> None:
         import spacy  # local import: the module must import without spaCy present
 
+        self.model = model or self.MODEL
         self._nlp = spacy.load(
-            self.MODEL,
+            self.model,
             disable=["tagger", "parser", "ner", "lemmatizer", "attribute_ruler", "tok2vec"],
         )
         self._vocab = self._nlp.vocab
+        try:
+            self.version = str(self._nlp.meta.get("version", self.VERSION))
+        except Exception:
+            self.version = self.VERSION
+        vecs = self._vocab.vectors
+        self.n_keys = int(len(vecs.key2row))
+        self.n_unique_vectors = int(vecs.shape[0])
+        self.pruned = self.n_unique_vectors < self.n_keys // 2
+        if self.pruned:
+            import warnings
+            warnings.warn(
+                f"{self.model} has a pruned vector table "
+                f"({self.n_keys} keys -> {self.n_unique_vectors} unique vectors): "
+                "cosines are bucket identities (antonyms can score 1.0). Soft-matching "
+                "results under this table are not semantically interpretable (audit F7).",
+                stacklevel=2,
+            )
 
     @property
     def descriptor(self) -> str:
-        return f"{self.MODEL}=={self.VERSION} (GloVe 300d static vectors)"
+        table = f"{self.n_keys} keys/{self.n_unique_vectors} vectors"
+        flag = ", PRUNED TABLE" if self.pruned else ""
+        return f"{self.model}=={self.version} (static 300d vectors, {table}{flag})"
 
     def has_vector(self, token: str) -> bool:
         return bool(self._vocab.has_vector(token))
@@ -123,7 +154,7 @@ class SoftMatcher:
     """
 
     def __init__(self, embedder, tau: float = 0.8, eps: float = 0.10,
-                 mc_draws: int = 200, seed: int = 42) -> None:
+                 mc_draws: int = 1000, seed: int = 42) -> None:
         self.embedder = embedder
         self.tau = float(tau)
         self.eps = float(eps)
@@ -184,7 +215,16 @@ class SoftMatcher:
         b = min(int(size_b), V)
         if V <= 0 or a <= 0 or b <= 0:
             return 0.0, 0.0
-        rng = np.random.default_rng(self.seed)
+        # Decorrelated, content-stable seeding (audit F8): re-seeding with the
+        # SAME fixed seed on every call made every same-geometry pair reuse
+        # identical draw patterns, so MC errors were shared across instances and
+        # did not average out — the pooled soft-AJ mean swung ~±0.03 between
+        # master seeds while each pair reported a tiny SE. Spawning a child seed
+        # from (master seed, a, b, crc32 of the vocab contents) keeps runs
+        # reproducible while making draws independent across pairs/instances.
+        vocab_key = zlib.crc32("\x1f".join(vocab).encode("utf-8"))
+        rng = np.random.default_rng(
+            np.random.SeedSequence([self.seed, a, b, vocab_key]))
         idx = np.arange(V)
         vals = np.empty(self.mc_draws, dtype=float)
         for t in range(self.mc_draws):

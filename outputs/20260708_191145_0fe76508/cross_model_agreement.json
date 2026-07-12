@@ -1,0 +1,173 @@
+{
+  "ag_news": {
+    "strategies": {
+      "H": {
+        "mean_jaccard": 0.5932080512080512,
+        "n_pairs": 75
+      },
+      "R": {
+        "mean_jaccard": 0.49223184223184224,
+        "n_pairs": 66
+      },
+      "CF": {
+        "mean_jaccard": 0.6,
+        "n_pairs": 1
+      },
+      "RO": {
+        "mean_jaccard": 0.5353703703703703,
+        "n_pairs": 75
+      }
+    },
+    "cross_model_same_strategy_mean": 0.5425377106252681,
+    "within_model_cross_strategy_mean_ecs": 0.3506799538489679,
+    "n_instances_multi_model": 25,
+    "paired_contrast": {
+      "mean_delta": 0.19857520786092217,
+      "ci_lower": 0.14633494806340044,
+      "ci_upper": 0.25161858476620386,
+      "n": 25,
+      "direction": "cross_model_exceeds"
+    },
+    "strategies_aj": {
+      "H": {
+        "mean_aj": 0.4891200673505428,
+        "n_pairs": 75
+      },
+      "R": {
+        "mean_aj": 0.7490529732616259,
+        "n_pairs": 63
+      },
+      "CF": {
+        "mean_aj": 1.0,
+        "n_pairs": 1
+      },
+      "RO": {
+        "mean_aj": 0.5968335559526416,
+        "n_pairs": 75
+      }
+    },
+    "cross_model_same_strategy_mean_aj": 0.6057797152486976,
+    "within_model_cross_strategy_mean_ecs_adj": 0.4732104667907411,
+    "paired_contrast_aj": {
+      "mean_delta": 0.12181434180219515,
+      "ci_lower": 0.019738513087162877,
+      "ci_upper": 0.22604270278376698,
+      "n": 25,
+      "direction": "cross_model_exceeds"
+    }
+  },
+  "mnli": {
+    "strategies": {
+      "H": {
+        "mean_jaccard": 0.6892597553757909,
+        "n_pairs": 73
+      },
+      "R": {
+        "mean_jaccard": 0.6620468572523368,
+        "n_pairs": 73
+      },
+      "CF": {
+        "mean_jaccard": 0.7063492063492063,
+        "n_pairs": 21
+      },
+      "RO": {
+        "mean_jaccard": 0.5403085177733067,
+        "n_pairs": 71
+      }
+    },
+    "cross_model_same_strategy_mean": 0.6379858017524849,
+    "within_model_cross_strategy_mean_ecs": 0.4245149700851455,
+    "n_instances_multi_model": 25,
+    "paired_contrast": {
+      "mean_delta": 0.21129021549158658,
+      "ci_lower": 0.14882549016397684,
+      "ci_upper": 0.2769747622807761,
+      "n": 25,
+      "direction": "cross_model_exceeds"
+    },
+    "strategies_aj": {
+      "H": {
+        "mean_aj": 0.4976393329926021,
+        "n_pairs": 70
+      },
+      "R": {
+        "mean_aj": 0.8171816570335366,
+        "n_pairs": 68
+      },
+      "CF": {
+        "mean_aj": 0.8406084656084657,
+        "n_pairs": 21
+      },
+      "RO": {
+        "mean_aj": 0.5486294378379272,
+        "n_pairs": 71
+      }
+    },
+    "cross_model_same_strategy_mean_aj": 0.6391677124001445,
+    "within_model_cross_strategy_mean_ecs_adj": 0.5331303480486222,
+    "paired_contrast_aj": {
+      "mean_delta": 0.11777713717412555,
+      "ci_lower": 0.0028431761470203596,
+      "ci_upper": 0.24896616875301658,
+      "n": 25,
+      "direction": "cross_model_exceeds"
+    }
+  },
+  "sst2": {
+    "strategies": {
+      "H": {
+        "mean_jaccard": 0.6364614837217576,
+        "n_pairs": 73
+      },
+      "R": {
+        "mean_jaccard": 0.6344614512471655,
+        "n_pairs": 70
+      },
+      "CF": {
+        "mean_jaccard": 0.575,
+        "n_pairs": 34
+      },
+      "RO": {
+        "mean_jaccard": 0.6645539906103287,
+        "n_pairs": 71
+      }
+    },
+    "cross_model_same_strategy_mean": 0.6355134001303356,
+    "within_model_cross_strategy_mean_ecs": 0.4010871928680147,
+    "n_instances_multi_model": 25,
+    "paired_contrast": {
+      "mean_delta": 0.23177444284110954,
+      "ci_lower": 0.17691364798781467,
+      "ci_upper": 0.29051224426807754,
+      "n": 25,
+      "direction": "cross_model_exceeds"
+    },
+    "strategies_aj": {
+      "H": {
+        "mean_aj": 0.4738519660411462,
+        "n_pairs": 73
+      },
+      "R": {
+        "mean_aj": 0.7975411932228252,
+        "n_pairs": 59
+      },
+      "CF": {
+        "mean_aj": 0.8285205226001839,
+        "n_pairs": 34
+      },
+      "RO": {
+        "mean_aj": 0.6185800486128832,
+        "n_pairs": 71
+      }
+    },
+    "cross_model_same_strategy_mean_aj": 0.6486709077682334,
+    "within_model_cross_strategy_mean_ecs_adj": 0.4704280791260551,
+    "paired_contrast_aj": {
+      "mean_delta": 0.1689016644218593,
+      "ci_lower": 0.0015873241751656107,
+      "ci_upper": 0.356317127486162,
+      "n": 25,
+      "direction": "cross_model_exceeds"
+    }
+  }
+}
