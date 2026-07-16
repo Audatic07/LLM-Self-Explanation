@@ -358,3 +358,28 @@ class TestModuleLevelLoadDataset:
             result = load_dataset("test/ds", split="train", cache_dir="/tmp")
             mock_hf.assert_called_once_with("test/ds", split="train", cache_dir="/tmp")
             assert result == "dataset"
+
+
+class TestCadImdbCurated:
+    """Move 2 (STRONG_ACCEPT_MOVES_SPEC_2026-07-13.md §2.4): the frozen CAD-IMDb
+    curated set matches its curation contract."""
+
+    @pytest.fixture(scope="class")
+    def instances(self):
+        loader = DatasetLoader(seed=42)
+        return loader.load_curated("data/processed/cad_imdb_curated.jsonl")
+
+    def test_200_balanced_instances(self, instances):
+        assert len(instances) == 200
+        labels = Counter(i.label for i in instances)
+        assert labels == {"positive": 100, "negative": 100}
+
+    def test_text_bounds(self, instances):
+        assert all(len(i.text) <= 2000 for i in instances)
+        assert all(i.metadata["content_words"] >= 8 for i in instances)
+
+    def test_identity_fields(self, instances):
+        assert all(i.dataset == "cad_imdb" for i in instances)
+        assert all(i.split == "dev+test-revised" for i in instances)
+        assert all(i.instance_id.startswith(("cad_imdb_dev_", "cad_imdb_test_"))
+                   for i in instances)

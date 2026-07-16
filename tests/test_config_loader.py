@@ -850,3 +850,23 @@ class TestLoadAndValidateConfigExtra:
         args = Namespace(config_dir=str(config_dir), skip_validation=False, experiment_name=None, seed=None, datasets=None, sample_size=None, models=None, temperature=None, max_retries=None, concurrent_requests=None, output_dir=None, log_level=None, force_restart=False)
         config = load_and_validate_config(args=args)
         assert config.experiment.name == "test"
+
+
+class TestCadImdbConfig:
+    """Move 2 (§2.3/2.4): the live config with the cad_imdb entry (local: id,
+    dev+test-revised split) validates."""
+
+    def test_live_config_with_cad_imdb_validates(self):
+        config = load_and_validate_config(config_dir="config")
+        names = [d.name for d in config.datasets]
+        assert "cad_imdb" in names
+        ds = next(d for d in config.datasets if d.name == "cad_imdb")
+        assert ds.huggingface_id == "local:cad_imdb"
+        assert ds.split == "dev+test-revised"
+        assert ds.sample_size == 200
+        assert ds.labels == ["negative", "positive"]
+
+    def test_local_prefix_accepted_by_validator(self):
+        cfg = DatasetConfig(name="x", huggingface_id="local:x", split="s",
+                            sample_size=10, labels=["a", "b"])
+        ConfigValidator()._validate_datasets([cfg])  # must not raise

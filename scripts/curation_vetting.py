@@ -11,6 +11,12 @@ Vetting criterion: exclude instances whose GOLD LABEL is wrong or genuinely
 ambiguous, plus low-quality items (garbled/fragment text). No model was used — these
 are manual judgments from reading every candidate. Everything not listed here was
 judged a clean, unambiguous, correctly-labeled instance.
+
+cad_imdb is the exception: its vetting is RULE-BASED (not per-instance human
+judgment; STRONG_ACCEPT_MOVES_SPEC_2026-07-13.md §2.2) — candidates are dropped
+when the text carries meta-artifacts: a leading ellipsis fragment, encoding
+damage (U+FFFD), or fewer than 8 content words. The rule is recorded here and in
+the datasheet; human vetting can amend later via CAD_DROPS.
 """
 
 import json
@@ -79,6 +85,52 @@ DROPS = {
 }
 
 
+# cad_imdb: manual amendments on top of the rule-based pass (currently none).
+CAD_DROPS = {}
+
+CAD_MIN_CONTENT_WORDS = 8
+
+
+def rule_based_cad_reason(rec: dict) -> str:
+    """Programmatic vetting rule for cad_imdb (recorded in the datasheet): drop
+    candidates whose text carries meta-artifacts. Returns the drop reason, or
+    None to keep."""
+    text = rec.get("text", "")
+    if rec["instance_id"] in CAD_DROPS:
+        return CAD_DROPS[rec["instance_id"]]
+    if text.lstrip().startswith("..."):
+        return "rule: leading-ellipsis fragment (meta-artifact)"
+    if "�" in text:
+        return "rule: encoding damage (U+FFFD replacement char)"
+    if rec.get("content_words", 0) < CAD_MIN_CONTENT_WORDS:
+        return f"rule: fewer than {CAD_MIN_CONTENT_WORDS} content words"
+    return None
+
+
+def write_decisions_cad_imdb() -> None:
+    """Rule-based decisions for cad_imdb (drops computed from the candidate text,
+    not a hand-authored id list)."""
+    candidates_path = PROCESSED / "cad_imdb_candidates.jsonl"
+    decisions_path = PROCESSED / "cad_imdb_decisions.jsonl"
+    n_keep = n_drop = 0
+    with open(candidates_path, encoding="utf-8") as fin, \
+            open(decisions_path, "w", encoding="utf-8") as fout:
+        for line in fin:
+            if not line.strip():
+                continue
+            rec = json.loads(line)
+            reason = rule_based_cad_reason(rec)
+            if reason:
+                out = {"instance_id": rec["instance_id"], "decision": "drop", "reason": reason}
+                n_drop += 1
+            else:
+                out = {"instance_id": rec["instance_id"], "decision": "keep",
+                       "reason": "rule-based pass: no meta-artifacts"}
+                n_keep += 1
+            fout.write(json.dumps(out) + "\n")
+    print(f"cad_imdb: wrote {decisions_path} (keep={n_keep}, drop={n_drop})")
+
+
 def write_decisions(dataset: str) -> None:
     candidates_path = PROCESSED / f"{dataset}_candidates.jsonl"
     decisions_path = PROCESSED / f"{dataset}_decisions.jsonl"
@@ -103,3 +155,5 @@ def write_decisions(dataset: str) -> None:
 if __name__ == "__main__":
     for ds in ("sst2", "mnli", "ag_news"):
         write_decisions(ds)
+    if (PROCESSED / "cad_imdb_candidates.jsonl").exists():
+        write_decisions_cad_imdb()

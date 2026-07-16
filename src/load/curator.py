@@ -91,6 +91,12 @@ class CurationReport:
     genre_distribution: Dict[str, int] = field(default_factory=dict)
     length_distribution: Dict[str, int] = field(default_factory=dict)
     shortfalls: List[str] = field(default_factory=list)
+    # Provenance for non-HuggingFace (local-raw) sources: origin, license,
+    # citation, and dataset-specific honesty/vetting notes for the datasheet.
+    source: str = None
+    license: str = None
+    citation: str = None
+    notes: List[str] = field(default_factory=list)
 
     def to_dict(self) -> Dict[str, Any]:
         return self.__dict__
@@ -144,6 +150,35 @@ class DatasetCurator:
             instances.append(Instance(
                 instance_id=f"{name}_{split}_{idx:06d}",
                 text=text, label=label, dataset=name, split=split, metadata=meta,
+            ))
+        return instances
+
+    def build_instances_local(self, rows: List[dict], ds_cfg) -> List[Instance]:
+        """Local-raw counterpart of ``build_instances`` for datasets ingested from a
+        fetched candidates_raw.jsonl instead of HuggingFace (e.g. CAD-IMDb,
+        STRONG_ACCEPT_MOVES_SPEC_2026-07-13.md §2.2). Each row carries
+        {"text", "label", "source_split"}; the instance_id embeds the SOURCE split
+        ({name}_{source_split}_{idx}) while ``Instance.split`` keeps the configured
+        composite split name (e.g. "dev+test-revised"). Same cleaning + metadata as
+        the HF path so the downstream quality filter / stratification are identical."""
+        name = ds_cfg.name
+        label_names = list(ds_cfg.labels)
+        instances: List[Instance] = []
+        for idx, row in enumerate(rows):
+            label = str(row.get("label", ""))
+            if label not in label_names:
+                continue
+            text = clean_text(str(row.get("text", "")))
+            src_split = str(row.get("source_split", ds_cfg.split))
+            meta = {
+                "genre": "",
+                "content_words": content_word_count(text),
+                "char_len": len(text),
+                "source_split": src_split,
+            }
+            instances.append(Instance(
+                instance_id=f"{name}_{src_split}_{idx:06d}",
+                text=text, label=label, dataset=name, split=ds_cfg.split, metadata=meta,
             ))
         return instances
 

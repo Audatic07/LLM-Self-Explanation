@@ -1,0 +1,43 @@
+{
+  "dataset": "cad_imdb",
+  "huggingface_id": null,
+  "split": "dev+test-revised",
+  "seed": 42,
+  "target": 200,
+  "raw_count": 733,
+  "drop_counts": {
+    "empty": 0,
+    "too_short": 0,
+    "too_long": 0,
+    "junk": 0,
+    "exact_dup": 0,
+    "near_dup": 0
+  },
+  "pool_size": 300,
+  "vetted_kept": 298,
+  "vetted_dropped": {
+    "rule: leading-ellipsis fragment (meta-artifact)": 2
+  },
+  "final_count": 200,
+  "label_distribution": {
+    "negative": 100,
+    "positive": 100
+  },
+  "genre_distribution": {
+    "n/a": 200
+  },
+  "length_distribution": {
+    "long": 68,
+    "medium": 66,
+    "short": 66
+  },
+  "shortfalls": [],
+  "source": "github.com/acmi-lab/counterfactually-augmented-data (revised IMDb)",
+  "license": "Apache-2.0 (repository LICENSE)",
+  "citation": "Kaushik, Hovy & Lipton (2020). Learning the Difference that Makes a Difference with Counterfactually-Augmented Data. ICLR 2020. arXiv:1909.12434",
+  "notes": [
+    "CAD was published in 2019-2020 and is therefore NOT post-training-cutoff; it addresses the *shortcut/near-solved* prong of R7, not memorization. Expect materially lower accuracy - that itself diversifies the 'explanations of easy predictions' concern.",
+    "Only the REVISED (counterfactual) dev+test rows are ingested; originals are excluded (shortcut-broken text is the point, and original/revised pairs would be ~85%-overlap near-dups by design).",
+    "Vetting was RULE-BASED for this dataset (scripts/curation_vetting.py cad_imdb section), not per-instance human judgment; human vetting can amend later."
+  ]
+}

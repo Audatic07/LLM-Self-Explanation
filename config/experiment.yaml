@@ -25,6 +25,16 @@ datasets:
     split: "test"
     sample_size: 200
     labels: ["World", "Sports", "Business", "Sci/Tech"]
+  # CAD-IMDb (Kaushik et al. 2020, arXiv:1909.12434): counterfactually-REVISED IMDb
+  # reviews — shortcut cues broken by human revision (strong-accept Move 2, §H.2).
+  # The loader always uses the frozen curated file (data/processed/cad_imdb_curated.jsonl,
+  # fetched+curated via scripts/fetch_cad_imdb.py + curate_dataset.py --local-raw);
+  # the "local:" id is provenance only and is never downloaded.
+  - name: "cad_imdb"
+    huggingface_id: "local:cad_imdb"
+    split: "dev+test-revised"
+    sample_size: 200
+    labels: ["negative", "positive"]
 
 # Models — three distinct, NON-ANTHROPIC Bedrock model families (Amazon, Qwen, DeepSeek),
 # run CONCURRENTLY per dataset (run_experiment.py fans the models out with asyncio.gather).

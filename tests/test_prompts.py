@@ -172,3 +172,38 @@ def test_counterfactual_alt_keeps_minimality_and_pinned_target():
     assert "third of the words" in prompt, "CF alt must keep the MiCE-style edit cap"
     assert "{other_labels_quoted}" in prompt, "CF alt must pin the target label(s)"
     assert "new_prediction" in prompt
+
+
+def test_cad_imdb_prompt_resolution():
+    """Move 2 (§2.3/2.4): create_prompt_map(config, "cad_imdb") resolves
+    classification -> classification_cad_imdb.txt, CF -> the BINARY base
+    counterfactual_explain.txt (2 labels => no multiclass variant is selected by
+    build_baseline_explain_prompt), H/R/RO -> the shared bases; and every
+    template formats without KeyError."""
+    import sys
+    ROOT = Path(__file__).parent.parent
+    sys.path.insert(0, str(ROOT))
+    from src.utils.config_loader import load_and_validate_config
+    from scripts.run_experiment import create_prompt_map, format_prompt as fp
+    from scripts.run_ablations import build_baseline_explain_prompt
+
+    config = load_and_validate_config(config_dir=str(ROOT / "config"))
+    prompts, sources = create_prompt_map(config, "cad_imdb")
+
+    assert sources["classification"].endswith("classification_cad_imdb.txt")
+    assert sources["CF_explain"].endswith("prompts/counterfactual_explain.txt")
+    assert sources["H_explain"].endswith("prompts/highlighting_explain.txt")
+    assert sources["R_explain"].endswith("prompts/rationale_explain.txt")
+    assert sources["RO_explain"].endswith("prompts/rank_ordering_explain.txt")
+
+    label_set = ["negative", "positive"]
+    text = "The plot was engaging and the acting felt genuine throughout."
+    rendered = fp(prompts["classification"], text, label_set)
+    assert text in rendered and "{" not in rendered.replace('{"label"', "").replace('"}', "")
+    for s in ("H", "R", "CF", "RO"):
+        out = build_baseline_explain_prompt(s, prompts, "positive", text, label_set)
+        assert text in out
+        assert "{input_text}" not in out and "{predicted_label}" not in out
+    # binary CF: the pinned target is the single other label
+    cf = build_baseline_explain_prompt("CF", prompts, "positive", text, label_set)
+    assert "negative" in cf

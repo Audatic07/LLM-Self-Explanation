@@ -1,0 +1,6 @@
+Analyze the sentiment expressed in the following text.
+
+Text: "{input_text}"
+
+Return only valid JSON:
+{{"label":"positive or negative"}}
