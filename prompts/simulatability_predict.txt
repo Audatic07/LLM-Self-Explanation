@@ -1,0 +1,16 @@
+A classifier model read the following text and predicted: {predicted_label}
+
+Text: "{input_text}"
+
+The model gave this explanation of its prediction:
+{explanation}
+
+The text was then modified as follows:
+
+Modified text: "{perturbed_text}"
+
+Based on the explanation, predict what the SAME model will answer for the modified text.
+Choose from: {label_set}.
+
+Return only valid JSON:
+{{"label":"<one of: {label_set}>"}}
