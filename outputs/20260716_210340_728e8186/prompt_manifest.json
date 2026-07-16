@@ -1,0 +1,40 @@
+{
+  "cad_imdb": {
+    "CF_explain": {
+      "file": "prompts/counterfactual_explain.txt",
+      "sha256": "59e9e504619ddf06293bacff7cbde9bc73b845ba943b53986fb40973dbb09c38"
+    },
+    "CF_explain_free": {
+      "file": "prompts/counterfactual_explain_free.txt",
+      "sha256": "54acb2482f04e2fd594f320a64b12bf350056cdda8808807a49a86910e3de034"
+    },
+    "CF_explain_free_multiclass": {
+      "file": "prompts/counterfactual_explain_free_multiclass.txt",
+      "sha256": "d3b368275e460b0f43ac9192a0174d2bb829a2bf2726e25cd857c94a360462eb"
+    },
+    "CF_explain_multiclass": {
+      "file": "prompts/counterfactual_explain_multiclass.txt",
+      "sha256": "014242923bd91043bd6447d65d61e5c736db7b2a21273a7db98efcbdb47114e2"
+    },
+    "H_explain": {
+      "file": "prompts/highlighting_explain.txt",
+      "sha256": "27953023074e67e7719e1cd7a37e3c6fc270dcb9e3dd4f7692d3da6f84255c9e"
+    },
+    "RO_explain": {
+      "file": "prompts/rank_ordering_explain.txt",
+      "sha256": "b6f51ef55c8ecb730f797703075cb8f5b6bf4d02c76d6a189b4804983826b354"
+    },
+    "R_explain": {
+      "file": "prompts/rationale_explain.txt",
+      "sha256": "3941e0a091bbeacba275248bbc3d5ebac0a807860e380d39da6f060db2a87546"
+    },
+    "classification": {
+      "file": "prompts/classification_cad_imdb.txt",
+      "sha256": "5ee710d4dfee182d48ab58be87ae65005cdd091ad3c6bf44226858c3d9fb809c"
+    },
+    "confidence": {
+      "file": "prompts/confidence_verbalized.txt",
+      "sha256": "1382f0c7ed959521b516a4221e04bf812cb4ccef60742d5a0a5dc53bc1836171"
+    }
+  }
+}
