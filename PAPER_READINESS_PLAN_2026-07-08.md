@@ -11,6 +11,12 @@
 > co-primary family and pre-declares nova-ag_news underpowered. The audit's §7 limitations
 > paragraph is the drop-in for the paper. The launch runbook below otherwise stands; add
 > `scripts/run_weighted_null_sensitivity.py` to the post-run offline steps.
+>
+> **STRONG-ACCEPT MOVES (2026-07-13).** `STRONG_ACCEPT_MOVES_SPEC_2026-07-13.md`
+> (pre-registered as plan §H) adds: disattenuated agreement (T9,
+> `scripts/run_disattenuated_agreement.py` + per-model ablation ceilings), the CAD-IMDb
+> fourth dataset arm (cells 9->12), and the counterfactual-simulatability bridge
+> (`scripts/run_simulatability.py`, family (c)).
 
 **Purpose:** the single document that takes the study from "pre-200-run fixes landed" to
 "the 200-run's outputs are directly draftable into the paper." It consolidates: (1) the
