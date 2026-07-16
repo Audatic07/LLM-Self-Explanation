@@ -331,3 +331,30 @@ Dated pre-registration amendment, recorded BEFORE the 200-instance production ru
    (audit F3)** — `paired_contrast_aj_matched` ({H,R,RO} cross-model pairs vs the within
    er-component). The unmatched Δ mixes CF representation (0.5–14% of cross pairs vs a
    fixed 2/3 of within weight) and is retained descriptively.
+
+## §H. AMENDMENT (2026-07-13, pre-N=200) — reliability correction, CAD-IMDb arm, simulatability bridge
+
+Registered before any new-data collection (STRONG_ACCEPT_MOVES_SPEC_2026-07-13.md).
+
+1. **Disattenuated agreement (Spearman 1904).** Per model×dataset and pooled, each
+   cross-paradigm pair's observed AJ mean is corrected by the geometric mean of the two
+   strategies' self-consistency ceilings (per-model ablation, *_alt paraphrases).
+   Estimability floor: both reliabilities >= 0.30 with ceiling n >= 10; excluded pairs are
+   reported as excluded, never silenced. Values > 1 are reported with an at-ceiling flag.
+   Interpretation registered in advance: corrected ~ 1 = divergence within elicitation
+   noise; corrected << 1 (CI excluding 1) = real paradigm divergence. Descriptive
+   companion to families (a)/(a2), no new NHST family.
+2. **CAD-IMDb arm.** Fourth dataset: revised (counterfactual) IMDb dev+test from Kaushik
+   et al. 2020, curated to the frozen-200 format (100/100). Addresses the shortcut/
+   near-solved prong of R7; NOT post-cutoff (recorded in the datasheet). Enters every
+   existing family under the §G granularities (cells grow 9->12; per-dataset co-primary
+   grows 3->4; Holm m grows accordingly).
+3. **Simulatability bridge (family (c), NEW).** Cohort: first 50 instances/dataset/model
+   (seeded slice). Three explanation-independent perturbations per instance (2 random
+   content-type erasures, seeds crc32(instance_id)^42 and +1; 1 deterministic top-frequency
+   deletion). Target model labels its own perturbations; the next model round-robin
+   simulates, per arm {baseline, H, R, CF, RO}. Estimand: gain_s = sim_acc_s −
+   sim_acc_baseline. H-sim: ecs_adj (available) is positively associated with mean gain.
+   Tests: per model, (c1) Spearman rho with cluster-bootstrap CI, (c2) top-vs-bottom
+   tercile sign-flip permutation (one-sided), Holm within each of (c1)/(c2). Red-flag
+   precision/recall reported descriptively. Negative or null results are reported as-is.
