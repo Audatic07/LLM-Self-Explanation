@@ -395,6 +395,36 @@ def table_T8(tdir, aidx):
                    ["Cell", "$\\rho$", "$\\tau_b$", "$p$", "N"], rows)
 
 
+@guard("T9 disattenuated")
+def table_T9(tdir, disattenuated_path: Path):
+    """Reliability-corrected (Spearman 1904) cross-paradigm agreement per cell
+    (Move 1, ECS_ROBUSTNESS_PLAN §H.1): pair, observed AJ, the two reliabilities,
+    corrected [CI], and a flag column carrying at-ceiling / excluded-pair status
+    (excluded pairs get a row, never silence)."""
+    data = json.load(open(disattenuated_path, encoding="utf-8"))
+    rows = []
+    for cell, group in sorted(data.get("per_cell", {}).items()):
+        for pair, e in group.get("pairs", {}).items():
+            if e.get("estimable"):
+                corrected = f"{_fmt(e.get('corrected'))} [{_fmt(e.get('ci_lower'))}, {_fmt(e.get('ci_upper'))}]"
+                flag = "at ceiling" if e.get("at_or_above_ceiling") else ""
+            else:
+                corrected = "--"
+                flag = f"excluded: {e.get('reason', '?')}".replace("_", r"\_")
+            rows.append([cell_label(cell), pair.replace("_", "--"),
+                         _fmt(e.get("observed")),
+                         f"{_fmt(e.get('rel_a'))}$\\times${_fmt(e.get('rel_b'))}",
+                         corrected, flag])
+    write_booktabs(tdir / "T9_disattenuated.tex",
+                   ("Disattenuated cross-paradigm agreement (Spearman 1904): observed AJ "
+                    "corrected by the geometric mean of the two strategies' self-consistency "
+                    "ceilings, per cell. Pairs below the pre-registered reliability floor "
+                    "(0.30, ceiling $n \\geq 10$) are reported as excluded."),
+                   "tab:disattenuated",
+                   ["Cell", "Pair", "Obs.", "$rel_A{\\times}rel_B$", "Corrected [95\\% CI]", "Flag"],
+                   rows, align="llrrrl")
+
+
 def write_numbers(out: Path, aidx, cross_model, erasure_path):
     nums = {}
     overall = aidx.get(("overall", "overall")) or aidx.get(("overall", "all"))
@@ -495,6 +525,7 @@ def main():
     table_T5(tdir, erasure_path)
     table_T6(tdir, cross_model)
     table_T8(tdir, aidx)
+    table_T9(tdir, run_dir / "disattenuated_agreement.json")
 
     logger.info("Numbers:")
     write_numbers(out, aidx, cross_model, erasure_path)

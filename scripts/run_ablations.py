@@ -21,7 +21,7 @@ from src.metrics.metrics_calculator import MetricsCalculator
 from src.plots.visualization_generator import VisualizationGenerator
 from src.utils.config_loader import load_and_validate_config, parse_command_line_args
 from src.utils.logging_config import setup_logging
-from src.utils.exceptions import APIError, ParsingError
+from src.utils.exceptions import APIError, ConfigurationError, ParsingError
 # Reuse the main run's prompt resolution + formatting so the ablation's BASELINE
 # elicitation is byte-identical to the study's (PROMPT_LITERATURE_VERIFICATION_2026-07-09.md §1).
 from scripts.run_experiment import (
@@ -48,6 +48,21 @@ ALT_PROMPTS = {
     "CF": "prompts/counterfactual_alt.txt",
     "RO": "prompts/rank_ordering_alt.txt",
 }
+
+
+def resolve_model(config, name: Optional[str]):
+    """Resolve a --model NAME (the config model name, e.g. 'qwen3-235b') against
+    config.models. None keeps the historical default (config.models[0]); an unknown
+    name is a hard error listing the valid names — never a silent fallback, because
+    the resolved model is stamped into _meta and drives the per-model reliability
+    ceilings (STRONG_ACCEPT_MOVES_SPEC_2026-07-13.md §1.1)."""
+    if name is None:
+        return config.models[0]
+    for m in config.models:
+        if m.name == name:
+            return m
+    valid = ", ".join(m.name for m in config.models)
+    raise ConfigurationError(f"Unknown --model '{name}'; valid model names: {valid}")
 
 
 def load_prompt(filepath: str) -> str:
@@ -224,19 +239,23 @@ async def run_explain(engine, class_prompt, class_raw, explain_prompt, max_token
     return await engine.chat(messages, max_tokens=max_tokens)
 
 
-async def run_ablations(config, args):
+async def run_ablations(config, args, model_cfg=None):
+    # model_cfg: the resolved ModelConfig to ablate (--model override); default keeps
+    # the historical single-model behavior (config.models[0]).
+    if model_cfg is None:
+        model_cfg = config.models[0]
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_dir = Path(config.output.base_dir) / timestamp / "ablations"
     output_dir.mkdir(parents=True, exist_ok=True)
 
     setup_logging(log_dir=output_dir / "logs", console_level=config.output.log_level)
-    logger.info("Starting ablation studies...")
+    logger.info(f"Starting ablation studies (model: {model_cfg.name} = {model_cfg.model_id})...")
 
     loader = DatasetLoader(seed=config.experiment.seed)
     parser = Parser()
     calc = MetricsCalculator()
     engine = InferenceEngine(
-        model_name=config.models[0].model_id,
+        model_name=model_cfg.model_id,
         max_retries=config.inference.max_retries,
         concurrent_requests=config.inference.concurrent_requests,
     )
@@ -425,7 +444,9 @@ async def run_ablations(config, args):
     # Audit F10: stamp scope + scales so single-model provenance and the
     # legacy-vs-AJ delta scales are explicit in the artifact itself.
     all_results["_meta"] = {
-        "model": config.models[0].model_id,
+        # Reflects the RESOLVED model (--model override), not config.models[0].
+        "model": model_cfg.model_id,
+        "model_name": model_cfg.name,
         "single_model_scope": True,
         "delta_scales": {
             "mean_delta": "legacy raw-Jaccard ECS (5 cross-paradigm pairs)",
@@ -450,9 +471,16 @@ async def run_ablations(config, args):
 
 def main():
     load_dotenv()
-    args = parse_command_line_args()
+    # --model is ablation-specific (which configured model's ceilings to collect);
+    # peel it off before delegating the shared flags to parse_command_line_args.
+    extra = argparse.ArgumentParser(add_help=False)
+    extra.add_argument("--model", type=str, default=None,
+                       help="Config model NAME to ablate (e.g. qwen3-235b); default: first configured model")
+    model_args, remaining = extra.parse_known_args()
+    args = parse_command_line_args(remaining)
     config = load_and_validate_config(args=args)
-    asyncio.run(run_ablations(config, args))
+    model_cfg = resolve_model(config, model_args.model)
+    asyncio.run(run_ablations(config, args, model_cfg=model_cfg))
 
 
 if __name__ == "__main__":

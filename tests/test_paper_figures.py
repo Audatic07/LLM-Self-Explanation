@@ -3,11 +3,20 @@
 One test per new VisualizationGenerator method: build a synthetic frame in the
 shape generate_paper_assets.py passes, call the method, assert both the PDF and
 PNG exist and are non-trivial. No pixel assertions — mirrors test_visualization.py.
+Also: table T9 (disattenuated agreement) smoke test on a synthetic JSON.
 """
+import importlib.util
+import json
+import sys
+from pathlib import Path
+from types import SimpleNamespace
+
 import numpy as np
 import pandas as pd
 import pytest
-from types import SimpleNamespace
+
+ROOT = Path(__file__).parent.parent
+sys.path.insert(0, str(ROOT))
 
 from src.plots.visualization_generator import VisualizationGenerator
 
@@ -107,3 +116,32 @@ def test_F7_confidence_ecs_grid(viz, tmp_path):
             corr[f"{m}_{ds}"] = SimpleNamespace(rho=0.3, kendall_tau_b=0.2)
     viz.plot_confidence_ecs_scatter_grid(pd.DataFrame(rows), corr)
     _nonempty(tmp_path, "F7_confidence_ecs_grid")
+
+
+def test_T9_disattenuated_table(tmp_path):
+    """table_T9 renders the disattenuated-agreement JSON as booktabs: estimable
+    pairs get corrected [CI], excluded pairs get a flagged row (never silence)."""
+    _spec = importlib.util.spec_from_file_location(
+        "generate_paper_assets", ROOT / "scripts" / "generate_paper_assets.py")
+    gpa = importlib.util.module_from_spec(_spec)
+    _spec.loader.exec_module(gpa)
+
+    data = {"per_cell": {"nova-pro_sst2": {"pairs": {
+        "H_R": {"observed": 0.45, "rel_a": 0.53, "rel_b": 0.90,
+                "corrected": 0.65, "ci_lower": 0.55, "ci_upper": 0.76,
+                "n_instances": 50, "at_or_above_ceiling": False,
+                "estimable": True, "reason": None},
+        "H_CF": {"observed": 0.20, "rel_a": 0.53, "rel_b": 0.16,
+                 "corrected": None, "ci_lower": None, "ci_upper": None,
+                 "n_instances": 36, "at_or_above_ceiling": False,
+                 "estimable": False, "reason": "reliability_below_floor:CF"},
+    }, "er_star": 0.65, "ep_star": None, "rp_star": None,
+        "ecs_adj_disattenuated": 0.65, "n_components": 1}}}
+    src = tmp_path / "disattenuated_agreement.json"
+    src.write_text(json.dumps(data), encoding="utf-8")
+
+    gpa.table_T9(tmp_path, src)
+    tex = (tmp_path / "T9_disattenuated.tex").read_text(encoding="utf-8")
+    assert "0.650 [0.550, 0.760]" in tex
+    assert "excluded" in tex and r"below\_floor" in tex
+    assert r"\toprule" in tex and r"\bottomrule" in tex

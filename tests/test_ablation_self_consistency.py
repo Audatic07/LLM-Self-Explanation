@@ -64,6 +64,36 @@ class TestSelfConsistencyAj:
         assert aj is not None and 0.0 < aj < 1.0
 
 
+class TestResolveModel:
+    """--model override (STRONG_ACCEPT_MOVES_SPEC_2026-07-13.md §1.1): resolve a config
+    model NAME to its ModelConfig; unknown name is a hard error listing valid names."""
+
+    @pytest.fixture(scope="class")
+    def config(self):
+        from types import SimpleNamespace
+        return SimpleNamespace(models=[
+            SimpleNamespace(name="nova-pro", model_id="eu.amazon.nova-pro-v1:0"),
+            SimpleNamespace(name="qwen3-235b", model_id="qwen.qwen3-235b-a22b-2507-v1:0"),
+            SimpleNamespace(name="deepseek-v3", model_id="deepseek.v3-v1:0"),
+        ])
+
+    def test_valid_name_resolves_to_model_id(self, config):
+        from scripts.run_ablations import resolve_model
+        assert resolve_model(config, "qwen3-235b").model_id == "qwen.qwen3-235b-a22b-2507-v1:0"
+        assert resolve_model(config, "deepseek-v3").model_id == "deepseek.v3-v1:0"
+
+    def test_none_defaults_to_first_model(self, config):
+        from scripts.run_ablations import resolve_model
+        assert resolve_model(config, None).name == "nova-pro"
+
+    def test_unknown_name_raises_listing_valid(self, config):
+        from scripts.run_ablations import resolve_model
+        from src.utils.exceptions import ConfigurationError
+        with pytest.raises(ConfigurationError) as exc:
+            resolve_model(config, "gpt-4o")
+        assert "qwen3-235b" in str(exc.value)
+
+
 class TestEcsAdjFromTokenSets:
     """Audit F10 (RESEARCH_AUDIT_2026-07-10): paraphrase deltas are also reported on
     the primary metric's (ECS-adj) scale via compute_ecs_adj_from_token_sets."""
