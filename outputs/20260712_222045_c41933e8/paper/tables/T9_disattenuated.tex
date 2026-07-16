@@ -1,0 +1,56 @@
+\begin{table}[t]
+\centering
+\caption{Disattenuated cross-paradigm agreement (Spearman 1904): observed AJ corrected by the geometric mean of the two strategies' self-consistency ceilings, per cell. Pairs below the pre-registered reliability floor (0.30, ceiling $n \geq 10$) are reported as excluded.}
+\label{tab:disattenuated}
+\begin{tabular}{llrrrl}
+\toprule
+Cell & Pair & Obs. & $rel_A{\times}rel_B$ & Corrected [95\% CI] & Flag \\
+\midrule
+deepseek-v3/ag_news & H--R & 0.501 & 0.730$\times$0.910 & 0.615 [0.445, 0.783] &  \\
+deepseek-v3/ag_news & RO--R & 0.482 & 0.727$\times$0.910 & 0.593 [0.452, 0.742] &  \\
+deepseek-v3/ag_news & H--CF & 0.513 & 0.730$\times$0.316 & 1.067 [0.747, 1.511] & at ceiling \\
+deepseek-v3/ag_news & RO--CF & 0.455 & 0.727$\times$0.316 & 0.949 [0.674, 1.328] &  \\
+deepseek-v3/ag_news & R--CF & 0.385 & 0.910$\times$0.316 & 0.719 [0.344, 1.203] &  \\
+deepseek-v3/mnli & H--R & 0.385 & 0.615$\times$0.950 & 0.504 [0.304, 0.704] &  \\
+deepseek-v3/mnli & RO--R & 0.513 & 0.750$\times$0.950 & 0.608 [0.463, 0.771] &  \\
+deepseek-v3/mnli & H--CF & 0.566 & 0.615$\times$0.648 & 0.898 [0.290, 1.535] &  \\
+deepseek-v3/mnli & RO--CF & 0.554 & 0.750$\times$0.648 & 0.795 [0.359, 1.221] &  \\
+deepseek-v3/mnli & R--CF & 0.378 & 0.950$\times$0.648 & 0.482 [-0.037, 0.975] &  \\
+deepseek-v3/sst2 & H--R & 0.488 & 0.728$\times$0.957 & 0.584 [0.348, 0.798] &  \\
+deepseek-v3/sst2 & RO--R & 0.487 & 0.829$\times$0.957 & 0.547 [0.336, 0.743] &  \\
+deepseek-v3/sst2 & H--CF & 0.773 & 0.728$\times$0.679 & 1.100 [0.854, 1.353] & at ceiling \\
+deepseek-v3/sst2 & RO--CF & 0.784 & 0.829$\times$0.679 & 1.045 [0.818, 1.269] & at ceiling \\
+deepseek-v3/sst2 & R--CF & 0.719 & 0.957$\times$0.679 & 0.892 [0.685, 1.117] &  \\
+nova-pro/ag_news & H--R & 0.473 & 0.547$\times$0.922 & 0.666 [0.477, 0.861] &  \\
+nova-pro/ag_news & RO--R & 0.448 & 0.621$\times$0.922 & 0.592 [0.419, 0.769] &  \\
+nova-pro/ag_news & H--CF & 0.250 & 0.547$\times$0.164 & -- & excluded: reliability\_below\_floor:CF \\
+nova-pro/ag_news & RO--CF & 0.332 & 0.621$\times$0.164 & -- & excluded: reliability\_below\_floor:CF \\
+nova-pro/ag_news & R--CF & 0.382 & 0.922$\times$0.164 & -- & excluded: reliability\_below\_floor:CF \\
+nova-pro/mnli & H--R & 0.608 & 0.664$\times$0.922 & 0.777 [0.607, 0.967] &  \\
+nova-pro/mnli & RO--R & 0.575 & 0.775$\times$0.922 & 0.681 [0.528, 0.837] &  \\
+nova-pro/mnli & H--CF & 0.227 & 0.664$\times$0.346 & 0.475 [-0.432, 1.389] &  \\
+nova-pro/mnli & RO--CF & 0.433 & 0.775$\times$0.346 & 0.836 [0.095, 1.632] &  \\
+nova-pro/mnli & R--CF & 0.172 & 0.922$\times$0.346 & 0.305 [-0.820, 1.373] &  \\
+nova-pro/sst2 & H--R & 0.531 & 0.533$\times$0.903 & 0.766 [0.521, 1.026] &  \\
+nova-pro/sst2 & RO--R & 0.431 & 0.698$\times$0.903 & 0.543 [0.315, 0.802] &  \\
+nova-pro/sst2 & H--CF & 0.477 & 0.533$\times$0.698 & 0.782 [0.480, 1.078] &  \\
+nova-pro/sst2 & RO--CF & 0.521 & 0.698$\times$0.698 & 0.747 [0.522, 0.988] &  \\
+nova-pro/sst2 & R--CF & 0.208 & 0.903$\times$0.698 & 0.263 [-0.048, 0.565] &  \\
+qwen3-235b/ag_news & H--R & 0.552 & 0.700$\times$0.943 & 0.679 [0.554, 0.806] &  \\
+qwen3-235b/ag_news & RO--R & 0.581 & 0.804$\times$0.943 & 0.667 [0.551, 0.785] &  \\
+qwen3-235b/ag_news & H--CF & 0.563 & 0.700$\times$0.736 & 0.784 [0.136, 1.409] &  \\
+qwen3-235b/ag_news & RO--CF & 0.644 & 0.804$\times$0.736 & 0.837 [0.456, 1.326] &  \\
+qwen3-235b/ag_news & R--CF & 0.489 & 0.943$\times$0.736 & 0.587 [0.253, 1.189] &  \\
+qwen3-235b/mnli & H--R & 0.610 & 0.735$\times$0.963 & 0.725 [0.559, 0.878] &  \\
+qwen3-235b/mnli & RO--R & 0.554 & 0.729$\times$0.963 & 0.662 [0.495, 0.840] &  \\
+qwen3-235b/mnli & H--CF & 0.768 & 0.735$\times$0.630 & 1.129 [0.768, 1.517] & at ceiling \\
+qwen3-235b/mnli & RO--CF & 0.409 & 0.729$\times$0.630 & 0.603 [0.205, 1.004] &  \\
+qwen3-235b/mnli & R--CF & 0.364 & 0.963$\times$0.630 & 0.467 [-0.184, 1.062] &  \\
+qwen3-235b/sst2 & H--R & 0.296 & 0.720$\times$0.849 & 0.379 [0.150, 0.608] &  \\
+qwen3-235b/sst2 & RO--R & 0.330 & 0.762$\times$0.849 & 0.411 [0.216, 0.617] &  \\
+qwen3-235b/sst2 & H--CF & 0.875 & 0.720$\times$0.790 & 1.160 [0.979, 1.336] & at ceiling \\
+qwen3-235b/sst2 & RO--CF & 0.862 & 0.762$\times$0.790 & 1.111 [0.944, 1.297] & at ceiling \\
+qwen3-235b/sst2 & R--CF & 0.467 & 0.849$\times$0.790 & 0.571 [0.301, 0.839] &  \\
+\bottomrule
+\end{tabular}
+\end{table}
