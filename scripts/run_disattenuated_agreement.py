@@ -206,14 +206,20 @@ def load_reliabilities(ablation_dirs: List[Path]) -> Dict[str, Dict[str, Dict[st
         model = meta.get("model_name") or MODEL_NAME.get(model_id, model_id)
         if model is None:
             raise ValueError(f"{path}: _meta.model missing — cannot attribute ceilings")
-        if model in rel:
-            raise ValueError(f"Duplicate ablation dir for model '{model}' ({d})")
-        rel[model] = {}
+        # Multiple dirs may cover the SAME model with disjoint dataset subsets (a
+        # --datasets top-up pass collected after a new dataset arm, e.g. cad_imdb
+        # ceilings for models whose original pass predates the arm). Merge per
+        # dataset; the SAME model+dataset ceiling appearing twice is ambiguous
+        # provenance and stays a hard error.
+        model_rel = rel.setdefault(model, {})
         for key, strategies in data.items():
             if key == "_meta" or not key.endswith("_prompt"):
                 continue
             dataset = key[:-len("_prompt")]
-            rel[model][dataset] = {}
+            if dataset in model_rel:
+                raise ValueError(
+                    f"Duplicate ceilings for model '{model}' dataset '{dataset}' ({d})")
+            model_rel[dataset] = {}
             for skey, e in strategies.items():
                 if not skey.endswith("_alt"):
                     continue

@@ -50,6 +50,24 @@ ALT_PROMPTS = {
 }
 
 
+def resolve_datasets(config, names: Optional[list]):
+    """Resolve a --datasets NAME list against config.datasets. None keeps the
+    historical default (every configured dataset); any unknown name is a hard error
+    listing the valid names — never a silent skip, because a misspelled dataset would
+    otherwise silently produce a ceilings file missing a study cell (the exact gap
+    this flag exists to close: collecting cad_imdb ceilings for models whose original
+    ablation pass predates the CAD-IMDb arm)."""
+    if names is None:
+        return list(config.datasets)
+    by_name = {d.name: d for d in config.datasets}
+    unknown = [n for n in names if n not in by_name]
+    if unknown:
+        valid = ", ".join(d.name for d in config.datasets)
+        raise ConfigurationError(
+            f"Unknown --datasets {unknown}; valid dataset names: {valid}")
+    return [by_name[n] for n in names]
+
+
 def resolve_model(config, name: Optional[str]):
     """Resolve a --model NAME (the config model name, e.g. 'qwen3-235b') against
     config.models. None keeps the historical default (config.models[0]); an unknown
@@ -239,11 +257,15 @@ async def run_explain(engine, class_prompt, class_raw, explain_prompt, max_token
     return await engine.chat(messages, max_tokens=max_tokens)
 
 
-async def run_ablations(config, args, model_cfg=None):
+async def run_ablations(config, args, model_cfg=None, dataset_cfgs=None):
     # model_cfg: the resolved ModelConfig to ablate (--model override); default keeps
     # the historical single-model behavior (config.models[0]).
+    # dataset_cfgs: the resolved dataset subset (--datasets override); default keeps
+    # the historical behavior (all configured datasets).
     if model_cfg is None:
         model_cfg = config.models[0]
+    if dataset_cfgs is None:
+        dataset_cfgs = list(config.datasets)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_dir = Path(config.output.base_dir) / timestamp / "ablations"
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -263,7 +285,7 @@ async def run_ablations(config, args, model_cfg=None):
     all_results = {}
     all_plot_data = []
 
-    for dataset_config in config.datasets:
+    for dataset_config in dataset_cfgs:
         subset_n = min(dataset_config.sample_size, config.ablations.subset_size)
         # Prefer the frozen curated set, sliced with the SAME seeded shuffle as the main
         # run (P0.2), so the ablation runs on a subset of the very instances the study
@@ -448,6 +470,12 @@ async def run_ablations(config, args, model_cfg=None):
         "model": model_cfg.model_id,
         "model_name": model_cfg.name,
         "single_model_scope": True,
+        # Reflects the RESOLVED dataset subset (--datasets override). A partial-scope
+        # ceilings file is merged with the model's other ablation dirs downstream
+        # (run_disattenuated_agreement.py --ablation-dirs), so the subset must be
+        # machine-readable here, not inferred from which keys happen to exist.
+        "datasets": [d.name for d in dataset_cfgs],
+        "full_dataset_scope": len(dataset_cfgs) == len(config.datasets),
         "delta_scales": {
             "mean_delta": "legacy raw-Jaccard ECS (5 cross-paradigm pairs)",
             "mean_delta_aj": "ECS-adj, available-component (primary metric's scale)",
@@ -476,11 +504,14 @@ def main():
     extra = argparse.ArgumentParser(add_help=False)
     extra.add_argument("--model", type=str, default=None,
                        help="Config model NAME to ablate (e.g. qwen3-235b); default: first configured model")
+    extra.add_argument("--datasets", type=str, nargs="+", default=None,
+                       help="Config dataset NAMEs to ablate (e.g. cad_imdb); default: all configured datasets")
     model_args, remaining = extra.parse_known_args()
     args = parse_command_line_args(remaining)
     config = load_and_validate_config(args=args)
     model_cfg = resolve_model(config, model_args.model)
-    asyncio.run(run_ablations(config, args, model_cfg=model_cfg))
+    dataset_cfgs = resolve_datasets(config, model_args.datasets)
+    asyncio.run(run_ablations(config, args, model_cfg=model_cfg, dataset_cfgs=dataset_cfgs))
 
 
 if __name__ == "__main__":

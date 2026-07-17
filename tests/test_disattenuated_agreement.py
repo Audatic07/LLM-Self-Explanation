@@ -141,3 +141,51 @@ class TestPerInstancePairAj:
                "counterfactual_tokens": ["a"], "rank_ordering_set": ["a"]}
         out = rda.per_instance_pair_aj([rec], MetricsCalculator())
         assert all(v == [] for v in out.values())
+
+
+class TestLoadReliabilitiesMerge:
+    """--datasets top-up passes produce a second ablation dir for the SAME model
+    covering only the new dataset (e.g. cad_imdb ceilings collected after the arm
+    was added). load_reliabilities must merge disjoint dataset subsets per model
+    and hard-error only on a same-model+same-dataset conflict."""
+
+    @staticmethod
+    def _write_dir(tmp_path, name, model_id, model_name, datasets):
+        import json
+        d = tmp_path / name
+        d.mkdir()
+        payload = {"_meta": {"model": model_id, "model_name": model_name}}
+        for ds in datasets:
+            payload[f"{ds}_prompt"] = {
+                "H_alt": {"self_consistency_aj_mean": 0.6,
+                          "self_consistency_aj_n": 50,
+                          "self_consistency_aj_values": [0.6] * 50}}
+        with open(d / "ablation_results.json", "w", encoding="utf-8") as f:
+            json.dump(payload, f)
+        return d
+
+    def test_same_model_disjoint_datasets_merge(self, tmp_path):
+        d1 = self._write_dir(tmp_path, "a1", "eu.amazon.nova-pro-v1:0", "nova-pro",
+                             ["sst2", "mnli", "ag_news"])
+        d2 = self._write_dir(tmp_path, "a2", "eu.amazon.nova-pro-v1:0", "nova-pro",
+                             ["cad_imdb"])
+        rel = rda.load_reliabilities([d1, d2])
+        assert set(rel["nova-pro"].keys()) == {"sst2", "mnli", "ag_news", "cad_imdb"}
+        assert rel["nova-pro"]["cad_imdb"]["H"]["mean"] == pytest.approx(0.6)
+
+    def test_same_model_same_dataset_conflict_raises(self, tmp_path):
+        d1 = self._write_dir(tmp_path, "a1", "eu.amazon.nova-pro-v1:0", "nova-pro",
+                             ["sst2"])
+        d2 = self._write_dir(tmp_path, "a2", "eu.amazon.nova-pro-v1:0", "nova-pro",
+                             ["sst2", "cad_imdb"])
+        with pytest.raises(ValueError, match="Duplicate ceilings.*nova-pro.*sst2"):
+            rda.load_reliabilities([d1, d2])
+
+    def test_distinct_models_unaffected(self, tmp_path):
+        d1 = self._write_dir(tmp_path, "a1", "eu.amazon.nova-pro-v1:0", "nova-pro",
+                             ["sst2"])
+        d2 = self._write_dir(tmp_path, "a2", "qwen.qwen3-235b-a22b-2507-v1:0",
+                             "qwen3-235b", ["sst2"])
+        rel = rda.load_reliabilities([d1, d2])
+        assert rel["nova-pro"]["sst2"]["H"]["mean"] == pytest.approx(0.6)
+        assert rel["qwen3-235b"]["sst2"]["H"]["mean"] == pytest.approx(0.6)

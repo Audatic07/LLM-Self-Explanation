@@ -110,3 +110,34 @@ class TestEcsAdjFromTokenSets:
         from scripts.run_ablations import compute_ecs_adj_from_token_sets
         sets = {"H": set(), "R": set(), "CF": set(), "RO": set()}
         assert compute_ecs_adj_from_token_sets(sets, TEXT, normalizer, calc) is None
+
+
+class TestResolveDatasets:
+    """--datasets subset resolver (ceilings top-up passes for late-added dataset
+    arms); mirrors the resolve_model contract: None = all, unknown = hard error."""
+
+    @pytest.fixture(scope="class")
+    def config(self):
+        from types import SimpleNamespace
+        return SimpleNamespace(datasets=[
+            SimpleNamespace(name="sst2"),
+            SimpleNamespace(name="mnli"),
+            SimpleNamespace(name="ag_news"),
+            SimpleNamespace(name="cad_imdb"),
+        ])
+
+    def test_valid_subset_resolves_in_given_order(self, config):
+        from scripts.run_ablations import resolve_datasets
+        out = resolve_datasets(config, ["cad_imdb", "sst2"])
+        assert [d.name for d in out] == ["cad_imdb", "sst2"]
+
+    def test_none_defaults_to_all_datasets(self, config):
+        from scripts.run_ablations import resolve_datasets
+        assert [d.name for d in resolve_datasets(config, None)] == [
+            "sst2", "mnli", "ag_news", "cad_imdb"]
+
+    def test_unknown_name_raises_listing_valid(self, config):
+        from scripts.run_ablations import resolve_datasets
+        from src.utils.exceptions import ConfigurationError
+        with pytest.raises(ConfigurationError, match="imdb_full.*valid dataset names.*sst2"):
+            resolve_datasets(config, ["cad_imdb", "imdb_full"])
