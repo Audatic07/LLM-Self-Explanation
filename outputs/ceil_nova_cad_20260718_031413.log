@@ -1,0 +1,1524 @@
+INFO     | Starting ablation studies (model: nova-pro = eu.amazon.nova-pro-v1:0)...
+INFO     | Found token in environment variables.
+INFO     | Loaded 200 curated instances from data\processed\cad_imdb_curated.jsonl
+INFO     | Loaded 50 CURATED instances for cad_imdb ablation from data\processed\cad_imdb_curated.jsonl
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'opinion' has no input anchor — introduced concept
+INFO     | R token 'expression' has no input anchor — introduced concept
+INFO     | R token 'highly' has no input anchor — introduced concept
+INFO     | R token 'favorable' has no input anchor — introduced concept
+INFO     | R token 'numerous' has no input anchor — introduced concept
+INFO     | R token 'contain' has no input anchor — introduced concept
+INFO     | R token 'recommendation' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'enthusiasm' has no input anchor — introduced concept
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'author' has no input anchor — introduced concept
+INFO     | R token 'impressive' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'various' has no input anchor — introduced concept
+INFO     | R token 'enjoyable' has no input anchor — introduced concept
+INFO     | R token 'aspect' has no input anchor — introduced concept
+INFO     | R token 'highlight' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'perfect,''slick' has no input anchor — introduced concept
+INFO     | R token 'rating' has no input anchor — introduced concept
+INFO     | R token 'numerous' has no input anchor — introduced concept
+INFO     | R token 'as'strong' has no input anchor — introduced concept
+INFO     | R token 'a'masterpiece' has no input anchor — introduced concept
+INFO     | R token 'contain' has no input anchor — introduced concept
+INFO     | R token 'exciting' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'use' has no input anchor — introduced concept
+INFO     | R token 'sentiment' has no input anchor — introduced concept
+INFO     | R token 'sarcastic' has no input anchor — introduced concept
+INFO     | R token 'various' has no input anchor — introduced concept
+INFO     | R token 'aspect' has no input anchor — introduced concept
+INFO     | R token 'critical' has no input anchor — introduced concept
+INFO     | R token 'language' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'word' has no input anchor — introduced concept
+INFO     | R token 'opinion' has no input anchor — introduced concept
+INFO     | R token 'highly' has no input anchor — introduced concept
+INFO     | R token 'unfavorable' has no input anchor — introduced concept
+INFO     | R token 'phrase' has no input anchor — introduced concept
+INFO     | R token 'contain' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'theme' has no input anchor — introduced concept
+INFO     | R token 'performance' has no input anchor — introduced concept
+INFO     | R token 'plot' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'historical' has no input anchor — introduced concept
+INFO     | R token 'suggest' has no input anchor — introduced concept
+INFO     | R token 'sentiment' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'inaccuracy' has no input anchor — introduced concept
+INFO     | R token 'detail' has no input anchor — introduced concept
+INFO     | R token 'appreciate' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'score' has no input anchor — introduced concept
+INFO     | R token 'perfect' has no input anchor — introduced concept
+INFO     | R token 'overall' has no input anchor — introduced concept
+INFO     | R token 'inventiveness' has no input anchor — introduced concept
+INFO     | R token 'culminate' has no input anchor — introduced concept
+INFO     | R token 'numerous' has no input anchor — introduced concept
+INFO     | R token 'contain' has no input anchor — introduced concept
+INFO     | R token 'humor' has no input anchor — introduced concept
+INFO     | R token 'development' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'balance' has no input anchor — introduced concept
+INFO     | R token 'sentimentality' has no input anchor — introduced concept
+INFO     | R token 'overall' has no input anchor — introduced concept
+INFO     | R token 'sentiment' has no input anchor — introduced concept
+INFO     | R token 'numerous' has no input anchor — introduced concept
+INFO     | R token 'humor' has no input anchor — introduced concept
+INFO     | R token 'aspect' has no input anchor — introduced concept
+INFO     | R token 'highlight' has no input anchor — introduced concept
+INFO     | R token 'content' has no input anchor — introduced concept
+INFO     | R token 'lead' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 8.0s (attempt 3)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'interested' has no input anchor — introduced concept
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'performance' has no input anchor — introduced concept
+INFO     | R token 'suggest' has no input anchor — introduced concept
+INFO     | R token 'look' has no input anchor — introduced concept
+INFO     | R token 'quality' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+INFO     | R token 'cultural' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'recommend' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 8.0s (attempt 3)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'enjoyment' has no input anchor — introduced concept
+INFO     | R token 'appreciation' has no input anchor — introduced concept
+INFO     | R token 'depth' has no input anchor — introduced concept
+INFO     | R token 'highlight' has no input anchor — introduced concept
+INFO     | R token 'unique' has no input anchor — introduced concept
+INFO     | R token 'quality' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 8.0s (attempt 3)
+ERROR    | Bedrock throttling retries exhausted | error=An error occurred (ThrottlingException) when calling the Converse operation (reached max retries: 0): Too many requests, please wait before trying again.
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'convey' has no input anchor — introduced concept
+INFO     | R token 'criticize' has no input anchor — introduced concept
+INFO     | R token 'sentiment' has no input anchor — introduced concept
+INFO     | R token 'movie' has no input anchor — introduced concept
+INFO     | R token 'crappi' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'artistic' has no input anchor — introduced concept
+INFO     | R token 'choice' has no input anchor — introduced concept
+INFO     | R token 'acknowledge' has no input anchor — introduced concept
+INFO     | R token 'performance' has no input anchor — introduced concept
+INFO     | R token 'dare' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'appreciation' has no input anchor — introduced concept
+INFO     | R token 'nature' has no input anchor — introduced concept
+INFO     | R token 'potential' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 8.0s (attempt 3)
+ERROR    | Bedrock throttling retries exhausted | error=An error occurred (ThrottlingException) when calling the Converse operation (reached max retries: 0): Too many requests, please wait before trying again.
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'criticism' has no input anchor — introduced concept
+INFO     | R token 'sentiment' has no input anchor — introduced concept
+INFO     | R token 'production' has no input anchor — introduced concept
+INFO     | R token 'various' has no input anchor — introduced concept
+INFO     | R token 'contain' has no input anchor — introduced concept
+INFO     | R token 'lead' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'issue' has no input anchor — introduced concept
+INFO     | R token 'discuss' has no input anchor — introduced concept
+INFO     | R token 'frustration' has no input anchor — introduced concept
+INFO     | R token 'note' has no input anchor — introduced concept
+INFO     | R token 'final' has no input anchor — introduced concept
+INFO     | R token 'primarily' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'dissatisfaction' has no input anchor — introduced concept
+INFO     | R token 'overall' has no input anchor — introduced concept
+INFO     | R token 'sentiment' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'development' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'observation' has no input anchor — introduced concept
+INFO     | R token 'fascination' has no input anchor — introduced concept
+INFO     | R token 'overall' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'excitement' has no input anchor — introduced concept
+INFO     | R token 'critical' has no input anchor — introduced concept
+INFO     | R token 'lead' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'sentiment' has no input anchor — introduced concept
+INFO     | R token 'disbelief' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'sadness' has no input anchor — introduced concept
+INFO     | R token 'disappointment' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'strongly' has no input anchor — introduced concept
+INFO     | R token 'use' has no input anchor — introduced concept
+INFO     | R token 'element' has no input anchor — introduced concept
+INFO     | R token 'language' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'author' has no input anchor — introduced concept
+INFO     | R token 'future' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'adaptation' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'dissatisfaction' has no input anchor — introduced concept
+INFO     | R token 'criticize' has no input anchor — introduced concept
+INFO     | R token 'acting' has no input anchor — introduced concept
+INFO     | R token 'overall' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'various' has no input anchor — introduced concept
+INFO     | R token 'aspect' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 8.0s (attempt 3)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'consider' has no input anchor — introduced concept
+INFO     | R token 'comment' has no input anchor — introduced concept
+INFO     | R token 'sentiment' has no input anchor — introduced concept
+INFO     | R token 'show' has no input anchor — introduced concept
+INFO     | R token 'overall' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+INFO     | R token 'initial' has no input anchor — introduced concept
+INFO     | R token 'some' has no input anchor — introduced concept
+INFO     | R token 'ultimately' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 8.0s (attempt 3)
+ERROR    | Bedrock throttling retries exhausted | error=An error occurred (ThrottlingException) when calling the Converse operation (reached max retries: 0): Too many requests, please wait before trying again.
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 8.0s (attempt 3)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'performance' has no input anchor — introduced concept
+INFO     | R token 'highlight' has no input anchor — introduced concept
+INFO     | R token 'not' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 8.0s (attempt 3)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 8.0s (attempt 3)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'theme' has no input anchor — introduced concept
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'word' has no input anchor — introduced concept
+INFO     | R token 'criticism' has no input anchor — introduced concept
+INFO     | R token 'use' has no input anchor — introduced concept
+INFO     | R token 'contain' has no input anchor — introduced concept
+INFO     | R token 'and'really' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 8.0s (attempt 3)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'unfavorable' has no input anchor — introduced concept
+INFO     | R token 'sentiment' has no input anchor — introduced concept
+INFO     | R token 'film' has no input anchor — introduced concept
+INFO     | R token 'numerous' has no input anchor — introduced concept
+INFO     | R token 'contain' has no input anchor — introduced concept
+INFO     | R token 'actor' has no input anchor — introduced concept
+INFO     | R token 'element' has no input anchor — introduced concept
+INFO     | R token 'critical' has no input anchor — introduced concept
+INFO     | R token 'comment' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'convey' has no input anchor — introduced concept
+INFO     | R token 'distressing' has no input anchor — introduced concept
+INFO     | R token 'exploitation' has no input anchor — introduced concept
+INFO     | R token 'action' has no input anchor — introduced concept
+INFO     | R token 'sentiment' has no input anchor — introduced concept
+INFO     | R token 'hunter' has no input anchor — introduced concept
+INFO     | R token 'scene' has no input anchor — introduced concept
+INFO     | R token 'suffering' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'appreciate' has no input anchor — introduced concept
+INFO     | R token 'portrayal' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'include' has no input anchor — introduced concept
+INFO     | R token 'recommend' has no input anchor — introduced concept
+INFO     | R token 'various' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'enjoyment' has no input anchor — introduced concept
+INFO     | R token 'appreciation' has no input anchor — introduced concept
+INFO     | R token 'highlight' has no input anchor — introduced concept
+INFO     | R token 'induce' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'criticize' has no input anchor — introduced concept
+INFO     | R token 'reader' has no input anchor — introduced concept
+INFO     | R token 'advise' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'include' has no input anchor — introduced concept
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'dissatisfaction' has no input anchor — introduced concept
+INFO     | R token 'overall' has no input anchor — introduced concept
+INFO     | R token 'effect' has no input anchor — introduced concept
+INFO     | R token 'sentiment' has no input anchor — introduced concept
+INFO     | R token 'direction' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'various' has no input anchor — introduced concept
+INFO     | R token 'aspect' has no input anchor — introduced concept
+INFO     | R token 'quality' has no input anchor — introduced concept
+INFO     | R token 'lead' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 8.0s (attempt 3)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 8.0s (attempt 3)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'professionalism' has no input anchor — introduced concept
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'dissatisfaction' has no input anchor — introduced concept
+INFO     | R token 'action' has no input anchor — introduced concept
+INFO     | R token 'frustration' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'dissatisfaction' has no input anchor — introduced concept
+INFO     | R token 'criticize' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 8.0s (attempt 3)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 8.0s (attempt 3)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'derogatory' has no input anchor — introduced concept
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'word' has no input anchor — introduced concept
+INFO     | R token 'criticism' has no input anchor — introduced concept
+INFO     | R token 'dissatisfaction' has no input anchor — introduced concept
+INFO     | R token 'use' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'people' has no input anchor — introduced concept
+INFO     | R token 'involve' has no input anchor — introduced concept
+INFO     | R token 'term' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 8.0s (attempt 3)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'criticize' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'ultimately' has no input anchor — introduced concept
+INFO     | R token 'lack' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 8.0s (attempt 3)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'amazement' has no input anchor — introduced concept
+INFO     | R token 'minor' has no input anchor — introduced concept
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'criticism' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'some' has no input anchor — introduced concept
+INFO     | R token 'enjoyment' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 8.0s (attempt 3)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'confusing' has no input anchor — introduced concept
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'convey' has no input anchor — introduced concept
+INFO     | R token 'dissatisfaction' has no input anchor — introduced concept
+INFO     | R token 'remark' has no input anchor — introduced concept
+INFO     | R token 'call' has no input anchor — introduced concept
+INFO     | R token 'ultimately' has no input anchor — introduced concept
+INFO     | R token 'highlight' has no input anchor — introduced concept
+INFO     | R token 'initial' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'dissatisfaction' has no input anchor — introduced concept
+INFO     | R token 'criticize' has no input anchor — introduced concept
+INFO     | R token 'plot' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'satisfaction' has no input anchor — introduced concept
+INFO     | R token 'excited' has no input anchor — introduced concept
+INFO     | R token 'engage' has no input anchor — introduced concept
+INFO     | R token 'find' has no input anchor — introduced concept
+INFO     | R token 'expression' has no input anchor — introduced concept
+INFO     | R token 'numerous' has no input anchor — introduced concept
+INFO     | R token 'enjoyment' has no input anchor — introduced concept
+INFO     | R token 'contain' has no input anchor — introduced concept
+INFO     | R token 'note' has no input anchor — introduced concept
+INFO     | R token 'child' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'dissatisfaction' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'disappointment' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'criticize' has no input anchor — introduced concept
+INFO     | R token 'n't' has no input anchor — introduced concept
+INFO     | R token 'suggest' has no input anchor — introduced concept
+INFO     | R token 'film' has no input anchor — introduced concept
+INFO     | R token 'viewership' has no input anchor — introduced concept
+INFO     | R token 'wide' has no input anchor — introduced concept
+INFO     | R token 'choice' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'acknowledge' has no input anchor — introduced concept
+INFO     | R token 'nature' has no input anchor — introduced concept
+INFO     | R token 'highlight' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'criticism' has no input anchor — introduced concept
+INFO     | R token 'dissatisfaction' has no input anchor — introduced concept
+INFO     | R token 'performance' has no input anchor — introduced concept
+INFO     | R token 'plot' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'comment' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'good' has no input anchor — introduced concept
+INFO     | R token 'violence' has no input anchor — introduced concept
+INFO     | R token 'consider' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 8.0s (attempt 3)
+ERROR    | Bedrock throttling retries exhausted | error=An error occurred (ThrottlingException) when calling the Converse operation (reached max retries: 0): Too many requests, please wait before trying again.
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'notable' has no input anchor — introduced concept
+INFO     | R token 'artist' has no input anchor — introduced concept
+INFO     | R token 'sentiment' has no input anchor — introduced concept
+INFO     | R token 'as'mediocre' has no input anchor — introduced concept
+INFO     | R token 'mention' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 8.0s (attempt 3)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'overall' has no input anchor — introduced concept
+INFO     | R token 'sentiment' has no input anchor — introduced concept
+INFO     | R token 'various' has no input anchor — introduced concept
+INFO     | R token 'aspect' has no input anchor — introduced concept
+INFO     | R token 'ability' has no input anchor — introduced concept
+INFO     | R token 'fear' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+INFO     | R token 'lead' has no input anchor — introduced concept
+INFO     | R token 'induce' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'remark' has no input anchor — introduced concept
+INFO     | R token 'enjoyment' has no input anchor — introduced concept
+INFO     | R token 'contain' has no input anchor — introduced concept
+INFO     | R token 'mention' has no input anchor — introduced concept
+INFO     | R token 'watch' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'dissatisfaction' has no input anchor — introduced concept
+INFO     | R token 'criticize' has no input anchor — introduced concept
+INFO     | R token 'poor' has no input anchor — introduced concept
+INFO     | R token 'predictability' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'advise' has no input anchor — introduced concept
+INFO     | R token 'nature' has no input anchor — introduced concept
+INFO     | R token 'ultimately' has no input anchor — introduced concept
+INFO     | R token 'not' has no input anchor — introduced concept
+INFO     | R token 'watch' has no input anchor — introduced concept
+INFO     | R token 'execution' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'aspect' has no input anchor — introduced concept
+INFO     | R token 'comparison' has no input anchor — introduced concept
+INFO     | R token 'various' has no input anchor — introduced concept
+INFO     | R token 'especially' has no input anchor — introduced concept
+INFO     | R token 'ultimately' has no input anchor — introduced concept
+INFO     | R token 'initial' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Running prompt wording ablation...
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | H salience item '***** out of *****' is not a single word — discarding
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 8.0s (attempt 3)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 8.0s (attempt 3)
+ERROR    | Bedrock throttling retries exhausted | error=An error occurred (ThrottlingException) when calling the Converse operation (reached max retries: 0): Too many requests, please wait before trying again.
+INFO     |   H_alt: mean delta = 0.0057 (50 instances); self-consistency AJ = 0.4910 (n=43)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'minor' has no input anchor — introduced concept
+INFO     | R token 'overwhelmingly' has no input anchor — introduced concept
+INFO     | R token 'critique' has no input anchor — introduced concept
+INFO     | R token 'enthusiastic' has no input anchor — introduced concept
+INFO     | R token 'contain' has no input anchor — introduced concept
+INFO     | R token 'recommendation' has no input anchor — introduced concept
+INFO     | R token 'language' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'enthusiasm' has no input anchor — introduced concept
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'author' has no input anchor — introduced concept
+INFO     | R token 'impressive' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'various' has no input anchor — introduced concept
+INFO     | R token 'enjoyable' has no input anchor — introduced concept
+INFO     | R token 'aspect' has no input anchor — introduced concept
+INFO     | R token 'highlight' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'rating' has no input anchor — introduced concept
+INFO     | R token 'give' has no input anchor — introduced concept
+INFO     | R token 'adjective' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'author' has no input anchor — introduced concept
+INFO     | R token 'absurd' has no input anchor — introduced concept
+INFO     | R token 'find' has no input anchor — introduced concept
+INFO     | R token 'lacking' has no input anchor — introduced concept
+INFO     | R token 'sarcastic' has no input anchor — introduced concept
+INFO     | R token 'various' has no input anchor — introduced concept
+INFO     | R token 'contain' has no input anchor — introduced concept
+INFO     | R token 'aspect' has no input anchor — introduced concept
+INFO     | R token 'highlight' has no input anchor — introduced concept
+INFO     | R token 'critical' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'word' has no input anchor — introduced concept
+INFO     | R token 'criticism' has no input anchor — introduced concept
+INFO     | R token 'dissatisfaction' has no input anchor — introduced concept
+INFO     | R token 'use' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 8.0s (attempt 3)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'performance' has no input anchor — introduced concept
+INFO     | R token 'plot' has no input anchor — introduced concept
+INFO     | R token 'element' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'historical' has no input anchor — introduced concept
+INFO     | R token 'commend' has no input anchor — introduced concept
+INFO     | R token 'overall' has no input anchor — introduced concept
+INFO     | R token 'suggest' has no input anchor — introduced concept
+INFO     | R token 'sentiment' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'inaccuracy' has no input anchor — introduced concept
+INFO     | R token 'note' has no input anchor — introduced concept
+INFO     | R token 'area' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'rating' has no input anchor — introduced concept
+INFO     | R token 'inventiveness' has no input anchor — introduced concept
+INFO     | R token 'culminate' has no input anchor — introduced concept
+INFO     | R token 'nature' has no input anchor — introduced concept
+INFO     | R token 'high' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'include' has no input anchor — introduced concept
+INFO     | R token 'sentiment' has no input anchor — introduced concept
+INFO     | R token 'various' has no input anchor — introduced concept
+INFO     | R token 'aspect' has no input anchor — introduced concept
+INFO     | R token 'engagement' has no input anchor — introduced concept
+INFO     | R token 'level' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'performance' has no input anchor — introduced concept
+INFO     | R token 'suggest' has no input anchor — introduced concept
+INFO     | R token 'thoughtfulness' has no input anchor — introduced concept
+INFO     | R token 'cultural' has no input anchor — introduced concept
+INFO     | R token 'look' has no input anchor — introduced concept
+INFO     | R token 'quality' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'sentiment' has no input anchor — introduced concept
+INFO     | R token 'contain' has no input anchor — introduced concept
+INFO     | R token 'multiple' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'acting' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'compare' has no input anchor — introduced concept
+INFO     | R token 'enjoyment' has no input anchor — introduced concept
+INFO     | R token 'appreciation' has no input anchor — introduced concept
+INFO     | R token 'unique' has no input anchor — introduced concept
+INFO     | R token 'highlight' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'various' has no input anchor — introduced concept
+INFO     | R token 'contain' has no input anchor — introduced concept
+INFO     | R token 'acting' has no input anchor — introduced concept
+INFO     | R token 'crappi' has no input anchor — introduced concept
+INFO     | R token 'aspect' has no input anchor — introduced concept
+INFO     | R token 'include' has no input anchor — introduced concept
+INFO     | R token 'criticize' has no input anchor — introduced concept
+INFO     | R token 'opinion' has no input anchor — introduced concept
+INFO     | R token 'direction' has no input anchor — introduced concept
+INFO     | R token 'movie' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'enthusiasm' has no input anchor — introduced concept
+INFO     | R token 'author' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'appreciation' has no input anchor — introduced concept
+INFO     | R token 'highlight' has no input anchor — introduced concept
+INFO     | R token 'quality' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'include' has no input anchor — introduced concept
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'criticize' has no input anchor — introduced concept
+INFO     | R token 'dissatisfaction' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'various' has no input anchor — introduced concept
+INFO     | R token 'quality' has no input anchor — introduced concept
+INFO     | R token 'act' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'issue' has no input anchor — introduced concept
+INFO     | R token 'discuss' has no input anchor — introduced concept
+INFO     | R token 'frustration' has no input anchor — introduced concept
+INFO     | R token 'note' has no input anchor — introduced concept
+INFO     | R token 'final' has no input anchor — introduced concept
+INFO     | R token 'primarily' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'dissatisfaction' has no input anchor — introduced concept
+INFO     | R token 'overall' has no input anchor — introduced concept
+INFO     | R token 'unfavorable' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'view' has no input anchor — introduced concept
+INFO     | R token 'development' has no input anchor — introduced concept
+INFO     | R token 'lead' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'message' has no input anchor — introduced concept
+INFO     | R token 'convey' has no input anchor — introduced concept
+INFO     | R token 'observation' has no input anchor — introduced concept
+INFO     | R token 'fascination' has no input anchor — introduced concept
+INFO     | R token 'overall' has no input anchor — introduced concept
+INFO     | R token 'unity' has no input anchor — introduced concept
+INFO     | R token 'sentiment' has no input anchor — introduced concept
+INFO     | R token 'representation' has no input anchor — introduced concept
+INFO     | R token 'excitement' has no input anchor — introduced concept
+INFO     | R token 'highlight' has no input anchor — introduced concept
+INFO     | R token 'cultural' has no input anchor — introduced concept
+INFO     | R token 'critical' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'sentiment' has no input anchor — introduced concept
+INFO     | R token 'disbelief' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'sadness' has no input anchor — introduced concept
+INFO     | R token 'disappointment' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 8.0s (attempt 3)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'strongly' has no input anchor — introduced concept
+INFO     | R token 'criticize' has no input anchor — introduced concept
+INFO     | R token 'use' has no input anchor — introduced concept
+INFO     | R token 'portrayal' has no input anchor — introduced concept
+INFO     | R token 'content' has no input anchor — introduced concept
+INFO     | R token 'language' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'criticism' has no input anchor — introduced concept
+INFO     | R token 'overall' has no input anchor — introduced concept
+INFO     | R token 'sentiment' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'some' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 8.0s (attempt 3)
+ERROR    | Bedrock throttling retries exhausted | error=An error occurred (ThrottlingException) when calling the Converse operation (reached max retries: 0): Too many requests, please wait before trying again.
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 8.0s (attempt 3)
+ERROR    | Bedrock throttling retries exhausted | error=An error occurred (ThrottlingException) when calling the Converse operation (reached max retries: 0): Too many requests, please wait before trying again.
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'performance' has no input anchor — introduced concept
+INFO     | R token 'highlight' has no input anchor — introduced concept
+INFO     | R token 'not' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'theme' has no input anchor — introduced concept
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'word' has no input anchor — introduced concept
+INFO     | R token 'criticism' has no input anchor — introduced concept
+INFO     | R token 'use' has no input anchor — introduced concept
+INFO     | R token 'contain' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'criticism' has no input anchor — introduced concept
+INFO     | R token 'acting' has no input anchor — introduced concept
+INFO     | R token 'plot' has no input anchor — introduced concept
+INFO     | R token 'film' has no input anchor — introduced concept
+INFO     | R token 'numerous' has no input anchor — introduced concept
+INFO     | R token 'contain' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 8.0s (attempt 3)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'convey' has no input anchor — introduced concept
+INFO     | R token 'distressing' has no input anchor — introduced concept
+INFO     | R token 'exploitation' has no input anchor — introduced concept
+INFO     | R token 'sentiment' has no input anchor — introduced concept
+INFO     | R token 'scene' has no input anchor — introduced concept
+INFO     | R token 'suffering' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'effectiveness' has no input anchor — introduced concept
+INFO     | R token 'subtlety' has no input anchor — introduced concept
+INFO     | R token 'appreciate' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+INFO     | R token 'win' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'include' has no input anchor — introduced concept
+INFO     | R token 'recommend' has no input anchor — introduced concept
+INFO     | R token 'sentiment' has no input anchor — introduced concept
+INFO     | R token 'various' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'enjoyment' has no input anchor — introduced concept
+INFO     | R token 'highlight' has no input anchor — introduced concept
+INFO     | R token 'amusement' has no input anchor — introduced concept
+INFO     | R token 'induce' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'criticize' has no input anchor — introduced concept
+INFO     | R token 'reader' has no input anchor — introduced concept
+INFO     | R token 'sentiment' has no input anchor — introduced concept
+INFO     | R token 'advise' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'include' has no input anchor — introduced concept
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'word' has no input anchor — introduced concept
+INFO     | R token 'dissatisfaction' has no input anchor — introduced concept
+INFO     | R token 'overall' has no input anchor — introduced concept
+INFO     | R token 'effect' has no input anchor — introduced concept
+INFO     | R token 'use' has no input anchor — introduced concept
+INFO     | R token 'direction' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'various' has no input anchor — introduced concept
+INFO     | R token 'aspect' has no input anchor — introduced concept
+INFO     | R token 'quality' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'professionalism' has no input anchor — introduced concept
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'dissatisfaction' has no input anchor — introduced concept
+INFO     | R token 'action' has no input anchor — introduced concept
+INFO     | R token 'frustration' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'dissatisfaction' has no input anchor — introduced concept
+INFO     | R token 'criticize' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'dissatisfaction' has no input anchor — introduced concept
+INFO     | R token 'criticize' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'harshly' has no input anchor — introduced concept
+INFO     | R token 'creator' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'ultimately' has no input anchor — introduced concept
+INFO     | R token 'criticize' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'lack' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'amazement' has no input anchor — introduced concept
+INFO     | R token 'minor' has no input anchor — introduced concept
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'criticism' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'some' has no input anchor — introduced concept
+INFO     | R token 'enjoyment' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'unclear' has no input anchor — introduced concept
+INFO     | R token 'criticize' has no input anchor — introduced concept
+INFO     | R token 'remark' has no input anchor — introduced concept
+INFO     | R token 'label' has no input anchor — introduced concept
+INFO     | R token 'ultimately' has no input anchor — introduced concept
+INFO     | R token 'initial' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'criticize' has no input anchor — introduced concept
+INFO     | R token 'opinion' has no input anchor — introduced concept
+INFO     | R token 'overall' has no input anchor — introduced concept
+INFO     | R token 'contain' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'satisfaction' has no input anchor — introduced concept
+INFO     | R token 'author' has no input anchor — introduced concept
+INFO     | R token 'entertainment' has no input anchor — introduced concept
+INFO     | R token 'value' has no input anchor — introduced concept
+INFO     | R token 'enjoyment' has no input anchor — introduced concept
+INFO     | R token 'reaction' has no input anchor — introduced concept
+INFO     | R token 'humor' has no input anchor — introduced concept
+INFO     | R token 'highlight' has no input anchor — introduced concept
+INFO     | R token 'child' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'dissatisfaction' has no input anchor — introduced concept
+INFO     | R token 'criticism' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'criticize' has no input anchor — introduced concept
+INFO     | R token 'overall' has no input anchor — introduced concept
+INFO     | R token 'state' has no input anchor — introduced concept
+INFO     | R token 'as'messe' has no input anchor — introduced concept
+INFO     | R token 'direction' has no input anchor — introduced concept
+INFO     | R token 'film' has no input anchor — introduced concept
+INFO     | R token 'n't' has no input anchor — introduced concept
+INFO     | R token 'quality' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'acknowledge' has no input anchor — introduced concept
+INFO     | R token 'nature' has no input anchor — introduced concept
+INFO     | R token 'highlight' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'criticism' has no input anchor — introduced concept
+INFO     | R token 'dissatisfaction' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'good' has no input anchor — introduced concept
+INFO     | R token 'violence' has no input anchor — introduced concept
+INFO     | R token 'consider' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'sentiment' has no input anchor — introduced concept
+INFO     | R token 'as'mediocre' has no input anchor — introduced concept
+INFO     | R token 'mention' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'create' has no input anchor — introduced concept
+INFO     | R token 'highly' has no input anchor — introduced concept
+INFO     | R token 'ability' has no input anchor — introduced concept
+INFO     | R token 'fear' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 8.0s (attempt 3)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'remark' has no input anchor — introduced concept
+INFO     | R token 'hypothetically' has no input anchor — introduced concept
+INFO     | R token 'enjoyment' has no input anchor — introduced concept
+INFO     | R token 'contain' has no input anchor — introduced concept
+INFO     | R token 'mention' has no input anchor — introduced concept
+INFO     | R token 'watch' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'dissatisfaction' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'worth' has no input anchor — introduced concept
+INFO     | R token 'highlight' has no input anchor — introduced concept
+INFO     | R token 'not' has no input anchor — introduced concept
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'overall' has no input anchor — introduced concept
+INFO     | R token 'sentiment' has no input anchor — introduced concept
+INFO     | R token 'comparison' has no input anchor — introduced concept
+INFO     | R token 'especially' has no input anchor — introduced concept
+INFO     | R token 'ultimately' has no input anchor — introduced concept
+INFO     | R token 'initial' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+INFO     | R token 'lead' has no input anchor — introduced concept
+INFO     |   R_alt: mean delta = 0.0066 (50 instances); self-consistency AJ = 0.8077 (n=48)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 8.0s (attempt 3)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 8.0s (attempt 3)
+ERROR    | Bedrock throttling retries exhausted | error=An error occurred (ThrottlingException) when calling the Converse operation (reached max retries: 0): Too many requests, please wait before trying again.
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 8.0s (attempt 3)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     |   CF_alt: mean delta = 0.0052 (50 instances); self-consistency AJ = 0.7019 (n=49)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 8.0s (attempt 3)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 4.0s (attempt 2)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+WARNING  | Bedrock throttled (ThrottlingException), retrying in 2.0s (attempt 1)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     |   RO_alt: mean delta = -0.0045 (50 instances); self-consistency AJ = 0.6733 (n=49)
+INFO     | Ablation results saved to outputs\20260718_031417\ablations\ablation_results.json
+INFO     | maxp pruned
+INFO     | LTSH dropped
+INFO     | cmap pruned
+INFO     | kern dropped
+INFO     | post pruned
+INFO     | PCLT dropped
+INFO     | JSTF dropped
+INFO     | meta dropped
+INFO     | GPOS pruned
+INFO     | GSUB pruned
+INFO     | glyf pruned
+INFO     | Added gid0 to subset
+INFO     | Added first four glyphs to subset
+INFO     | Closing glyph list over 'GSUB': 34 glyphs before
+INFO     | Glyph names: ['.notdef', 'A', 'C', 'E', 'F', 'H', 'O', 'R', 'S', 'V', 'a', 'b', 'd', 'e', 'five', 'glyph00001', 'glyph00002', 'i', 'l', 'm', 'minus', 'n', 'o', 'one', 'p', 'period', 'r', 's', 'space', 't', 'u', 'underscore', 'y', 'zero']
+INFO     | Glyph IDs:   [0, 1, 2, 3, 17, 19, 20, 24, 36, 38, 40, 41, 43, 50, 53, 54, 57, 66, 68, 69, 71, 72, 76, 79, 80, 81, 82, 83, 85, 86, 87, 88, 92, 237]
+INFO     | Closed glyph list over 'GSUB': 41 glyphs after
+INFO     | Glyph names: ['.notdef', 'A', 'C', 'E', 'F', 'H', 'O', 'R', 'S', 'V', 'a', 'b', 'd', 'e', 'five', 'glyph00001', 'glyph00002', 'glyph03464', 'glyph03674', 'glyph03675', 'glyph03679', 'i', 'l', 'm', 'minus', 'n', 'o', 'one', 'p', 'period', 'r', 's', 'space', 't', 'u', 'underscore', 'uni00B9', 'uni2070', 'uni2075', 'y', 'zero']
+INFO     | Glyph IDs:   [0, 1, 2, 3, 17, 19, 20, 24, 36, 38, 40, 41, 43, 50, 53, 54, 57, 66, 68, 69, 71, 72, 76, 79, 80, 81, 82, 83, 85, 86, 87, 88, 92, 237, 239, 3464, 3674, 3675, 3679, 3686, 3775]
+INFO     | Closing glyph list over 'glyf': 41 glyphs before
+INFO     | Glyph names: ['.notdef', 'A', 'C', 'E', 'F', 'H', 'O', 'R', 'S', 'V', 'a', 'b', 'd', 'e', 'five', 'glyph00001', 'glyph00002', 'glyph03464', 'glyph03674', 'glyph03675', 'glyph03679', 'i', 'l', 'm', 'minus', 'n', 'o', 'one', 'p', 'period', 'r', 's', 'space', 't', 'u', 'underscore', 'uni00B9', 'uni2070', 'uni2075', 'y', 'zero']
+INFO     | Glyph IDs:   [0, 1, 2, 3, 17, 19, 20, 24, 36, 38, 40, 41, 43, 50, 53, 54, 57, 66, 68, 69, 71, 72, 76, 79, 80, 81, 82, 83, 85, 86, 87, 88, 92, 237, 239, 3464, 3674, 3675, 3679, 3686, 3775]
+INFO     | Closed glyph list over 'glyf': 43 glyphs after
+INFO     | Glyph names: ['.notdef', 'A', 'C', 'E', 'F', 'H', 'O', 'R', 'S', 'V', 'a', 'b', 'd', 'e', 'five', 'glyph00001', 'glyph00002', 'glyph03384', 'glyph03389', 'glyph03464', 'glyph03674', 'glyph03675', 'glyph03679', 'i', 'l', 'm', 'minus', 'n', 'o', 'one', 'p', 'period', 'r', 's', 'space', 't', 'u', 'underscore', 'uni00B9', 'uni2070', 'uni2075', 'y', 'zero']
+INFO     | Glyph IDs:   [0, 1, 2, 3, 17, 19, 20, 24, 36, 38, 40, 41, 43, 50, 53, 54, 57, 66, 68, 69, 71, 72, 76, 79, 80, 81, 82, 83, 85, 86, 87, 88, 92, 237, 239, 3384, 3389, 3464, 3674, 3675, 3679, 3686, 3775]
+INFO     | Retaining 43 glyphs
+INFO     | head subsetting not needed
+INFO     | hhea subsetting not needed
+INFO     | maxp subsetting not needed
+INFO     | OS/2 subsetting not needed
+INFO     | hmtx subsetted
+INFO     | VDMX subsetting not needed
+INFO     | hdmx subsetted
+INFO     | cmap subsetted
+INFO     | fpgm subsetting not needed
+INFO     | prep subsetting not needed
+INFO     | cvt  subsetting not needed
+INFO     | loca subsetting not needed
+INFO     | post subsetted
+INFO     | gasp subsetting not needed
+INFO     | GDEF subsetted
+INFO     | GPOS subsetted
+INFO     | GSUB subsetted
+INFO     | name subsetting not needed
+INFO     | glyf subsetted
+INFO     | head pruned
+INFO     | OS/2 Unicode ranges pruned: [0, 38]
+INFO     | OS/2 CodePage ranges pruned: [0]
+INFO     | glyf pruned
+INFO     | GDEF pruned
+INFO     | GPOS pruned
+INFO     | GSUB pruned
+INFO     | name pruned
+INFO     | Robustness analysis plot saved to outputs\20260718_031417\ablations
+INFO     | Ablation studies complete. Results saved to outputs\20260718_031417\ablations
