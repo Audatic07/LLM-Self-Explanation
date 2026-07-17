@@ -1,0 +1,66 @@
+{
+  "cad_imdb": {
+    "strategies": {
+      "H": {
+        "mean_jaccard": 0.5382152869208829,
+        "n_pairs": 13
+      },
+      "R": {
+        "mean_jaccard": 0.41097883597883594,
+        "n_pairs": 15
+      },
+      "CF": {
+        "mean_jaccard": 0.6605447243309562,
+        "n_pairs": 15
+      },
+      "RO": {
+        "mean_jaccard": 0.5044973544973544,
+        "n_pairs": 15
+      }
+    },
+    "cross_model_same_strategy_mean": 0.5282260767599771,
+    "within_model_cross_strategy_mean_ecs": 0.26783830716918455,
+    "n_instances_multi_model": 5,
+    "paired_contrast": {
+      "mean_delta": 0.25739594568407065,
+      "ci_lower": 0.21924505433680502,
+      "ci_upper": 0.2955468370313364,
+      "n": 5,
+      "direction": "cross_model_exceeds"
+    },
+    "strategies_aj": {
+      "H": {
+        "mean_aj": 0.3479871277517005,
+        "n_pairs": 13
+      },
+      "R": {
+        "mean_aj": 0.6631688814816644,
+        "n_pairs": 14
+      },
+      "CF": {
+        "mean_aj": 0.7872530776089434,
+        "n_pairs": 15
+      },
+      "RO": {
+        "mean_aj": 0.4838139540681808,
+        "n_pairs": 15
+      }
+    },
+    "cross_model_same_strategy_mean_aj": 0.5767403943275838,
+    "within_model_cross_strategy_mean_ecs_adj": 0.45079732998445815,
+    "paired_contrast_aj": {
+      "mean_delta": 0.12963989176798907,
+      "ci_lower": 0.03440385339309898,
+      "ci_upper": 0.21299790939815771,
+      "n": 5,
+      "direction": "cross_model_exceeds"
+    },
+    "paired_contrast_aj_matched": {
+      "mean_delta": 0.17371510172357701,
+      "ci_lower": 0.06928932377031363,
+      "ci_upper": 0.2662997202619609,
+      "n": 5,
+      "direction": "cross_model_exceeds"
+    }
+  }
+}

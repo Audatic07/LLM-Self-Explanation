@@ -1,0 +1,45 @@
+Execution Summary
+=================
+Run ID: 728e8186
+Start Time: 2026-07-16 21:03:42
+End Time: 2026-07-16 21:05:34
+Duration: 111.47 seconds (1.86 minutes)
+
+Processing Statistics
+---------------------
+Total Instances: 15
+Successful: 15 (100.0%)
+Failed: 0 (0.0%)
+
+Failure Breakdown
+-----------------
+API Failures: 0
+Normalization Failures: 0
+Prompt Validation Failures: 0
+Parsing Failures by Strategy:
+  CF: 0
+  H: 1
+  R: 0
+  RO: 0
+
+Sampling Log:
+----------------------------------------
+  nova-pro/cad_imdb: requested=5, sampled=5, wrong_pred=1
+  qwen3-235b/cad_imdb: requested=5, sampled=5, wrong_pred=0
+  deepseek-v3/cad_imdb: requested=5, sampled=5, wrong_pred=0
+
+Performance Metrics
+-------------------
+Average Time per Instance: 7.43 seconds
+Total API Requests: 135
+Failed API Requests: 0 (0.0%)
+API Requests by Category:
+  CF: 15
+  CF_free: 15
+  CF_free_verify: 15
+  CF_verify: 15
+  H: 15
+  R: 15
+  RO: 15
+  classification: 15
+  confidence: 15

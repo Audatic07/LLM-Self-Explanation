@@ -1,0 +1,358 @@
+INFO     | Starting experiment: llm-explanation-agreement-study v1.0
+INFO     | Run ID: 728e8186
+INFO     | Random seed: 42
+INFO     | Output directory: outputs\20260716_210340_728e8186
+INFO     | Configuration saved to outputs\20260716_210340_728e8186\config_snapshot.yaml
+INFO     | Processing dataset: cad_imdb
+INFO     | Loaded 200 curated instances from data\processed\cad_imdb_curated.jsonl
+INFO     | Loaded 200 CURATED instances for cad_imdb from data\processed\cad_imdb_curated.jsonl
+INFO     | Sliced to 5 instances (sample_size=5)
+INFO     | Running 3 models concurrently on cad_imdb: nova-pro, qwen3-235b, deepseek-v3
+INFO     | Processing model: nova-pro on cad_imdb
+INFO     | Found token in environment variables.
+INFO     | [nova-pro] Processing cad_imdb_dev_000284 (1/5)
+INFO     | Processing model: qwen3-235b on cad_imdb
+INFO     | Found token in environment variables.
+INFO     | [qwen3-235b] Processing cad_imdb_dev_000284 (1/5)
+INFO     | Processing model: deepseek-v3 on cad_imdb
+INFO     | Found token in environment variables.
+INFO     | [deepseek-v3] Processing cad_imdb_dev_000284 (1/5)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | R token 'effect' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+INFO     | R token 'scariness' has no input anchor — introduced concept
+INFO     | R token 'single' has no input anchor — introduced concept
+INFO     | R token 'flaw' has no input anchor — introduced concept
+INFO     | R token 'downplay' has no input anchor — introduced concept
+INFO     | R token 'comment' has no input anchor — introduced concept
+INFO     | R token 'overwhelmingly' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'recommendation' has no input anchor — introduced concept
+INFO     | R token 'critique' has no input anchor — introduced concept
+INFO     | R token 'enthusiastic' has no input anchor — introduced concept
+INFO     | R token 'minor' has no input anchor — introduced concept
+INFO     | R token 'contain' has no input anchor — introduced concept
+INFO     | R token 'overwhelmingly' has no input anchor — introduced concept
+INFO     | R token 'language' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | [deepseek-v3] Processing cad_imdb_test_000501 (2/5)
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | R token 'effect' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+INFO     | R token 'quality' has no input anchor — introduced concept
+INFO     | R token 'enthusiastic' has no input anchor — introduced concept
+INFO     | R token 'frame' has no input anchor — introduced concept
+INFO     | R token 'overall' has no input anchor — introduced concept
+INFO     | R token 'minor' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'strongly' has no input anchor — introduced concept
+INFO     | R token 'criticism' has no input anchor — introduced concept
+INFO     | R token 'sarcastically' has no input anchor — introduced concept
+INFO     | R token 'sentiment' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | [nova-pro] Processing cad_imdb_test_000501 (2/5)
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | [qwen3-235b] Processing cad_imdb_test_000501 (2/5)
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+WARNING  | H salience word 'n't' not anchored — discarding
+INFO     | R token 'praise' has no input anchor — introduced concept
+INFO     | R token 'good' has no input anchor — introduced concept
+INFO     | R token 'author' has no input anchor — introduced concept
+INFO     | R token 'enthusiastically' has no input anchor — introduced concept
+INFO     | R token 'recommend' has no input anchor — introduced concept
+INFO     | R token 'extreme' has no input anchor — introduced concept
+INFO     | R token 'overwhelmingly' has no input anchor — introduced concept
+INFO     | R token 'use' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+INFO     | R token 'aspect' has no input anchor — introduced concept
+INFO     | R token 'enthusiasm' has no input anchor — introduced concept
+INFO     | R token 'various' has no input anchor — introduced concept
+INFO     | R token 'author' has no input anchor — introduced concept
+INFO     | R token 'enjoyable' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'impressive' has no input anchor — introduced concept
+INFO     | R token 'highlight' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | [deepseek-v3] Processing cad_imdb_dev_000699 (3/5)
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | [nova-pro] Processing cad_imdb_dev_000699 (3/5)
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | R token 'praise' has no input anchor — introduced concept
+INFO     | R token 'approval' has no input anchor — introduced concept
+INFO     | R token 'effusive' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'overwhelmingly' has no input anchor — introduced concept
+INFO     | R token 'rating' has no input anchor — introduced concept
+INFO     | R token 'use' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+WARNING  | Parsing error for cad_imdb_test_000501 strategy H: [PRS000] No valid JSON found in highlighting response
+INFO     | R token 'exaggerated' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'recommendation' has no input anchor — introduced concept
+INFO     | R token 'enthusiastic' has no input anchor — introduced concept
+INFO     | R token 'irony' has no input anchor — introduced concept
+INFO     | R token 'excitement' has no input anchor — introduced concept
+INFO     | R token 'apparent' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'watch' has no input anchor — introduced concept
+INFO     | R token 'criticism' has no input anchor — introduced concept
+INFO     | R token 'language' has no input anchor — introduced concept
+INFO     | R token 'use' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'adjective' has no input anchor — introduced concept
+INFO     | R token 'favorable' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+INFO     | R token 'rating' has no input anchor — introduced concept
+INFO     | R token 'highly' has no input anchor — introduced concept
+INFO     | R token 'sentiment' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | [deepseek-v3] Processing cad_imdb_dev_000531 (4/5)
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | [nova-pro] Processing cad_imdb_dev_000531 (4/5)
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | [qwen3-235b] Processing cad_imdb_dev_000699 (3/5)
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | R token 'praise' has no input anchor — introduced concept
+INFO     | R token 'author' has no input anchor — introduced concept
+INFO     | R token 'enthusiastically' has no input anchor — introduced concept
+INFO     | R token 'coherent' has no input anchor — introduced concept
+INFO     | R token 'reason' has no input anchor — introduced concept
+INFO     | R token 'recommend' has no input anchor — introduced concept
+INFO     | R token 'sarcastic' has no input anchor — introduced concept
+INFO     | R token 'use' has no input anchor — introduced concept
+INFO     | R token 'highlight' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | [deepseek-v3] Processing cad_imdb_dev_000220 (5/5)
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'critical' has no input anchor — introduced concept
+INFO     | R token 'dissatisfaction' has no input anchor — introduced concept
+INFO     | R token 'flaw' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'sarcastic' has no input anchor — introduced concept
+INFO     | R token 'language' has no input anchor — introduced concept
+INFO     | R token 'use' has no input anchor — introduced concept
+INFO     | R token 'perceive' has no input anchor — introduced concept
+INFO     | R token 'highlight' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+WARNING  | H salience word 'n't' not anchored — discarding
+INFO     | R token 'praise' has no input anchor — introduced concept
+INFO     | R token 'quality' has no input anchor — introduced concept
+INFO     | R token 'strength' has no input anchor — introduced concept
+INFO     | R token 'culminate' has no input anchor — introduced concept
+INFO     | R token 'enthusiastic' has no input anchor — introduced concept
+INFO     | R token 'description' has no input anchor — introduced concept
+INFO     | R token 'impact' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'emotional' has no input anchor — introduced concept
+INFO     | R token 'rating' has no input anchor — introduced concept
+INFO     | R token 'highlight' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | [nova-pro] Processing cad_imdb_dev_000220 (5/5)
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | R token 'harshly' has no input anchor — introduced concept
+INFO     | R token 'critical' has no input anchor — introduced concept
+INFO     | R token 'word' has no input anchor — introduced concept
+INFO     | R token 'strongly' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'opinion' has no input anchor — introduced concept
+INFO     | R token 'use' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | [qwen3-235b] Processing cad_imdb_dev_000531 (4/5)
+INFO     | Bedrock request successful | model=deepseek.v3-v1:0 | status=success
+INFO     | Saved 5 instances to checkpoint (outputs\20260716_210340_728e8186\checkpoint_cad_imdb_deepseek-v3.jsonl)
+INFO     | Token usage for deepseek-v3/cad_imdb: engine=27395 (prompt=18456, completion=8939), per-instance sum=27395, truncated_calls=0
+C:\OpenSource\Research\src\statistics\statistical_tests.py:97: ConstantInputWarning: An input array is constant; the correlation coefficient is not defined.
+  boot_rho, _ = scipy.stats.spearmanr([confidences[i] for i in idx], [ecs_values[i] for i in idx])
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'vow' has no input anchor — introduced concept
+INFO     | R token 'contain' has no input anchor — introduced concept
+INFO     | R token 'criticism' has no input anchor — introduced concept
+INFO     | R token 'language' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Bedrock request successful | model=eu.amazon.nova-pro-v1:0 | status=success
+INFO     | Saved 5 instances to checkpoint (outputs\20260716_210340_728e8186\checkpoint_cad_imdb_nova-pro.jsonl)
+INFO     | Token usage for nova-pro/cad_imdb: engine=27520 (prompt=18225, completion=9295), per-instance sum=27520, truncated_calls=0
+C:\OpenSource\Research\src\statistics\statistical_tests.py:71: ConstantInputWarning: An input array is constant; the correlation coefficient is not defined.
+  rho, p_value = scipy.stats.spearmanr(confidences, ecs_values)
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | R token 'exaggerated' has no input anchor — introduced concept
+INFO     | R token 'praise' has no input anchor — introduced concept
+INFO     | R token 'criticism' has no input anchor — introduced concept
+INFO     | R token 'cast' has no input anchor — introduced concept
+INFO     | R token 'poor' has no input anchor — introduced concept
+INFO     | R token 'overall' has no input anchor — introduced concept
+INFO     | R token 'mock' has no input anchor — introduced concept
+INFO     | R token 'sarcastic' has no input anchor — introduced concept
+INFO     | R token 'tone' has no input anchor — introduced concept
+INFO     | R token 'initial' has no input anchor — introduced concept
+INFO     | R token 'use' has no input anchor — introduced concept
+INFO     | R token 'sentiment' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | [qwen3-235b] Processing cad_imdb_dev_000220 (5/5)
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | R token 'strong' has no input anchor — introduced concept
+INFO     | R token 'clearly' has no input anchor — introduced concept
+INFO     | R token 'disapproval' has no input anchor — introduced concept
+INFO     | R token 'express' has no input anchor — introduced concept
+INFO     | R token 'criticism' has no input anchor — introduced concept
+INFO     | R token 'language' has no input anchor — introduced concept
+INFO     | R token 'use' has no input anchor — introduced concept
+INFO     | R token 'sentiment' has no input anchor — introduced concept
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Bedrock request successful | model=qwen.qwen3-235b-a22b-2507-v1:0 | status=success
+INFO     | Saved 5 instances to checkpoint (outputs\20260716_210340_728e8186\checkpoint_cad_imdb_qwen3-235b.jsonl)
+INFO     | Token usage for qwen3-235b/cad_imdb: engine=26865 (prompt=18736, completion=8129), per-instance sum=26865, truncated_calls=0
+INFO     | Report saved to outputs\20260716_210340_728e8186\report.md
+INFO     | Experiment complete. Results saved to outputs\20260716_210340_728e8186
+INFO     | Execution Summary
+=================
+Run ID: 728e8186
+Start Time: 2026-07-16 21:03:42
+End Time: 2026-07-16 21:05:34
+Duration: 111.47 seconds (1.86 minutes)
+
+Processing Statistics
+---------------------
+Total Instances: 15
+Successful: 15 (100.0%)
+Failed: 0 (0.0%)
+
+Failure Breakdown
+-----------------
+API Failures: 0
+Normalization Failures: 0
+Prompt Validation Failures: 0
+Parsing Failures by Strategy:
+  CF: 0
+  H: 1
+  R: 0
+  RO: 0
+
+Sampling Log:
+----------------------------------------
+  nova-pro/cad_imdb: requested=5, sampled=5, wrong_pred=1
+  qwen3-235b/cad_imdb: requested=5, sampled=5, wrong_pred=0
+  deepseek-v3/cad_imdb: requested=5, sampled=5, wrong_pred=0
+
+Performance Metrics
+-------------------
+Average Time per Instance: 7.43 seconds
+Total API Requests: 135
+Failed API Requests: 0 (0.0%)
+API Requests by Category:
+  CF: 15
+  CF_free: 15
+  CF_free_verify: 15
+  CF_verify: 15
+  H: 15
+  R: 15
+  RO: 15
+  classification: 15
+  confidence: 15
