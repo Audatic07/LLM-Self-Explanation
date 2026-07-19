@@ -1,0 +1,56 @@
+Execution Summary
+=================
+Run ID: eaa24e67
+Start Time: 2026-07-18 04:16:21
+End Time: 2026-07-18 08:59:55
+Duration: 17014.58 seconds (283.58 minutes)
+
+Processing Statistics
+---------------------
+Total Instances: 2400
+Successful: 2400 (100.0%)
+Failed: 0 (0.0%)
+
+Failure Breakdown
+-----------------
+API Failures: 0
+Normalization Failures: 0
+Prompt Validation Failures: 0
+Parsing Failures by Strategy:
+  CF: 988
+  H: 36
+  R: 78
+  RO: 26
+
+Sampling Log:
+----------------------------------------
+  nova-pro/sst2: requested=200, sampled=200, wrong_pred=10
+  qwen3-235b/sst2: requested=200, sampled=200, wrong_pred=4
+  deepseek-v3/sst2: requested=200, sampled=200, wrong_pred=4
+  nova-pro/mnli: requested=200, sampled=200, wrong_pred=30
+  qwen3-235b/mnli: requested=200, sampled=200, wrong_pred=22
+  deepseek-v3/mnli: requested=200, sampled=200, wrong_pred=41
+  nova-pro/ag_news: requested=200, sampled=200, wrong_pred=15
+  qwen3-235b/ag_news: requested=200, sampled=200, wrong_pred=16
+  deepseek-v3/ag_news: requested=200, sampled=200, wrong_pred=24
+  nova-pro/cad_imdb: requested=200, sampled=200, wrong_pred=17
+  qwen3-235b/cad_imdb: requested=200, sampled=200, wrong_pred=13
+  deepseek-v3/cad_imdb: requested=200, sampled=200, wrong_pred=8
+
+Performance Metrics
+-------------------
+Average Time per Instance: 7.09 seconds
+Total API Requests: 26545
+Failed API Requests: 4783 (18.0%)
+API Requests by Category:
+  CF: 2400
+  CF_correct: 305
+  CF_free: 2400
+  CF_free_verify: 2328
+  CF_verify: 1957
+  H: 2400
+  R: 2400
+  RO: 2400
+  RO_correct: 372
+  classification: 2400
+  confidence: 2400

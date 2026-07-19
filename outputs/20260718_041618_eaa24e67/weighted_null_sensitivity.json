@@ -1,0 +1,128 @@
+{
+  "provenance": {
+    "draws": 400,
+    "seed": 42,
+    "weighting": "token occurrence count",
+    "note": "Sensitivity only (audit F4) \u2014 the pre-registered primary stays the uniform exact-hypergeometric null."
+  },
+  "pooled": {
+    "uniform_complete_mean": 0.43196706822829484,
+    "n_u_cc": 1153,
+    "weighted_complete_mean": 0.42123527654771087,
+    "n_w_cc": 1142,
+    "uniform_available_mean": 0.46165438861721014,
+    "weighted_available_mean": 0.4480595912743812,
+    "n_available": 2313
+  },
+  "per_cell": {
+    "deepseek-v3_ag_news": {
+      "uniform_complete_mean": 0.5025309806318035,
+      "n_u_cc": 80,
+      "weighted_complete_mean": 0.492950627462381,
+      "n_w_cc": 80,
+      "uniform_available_mean": 0.544489114426642,
+      "weighted_available_mean": 0.534057324392515,
+      "n_available": 194
+    },
+    "deepseek-v3_cad_imdb": {
+      "uniform_complete_mean": 0.46480835142245136,
+      "n_u_cc": 193,
+      "weighted_complete_mean": 0.44838036171924733,
+      "n_w_cc": 193,
+      "uniform_available_mean": 0.4588462167956003,
+      "weighted_available_mean": 0.4423459621431516,
+      "n_available": 200
+    },
+    "deepseek-v3_mnli": {
+      "uniform_complete_mean": 0.4409822655402321,
+      "n_u_cc": 51,
+      "weighted_complete_mean": 0.41205571283913,
+      "n_w_cc": 47,
+      "uniform_available_mean": 0.5013154697518524,
+      "weighted_available_mean": 0.4836142443691015,
+      "n_available": 193
+    },
+    "deepseek-v3_sst2": {
+      "uniform_complete_mean": 0.617313592651006,
+      "n_u_cc": 143,
+      "weighted_complete_mean": 0.6195226231972342,
+      "n_w_cc": 144,
+      "uniform_available_mean": 0.6175433451168533,
+      "weighted_available_mean": 0.6170750161459605,
+      "n_available": 197
+    },
+    "nova-pro_ag_news": {
+      "uniform_complete_mean": 0.3545501360493698,
+      "n_u_cc": 30,
+      "weighted_complete_mean": 0.36097386618402616,
+      "n_w_cc": 29,
+      "uniform_available_mean": 0.4392472618313815,
+      "weighted_available_mean": 0.42292915291272903,
+      "n_available": 190
+    },
+    "nova-pro_cad_imdb": {
+      "uniform_complete_mean": 0.300853168313704,
+      "n_u_cc": 154,
+      "weighted_complete_mean": 0.27837730063250005,
+      "n_w_cc": 153,
+      "uniform_available_mean": 0.28682215029332947,
+      "weighted_available_mean": 0.26314816113852424,
+      "n_available": 198
+    },
+    "nova-pro_mnli": {
+      "uniform_complete_mean": 0.28365305405973595,
+      "n_u_cc": 37,
+      "weighted_complete_mean": 0.27918876731997094,
+      "n_w_cc": 34,
+      "uniform_available_mean": 0.4749647377056826,
+      "weighted_available_mean": 0.45409524588148015,
+      "n_available": 182
+    },
+    "nova-pro_sst2": {
+      "uniform_complete_mean": 0.41383535972006946,
+      "n_u_cc": 109,
+      "weighted_complete_mean": 0.4107441007737548,
+      "n_w_cc": 109,
+      "uniform_available_mean": 0.42605183495328003,
+      "weighted_available_mean": 0.42528778329519856,
+      "n_available": 186
+    },
+    "qwen3-235b_ag_news": {
+      "uniform_complete_mean": 0.4271931458844022,
+      "n_u_cc": 14,
+      "weighted_complete_mean": 0.41360674766865974,
+      "n_w_cc": 14,
+      "uniform_available_mean": 0.48933802162741596,
+      "weighted_available_mean": 0.47745967650840054,
+      "n_available": 195
+    },
+    "qwen3-235b_cad_imdb": {
+      "uniform_complete_mean": 0.37047159916427175,
+      "n_u_cc": 178,
+      "weighted_complete_mean": 0.354216944580198,
+      "n_w_cc": 178,
+      "uniform_available_mean": 0.35352955472732234,
+      "weighted_available_mean": 0.3375624315508658,
+      "n_available": 199
+    },
+    "qwen3-235b_mnli": {
+      "uniform_complete_mean": 0.4307440572398104,
+      "n_u_cc": 39,
+      "weighted_complete_mean": 0.39911677939231527,
+      "n_w_cc": 36,
+      "uniform_available_mean": 0.5078177173197856,
+      "weighted_available_mean": 0.480881382585411,
+      "n_available": 191
+    },
+    "qwen3-235b_sst2": {
+      "uniform_complete_mean": 0.44869459170429565,
+      "n_u_cc": 125,
+      "weighted_complete_mean": 0.44773232571801963,
+      "n_w_cc": 125,
+      "uniform_available_mean": 0.443048276476822,
+      "weighted_available_mean": 0.4417422959527572,
+      "n_available": 188
+    }
+  },
+  "n_instances": 2400
+}
