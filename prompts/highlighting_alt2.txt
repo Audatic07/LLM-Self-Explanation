@@ -1,0 +1,8 @@
+The text was classified as: {predicted_label}
+
+Text: "{input_text}"
+
+Judge how strongly each individual word drove this classification. Assign every word a weight between 1 (no influence) and 10 (fully decisive), reproducing each word verbatim in its original order. Repeated words must each receive their own entry.
+
+Return only valid JSON:
+{{"salience": [["word", score], ["word", score]]}}

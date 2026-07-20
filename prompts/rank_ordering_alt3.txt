@@ -1,0 +1,8 @@
+Classification result for the text: {predicted_label}
+
+Text: "{input_text}"
+
+Which 5 words carried the most weight for that result? Rank them starting with the most influential and ending with the least. Each item must be a single word appearing in the text.
+
+Return only valid JSON:
+{{"ranking": ["word1", "word2", "word3", "word4", "word5"]}}

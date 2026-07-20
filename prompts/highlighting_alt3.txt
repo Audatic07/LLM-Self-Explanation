@@ -1,0 +1,8 @@
+Classification result for the text: {predicted_label}
+
+Text: "{input_text}"
+
+Go through the text word by word and mark the influence of each one on that result, using a 1-to-10 scale where 1 means irrelevant and 10 means decisive. Quote each word exactly as written, keep the original ordering, and list every occurrence separately.
+
+Return only valid JSON:
+{{"salience": [["word", score], ["word", score]]}}

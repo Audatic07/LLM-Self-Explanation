@@ -1,0 +1,8 @@
+The text was classified as: {predicted_label}
+
+Text: "{input_text}"
+
+Name the 5 words that mattered most to this classification, ordered from most important to least important. Every entry must be one single word copied from the text.
+
+Return only valid JSON:
+{{"ranking": ["word1", "word2", "word3", "word4", "word5"]}}

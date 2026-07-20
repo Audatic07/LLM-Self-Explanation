@@ -1,0 +1,8 @@
+The text was classified as: {predicted_label}
+
+Text: "{input_text}"
+
+Rewrite the text so that it would instead receive one of these labels: {other_labels_quoted}. Use the smallest number of word changes possible — modify at most a third of the words and introduce no additional sentences. Leave spacing and punctuation as they are, changing only the words you replace.
+
+Return only valid JSON (exactly one JSON object, one rewrite):
+{{"rewritten": "<edited text>", "new_prediction": "<one of: {other_labels}>"}}

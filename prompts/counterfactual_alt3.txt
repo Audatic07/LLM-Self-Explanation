@@ -1,0 +1,8 @@
+Classification result for the text: {predicted_label}
+
+Text: "{input_text}"
+
+Produce a minimally edited version of this text that would be classified as one of: {other_labels_quoted}. Keep edits to a minimum — at most one third of the words may change, and no sentences may be added. The original spacing and punctuation style must be preserved; only the words you deliberately alter should differ.
+
+Return only valid JSON (exactly one JSON object, one rewrite):
+{{"rewritten": "<edited text>", "new_prediction": "<one of: {other_labels}>"}}

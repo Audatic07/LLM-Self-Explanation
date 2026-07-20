@@ -211,24 +211,47 @@ def load_reliabilities(ablation_dirs: List[Path]) -> Dict[str, Dict[str, Dict[st
         # ceilings for models whose original pass predates the arm). Merge per
         # dataset; the SAME model+dataset ceiling appearing twice is ambiguous
         # provenance and stays a hard error.
+        # Which reworded prompt set produced this dir's ceilings. Dirs written before
+        # the 2026-07-20 paraphrase expansion carry no stamp and are the original 'alt'.
+        variant = meta.get("paraphrase_variant", "alt")
         model_rel = rel.setdefault(model, {})
         for key, strategies in data.items():
             if key == "_meta" or not key.endswith("_prompt"):
                 continue
             dataset = key[:-len("_prompt")]
-            if dataset in model_rel:
-                raise ValueError(
-                    f"Duplicate ceilings for model '{model}' dataset '{dataset}' ({d})")
-            model_rel[dataset] = {}
+            ds_rel = model_rel.setdefault(dataset, {})
             for skey, e in strategies.items():
                 if not skey.endswith("_alt"):
                     continue
                 s = skey[:-len("_alt")]
-                rel[model][dataset][s] = {
+                entry = ds_rel.setdefault(s, {"values": [], "by_variant": {}})
+                # The SAME model+dataset+strategy under the SAME paraphrase twice is
+                # ambiguous provenance and stays a hard error; different paraphrases
+                # are the expansion and are POOLED (2026-07-20).
+                if variant in entry["by_variant"]:
+                    raise ValueError(
+                        f"Duplicate ceilings for model '{model}' dataset '{dataset}' "
+                        f"strategy '{s}' paraphrase '{variant}' ({d})")
+                vals = e.get("self_consistency_aj_values") or []
+                entry["by_variant"][variant] = {
                     "mean": e.get("self_consistency_aj_mean"),
                     "n": e.get("self_consistency_aj_n", 0),
-                    "values": e.get("self_consistency_aj_values") or [],
+                    "values": vals,
                 }
+                entry["values"].extend(vals)
+
+    # Finalize: the pooled point estimate is the mean over all paraphrases' values;
+    # variant_means/variant_spread expose how much the ceiling moves with the wording,
+    # which is the quantity the single-paraphrase design could not report.
+    for model, by_ds in rel.items():
+        for dataset, by_s in by_ds.items():
+            for s, entry in by_s.items():
+                entry["n"] = len(entry["values"])
+                entry["mean"] = float(np.mean(entry["values"])) if entry["values"] else None
+                vm = {v: b["mean"] for v, b in entry["by_variant"].items() if b["mean"] is not None}
+                entry["variant_means"] = vm
+                entry["n_variants"] = len(vm)
+                entry["variant_spread"] = (max(vm.values()) - min(vm.values())) if len(vm) > 1 else None
     return rel
 
 
@@ -341,6 +364,57 @@ def run(results_dir: Path, ablation_dirs: List[Path]) -> Dict:
     group = analyze_group(records, rel, calc)
     output["overall"] = group
     print_group("overall", group)
+
+    # --- Paraphrase-spread sensitivity (2026-07-20) -------------------------------
+    # The single-paraphrase design made every ceiling a point estimate, so a rewording
+    # that happened to be disruptive for one strategy would inflate that strategy's
+    # corrected pairs. With multiple paraphrases we can re-derive the overall table
+    # under EACH paraphrase separately and report the range, which is what turns the
+    # at-ceiling reading from provisional into a bounded claim.
+    variants = sorted({v for m in reliabilities.values() for d in m.values()
+                       for s in d.values() for v in s.get("by_variant", {})})
+    if len(variants) > 1:
+        per_variant: Dict[str, Dict] = {}
+        for variant in variants:
+            rel_v = {}
+            for s in strategies:
+                vals: List[float] = []
+                for m in models:
+                    for d in datasets:
+                        e = reliabilities.get(m, {}).get(d, {}).get(s)
+                        if e:
+                            b = e.get("by_variant", {}).get(variant)
+                            if b:
+                                vals.extend(b.get("values") or [])
+                rel_v[s] = ({"mean": float(np.mean(vals)), "n": len(vals), "values": vals}
+                            if vals else None)
+            per_variant[variant] = analyze_group(records, rel_v, calc)
+            print_group(f"overall[{variant}]", per_variant[variant])
+        # Range of the corrected value for each pair across paraphrases.
+        spread: Dict[str, Dict] = {}
+        for pair in output["overall"]["pairs"]:
+            vals = [per_variant[v]["pairs"].get(pair, {}).get("corrected")
+                    for v in variants]
+            vals = [x for x in vals if x is not None]
+            if vals:
+                spread[pair] = {
+                    "by_variant": {v: per_variant[v]["pairs"].get(pair, {}).get("corrected")
+                                   for v in variants},
+                    "min": min(vals), "max": max(vals), "range": max(vals) - min(vals),
+                    "pooled": output["overall"]["pairs"][pair].get("corrected"),
+                }
+        output["paraphrase_sensitivity"] = {
+            "note": ("Overall table re-derived under each paraphrase's ceilings separately. "
+                     "The pooled row of the main table uses all paraphrases' values."),
+            "variants": variants,
+            "per_variant_overall": per_variant,
+            "corrected_spread": spread,
+        }
+        output["provenance"]["paraphrase_variants"] = variants
+        print("\nparaphrase spread (corrected value per pair):")
+        for pair, e in spread.items():
+            bv = " ".join(f"{v}={_fmt(x)}" for v, x in e["by_variant"].items())
+            print(f"  {pair}: {bv} | pooled={_fmt(e['pooled'])} range={_fmt(e['range'])}")
 
     out_path = results_dir / "disattenuated_agreement.json"
     with open(out_path, "w", encoding="utf-8") as f:

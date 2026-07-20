@@ -1,0 +1,8 @@
+Classification result for the text: {predicted_label}
+
+Text: "{input_text}"
+
+State, in exactly one sentence, the reason this text received that classification.
+
+Return only valid JSON:
+{{"rationale": "<one-sentence explanation>"}}

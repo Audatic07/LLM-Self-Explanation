@@ -42,12 +42,49 @@ STRATEGY_IDS = ["H", "R", "CF", "RO"]
 # ablations were cut: normalization is pinned by the v3.0 shared-token-space
 # requirement (varying it re-introduces the review §8.2 asymmetry by construction),
 # and dynamic_k superseded fixed-k highlighting.
-ALT_PROMPTS = {
-    "H": "prompts/highlighting_alt.txt",
-    "R": "prompts/rationale_alt.txt",
-    "CF": "prompts/counterfactual_alt.txt",
-    "RO": "prompts/rank_ordering_alt.txt",
+#
+# PARAPHRASE VARIANTS (2026-07-20). The original single paraphrase per strategy made
+# every reliability ceiling a point estimate that conflates instrument stability with
+# the disruptiveness of that one rewording — and because a low reliability INFLATES the
+# disattenuated ratio, the "extraction<->CF at ceiling" reading was the claim most
+# exposed to it. `--paraphrase alt2|alt3` collects additional independent rewordings so
+# each ceiling becomes a distribution. The variants are semantically equivalent and keep
+# every format slot and JSON schema identical; only surface wording differs.
+ALT_PROMPT_SETS = {
+    "alt": {
+        "H": "prompts/highlighting_alt.txt",
+        "R": "prompts/rationale_alt.txt",
+        "CF": "prompts/counterfactual_alt.txt",
+        "RO": "prompts/rank_ordering_alt.txt",
+    },
+    "alt2": {
+        "H": "prompts/highlighting_alt2.txt",
+        "R": "prompts/rationale_alt2.txt",
+        "CF": "prompts/counterfactual_alt2.txt",
+        "RO": "prompts/rank_ordering_alt2.txt",
+    },
+    "alt3": {
+        "H": "prompts/highlighting_alt3.txt",
+        "R": "prompts/rationale_alt3.txt",
+        "CF": "prompts/counterfactual_alt3.txt",
+        "RO": "prompts/rank_ordering_alt3.txt",
+    },
 }
+# Back-compat alias: existing call sites read ALT_PROMPTS for the original paraphrase.
+ALT_PROMPTS = ALT_PROMPT_SETS["alt"]
+
+
+def resolve_paraphrase(name: Optional[str]) -> str:
+    """Resolve a --paraphrase variant name against ALT_PROMPT_SETS. None keeps the
+    historical default ('alt'); an unknown name is a hard error listing valid names,
+    mirroring resolve_model/resolve_datasets — a silent fallback would produce a
+    ceilings file whose _meta claims a variant it did not actually run."""
+    if name is None:
+        return "alt"
+    if name in ALT_PROMPT_SETS:
+        return name
+    valid = ", ".join(sorted(ALT_PROMPT_SETS))
+    raise ConfigurationError(f"Unknown --paraphrase '{name}'; valid variants: {valid}")
 
 
 def resolve_datasets(config, names: Optional[list]):
@@ -257,21 +294,25 @@ async def run_explain(engine, class_prompt, class_raw, explain_prompt, max_token
     return await engine.chat(messages, max_tokens=max_tokens)
 
 
-async def run_ablations(config, args, model_cfg=None, dataset_cfgs=None):
+async def run_ablations(config, args, model_cfg=None, dataset_cfgs=None, paraphrase="alt"):
     # model_cfg: the resolved ModelConfig to ablate (--model override); default keeps
     # the historical single-model behavior (config.models[0]).
     # dataset_cfgs: the resolved dataset subset (--datasets override); default keeps
     # the historical behavior (all configured datasets).
+    # paraphrase: which reworded prompt set to elicit (--paraphrase override); default
+    # 'alt' keeps the original single-paraphrase behavior byte-for-byte.
     if model_cfg is None:
         model_cfg = config.models[0]
     if dataset_cfgs is None:
         dataset_cfgs = list(config.datasets)
+    alt_prompt_map = ALT_PROMPT_SETS[paraphrase]
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_dir = Path(config.output.base_dir) / timestamp / "ablations"
     output_dir.mkdir(parents=True, exist_ok=True)
 
     setup_logging(log_dir=output_dir / "logs", console_level=config.output.log_level)
-    logger.info(f"Starting ablation studies (model: {model_cfg.name} = {model_cfg.model_id})...")
+    logger.info(f"Starting ablation studies (model: {model_cfg.name} = {model_cfg.model_id}, "
+                f"paraphrase: {paraphrase})...")
 
     loader = DatasetLoader(seed=config.experiment.seed)
     parser = Parser()
@@ -375,7 +416,7 @@ async def run_ablations(config, args, model_cfg=None, dataset_cfgs=None):
         if config.ablations.prompt_variants and baseline_data:
             logger.info("Running prompt wording ablation...")
             for s in STRATEGY_IDS:
-                alt_template = load_prompt(ALT_PROMPTS[s])
+                alt_template = load_prompt(alt_prompt_map[s])
                 if not alt_template:
                     continue
 
@@ -470,6 +511,11 @@ async def run_ablations(config, args, model_cfg=None, dataset_cfgs=None):
         "model": model_cfg.model_id,
         "model_name": model_cfg.name,
         "single_model_scope": True,
+        # Which reworded prompt set produced these ceilings (--paraphrase). Downstream
+        # aggregation pools ceilings ACROSS variants, so the variant must be
+        # machine-readable here rather than inferred from the output directory.
+        "paraphrase_variant": paraphrase,
+        "paraphrase_prompts": alt_prompt_map,
         # Reflects the RESOLVED dataset subset (--datasets override). A partial-scope
         # ceilings file is merged with the model's other ablation dirs downstream
         # (run_disattenuated_agreement.py --ablation-dirs), so the subset must be
@@ -506,12 +552,18 @@ def main():
                        help="Config model NAME to ablate (e.g. qwen3-235b); default: first configured model")
     extra.add_argument("--datasets", type=str, nargs="+", default=None,
                        help="Config dataset NAMEs to ablate (e.g. cad_imdb); default: all configured datasets")
+    extra.add_argument("--paraphrase", type=str, default=None,
+                       choices=sorted(ALT_PROMPT_SETS),
+                       help="Which reworded prompt set to elicit for the reliability "
+                            "ceiling (default: alt, the original single paraphrase)")
     model_args, remaining = extra.parse_known_args()
     args = parse_command_line_args(remaining)
     config = load_and_validate_config(args=args)
     model_cfg = resolve_model(config, model_args.model)
     dataset_cfgs = resolve_datasets(config, model_args.datasets)
-    asyncio.run(run_ablations(config, args, model_cfg=model_cfg, dataset_cfgs=dataset_cfgs))
+    paraphrase = resolve_paraphrase(model_args.paraphrase)
+    asyncio.run(run_ablations(config, args, model_cfg=model_cfg, dataset_cfgs=dataset_cfgs,
+                              paraphrase=paraphrase))
 
 
 if __name__ == "__main__":
