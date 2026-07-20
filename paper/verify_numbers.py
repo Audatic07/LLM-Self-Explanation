@@ -261,6 +261,104 @@ check("minor overlap E-R", 0.689, ov_er)
 check("minor overlap R-P", 0.526, o["R_CF"])
 assert ov_ep > ov_er > o["R_CF"], "overlap composite must preserve paradigm ordering"
 
+# ---------- review-round-2 additions ----------
+# Item 2: degeneracy regimes. (a) small-V: J_max healthy but E[J] risen to meet it;
+# (b) size imbalance: J_max itself < eps-scale. Split at J_max = 0.35.
+regime = defaultdict(lambda: defaultdict(int))
+vsz, jmax_deg, ej_deg = defaultdict(list), defaultdict(list), defaultdict(list)
+for r in inst:
+    ss, V = _sets(r), int(r.get("vocab_size") or 0)
+    ds = r["dataset"]
+    vsz[ds].append(V)
+    for a, b in PAIRS:
+        if a in ss and b in ss:
+            sa, sb = len(ss[a]), len(ss[b])
+            ej = calc.expected_jaccard_exact(sa, sb, V)
+            jm = min(sa, sb) / max(sa, sb)
+            if jm - ej < 0.10:
+                regime[ds]["B" if jm < 0.35 else "A"] += 1
+                jmax_deg[ds].append(jm)
+                ej_deg[ds].append(ej)
+
+
+def _med(v):
+    return sorted(v)[len(v) // 2]
+
+
+for ds, a_exp, b_exp in [("cad_imdb", 0, 398), ("ag_news", 0, 48),
+                         ("mnli", 41, 248), ("sst2", 65, 148)]:
+    check(f"item2 {ds} regimeA", a_exp, regime[ds]["A"])
+    check(f"item2 {ds} regimeB", b_exp, regime[ds]["B"])
+check("item2 cad median V", 68, _med(vsz["cad_imdb"]))
+check("item2 mnli median V", 12, _med(vsz["mnli"]))
+check("item2 sst2 median V", 10, _med(vsz["sst2"]))
+check("item2 cad median jmax(degen)", 0.108, _med(jmax_deg["cad_imdb"]), tol=6e-4)
+check("item2 sst2 mean E[J](degen)", 0.37,
+      sum(ej_deg["sst2"]) / len(ej_deg["sst2"]), tol=6e-3)
+check("item2 mnli mean E[J](degen)", 0.18,
+      sum(ej_deg["mnli"]) / len(ej_deg["mnli"]), tol=6e-3)
+assert sum(regime[d]["A"] + regime[d]["B"] for d in regime) == 948, "regime totals must sum to 948"
+# CAD-IMDb median evidence-set sizes quoted in Appendix D
+cad = [r for r in inst if r["dataset"] == "cad_imdb"]
+cad_sz = defaultdict(list)
+for r in cad:
+    for s, st in _sets(r).items():
+        cad_sz[s].append(len(st))
+for s, exp in [("H", 30), ("CF", 11), ("R", 6)]:
+    check(f"item2 cad median |{s}|", exp, _med(cad_sz[s]))
+
+# Item 4: ceiling gate is parse-level, so low-validity cells still clear n>=10
+qwen_ag = [r for r in inst if r["dataset"] == "ag_news"
+           and r["model"] == "qwen.qwen3-235b-a22b-2507-v1:0"]
+n_cf_valid = sum(1 for r in qwen_ag if r.get("counterfactual_valid"))
+check("item4 qwen/ag CF validity %", 7.5, round(100 * n_cf_valid / len(qwen_ag), 1))
+abl = json.loads(Path("outputs/20260716_195651/ablations/ablation_results.json").read_text())
+check("item4 qwen/ag ceiling n", 13,
+      abl["ag_news_prompt"]["CF_alt"]["self_consistency_aj_n"])
+check("item4 qwen/ag rel_CF", 0.736,
+      abl["ag_news_prompt"]["CF_alt"]["self_consistency_aj_mean"], tol=6e-4)
+
+# Item 5: erasure set sizes and per-token flip densities
+sz = defaultdict(list)
+cc3_sizes = []
+for r in inst:
+    ss = _sets(r)
+    cnt = defaultdict(int)
+    for s, st in ss.items():
+        sz[s].append(len(st))
+        for t in st:
+            cnt[t] += 1
+    n_cc3 = sum(1 for t, c in cnt.items() if c >= 3)
+    if n_cc3:
+        cc3_sizes.append(n_cc3)
+mean_cc3 = sum(cc3_sizes) / len(cc3_sizes)
+check("item5 mean CC3 size", 3.1, mean_cc3, tol=0.05)
+check("item5 mean |H|", 12.6, sum(sz["H"]) / len(sz["H"]), tol=0.05)
+check("item5 mean |CF|", 6.2, sum(sz["CF"]) / len(sz["CF"]), tol=0.05)
+pooled_er = er["pooled"]["overall"]
+dens = {}
+for op in ("mask", "delete"):
+    dens[("CC3", op)] = pooled_er["cc3_flip_rate"][op] / mean_cc3
+    dens[("rand", op)] = pooled_er["random_flip_rate"][op] / mean_cc3
+    for s in ("H", "R", "CF", "RO"):
+        dens[(s, op)] = pooled_er["strategy_flip_rate"][s][op] / (sum(sz[s]) / len(sz[s]))
+for (k_, op), exp in [(("CC3", "mask"), 0.096), (("CC3", "delete"), 0.103),
+                      (("CF", "mask"), 0.072), (("CF", "delete"), 0.079),
+                      (("RO", "mask"), 0.072), (("RO", "delete"), 0.078),
+                      (("R", "mask"), 0.057), (("R", "delete"), 0.061),
+                      (("H", "mask"), 0.035), (("H", "delete"), 0.036),
+                      (("rand", "mask"), 0.041), (("rand", "delete"), 0.040)]:
+    check(f"item5 density {k_}/{op}", exp, dens[(k_, op)], tol=6e-4)
+# the ordering claim: CC3 densest under both operators
+for op in ("mask", "delete"):
+    assert dens[("CC3", op)] > max(dens[(s, op)] for s in ("H", "R", "CF", "RO")), \
+        f"CC3 must be densest under {op}"
+    assert dens[("CC3", op)] / dens[("rand", op)] > 2.3, "CC3 vs random density ratio"
+
+# Appendix D: E-R delta under the non-degenerate restriction
+check("appD E-R delta", 0.056,
+      _mean(nd_rows, "ecs_adj_er") - _mean(cc_rows, "ecs_adj_er"), tol=6e-4)
+
 # §3.3 simulation numbers are asserted in tests/test_disattenuation_recovery.py
 # (run: python -m pytest tests/test_disattenuation_recovery.py)
 
