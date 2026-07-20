@@ -7,7 +7,8 @@ through two rounds of external review. Everything below is committed and pushed 
 (2,400 instances = 3 models × 4 datasets × 200, commit `670b928`). No number in the paper
 was typed by hand without a machine check against that run's artifacts.
 
-**Commits:** `89739f5` (initial draft + review round 1) → `845c70d` (review round 2).
+**Commits:** `89739f5` (draft + review round 1) → `845c70d` (review round 2) →
+`3075d17`/`d95216c`/`921a521`/`5ad8ee4` (collection runs, §8).
 Both on `main`, pushed to `github.com/Audatic07/LLM-Self-Explanation`.
 
 ---
@@ -19,10 +20,10 @@ Both on `main`, pushed to `github.com/Audatic07/LLM-Self-Explanation`.
 | File | What it is |
 |---|---|
 | `main.tex` (425 lines) | The paper: abstract → intro → related work → method → setup → 5 results sections → discussion → conclusion → limitations/ethics/reproducibility → 4 appendices |
-| `main.pdf` | Built artifact: **18 pages**, content pp. 1–9, zero LaTeX errors, zero overfull boxes, all citations resolved |
-| `references.bib` | 24 entries; 2 flagged `TODO-VERIFY` (author lists for arXiv:2407.14487, arXiv:2502.18156) |
+| `main.pdf` | Built artifact: **19 pages**, content pp. 1–9, zero LaTeX errors, zero overfull boxes, all citations resolved |
+| `refs.bib` | 24 entries; 2 flagged `TODO-VERIFY` (author lists for arXiv:2407.14487, arXiv:2502.18156) |
 | `acl.sty`, `acl_natbib.bst` | Official ACL style files (acl-org/acl-style-files) |
-| `verify_numbers.py` | **240 executed checks + 8 structural assertions** against run artifacts; exits nonzero on mismatch |
+| `verify_numbers.py` | **~270 executed checks + structural assertions** against run artifacts; exits nonzero on mismatch |
 | `figures/make_dumbbell.py` | Generates the body figure (observed → corrected agreement) from `disattenuated_agreement.json` |
 | `tables/make_tables.py` | Regenerates appendix tables A1–A4 from the run's frozen booktabs output |
 | `tables/A5_correctness.tex` | Correctness-split table (hand-built from computed values) |
@@ -48,13 +49,15 @@ Five findings, in the order the paper makes them:
    model×dataset cells (0.284–0.617; Holm *p* ≤ .0012 throughout), pooled 0.432.
 2. **Structure by paradigm distance, sharpened by reliability correction.** Observed
    E–P 0.615 > E–R 0.395 > R–P 0.286. After disattenuation, extraction↔counterfactual
-   pairs reach the ceiling (0.883, 0.956) — their divergence is mostly elicitation noise —
-   while every rationale-involving pair stays far short (R–CF 0.391, CI [0.352, 0.429]),
-   despite R being the *most reliable* instrument. **This is the headline.**
+   pairs approach the ceiling (0.876, 0.936) — their divergence is mostly elicitation
+   noise — while every rationale-involving pair stays far short (R–CF 0.393, CI
+   [0.354, 0.432]), despite R being the *most reliable* instrument. **This is the
+   headline.** (Values updated by the three-paraphrase expansion; see §8.1.)
 3. **Paradigm-shaped, not model-shaped.** Two models using one strategy agree more than
    one model using two strategies, on all four datasets.
 4. **Consensus is causally load-bearing.** CC3 erasure flips predictions 2.0–2.7× more
-   than matched random controls, all models, both operators.
+   than matched random controls — and 4–5× more than size-matched *non-consensus* salient
+   tokens (§8.2) — for all models, both operators.
 5. **But it does not predict simulatability** (under explanation-independent
    perturbations) — a pre-registered null, reported as such.
 
