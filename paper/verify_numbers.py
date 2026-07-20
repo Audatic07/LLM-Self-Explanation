@@ -60,12 +60,13 @@ check("T1 pooled cc N", 1153, overall["n_ecs_adj_complete"])
 check("T1 pooled avail", 0.462, overall["mean_ecs_adj_available"])
 
 # ---------- Table 2: pooled disattenuation ----------
+# Pooled over THREE paraphrase rewordings (2026-07-20 expansion).
 T2 = {  # pair: (obs, rel_a, rel_b, corrected, ci_lo, ci_hi)
-    "RO_CF": (0.653, 0.75, 0.62, 0.956, 0.909, 1.006),
-    "H_CF": (0.555, 0.64, 0.62, 0.883, 0.830, 0.935),
-    "H_R": (0.495, 0.64, 0.90, 0.654, 0.623, 0.684),
-    "RO_R": (0.424, 0.75, 0.90, 0.516, 0.491, 0.539),
-    "R_CF": (0.291, 0.90, 0.62, 0.391, 0.352, 0.429),
+    "RO_CF": (0.653, 0.79, 0.62, 0.936, 0.898, 0.978),
+    "H_CF": (0.555, 0.65, 0.62, 0.876, 0.829, 0.922),
+    "H_R": (0.495, 0.65, 0.89, 0.649, 0.621, 0.676),
+    "RO_R": (0.424, 0.79, 0.89, 0.504, 0.481, 0.527),
+    "R_CF": (0.291, 0.89, 0.62, 0.393, 0.354, 0.432),
 }
 for pair, (obs, ra, rb, corr, lo, hi) in T2.items():
     p = dis["overall"]["pairs"][pair]
@@ -162,10 +163,10 @@ ecf = []
 for m in ("deepseek-v3", "nova-pro", "qwen3-235b"):
     for pr in ("H_CF", "RO_CF"):
         ecf.append(dis["per_cell"][f"{m}_cad_imdb"]["pairs"][pr]["corrected"])
-inside = [v for v in ecf if 0.875 <= v <= 1.065]
-assert len(inside) == 5 and min(ecf) < 0.56, f"CAD ext-CF pairs: {sorted(round(v,3) for v in ecf)}"
+inside = [v for v in ecf if 0.89 <= v <= 1.05]
+assert len(inside) == 5 and min(ecf) < 0.54, f"CAD ext-CF pairs: {sorted(round(v,3) for v in ecf)}"
 rcf_cad = [dis["per_cell"][f"{m}_cad_imdb"]["pairs"]["R_CF"]["corrected"] for m in ("deepseek-v3", "nova-pro", "qwen3-235b")]
-assert 0.115 <= min(rcf_cad) and max(rcf_cad) <= 0.355, f"CAD R-CF {rcf_cad}"
+assert 0.115 <= min(rcf_cad) and max(rcf_cad) <= 0.36, f"CAD R-CF {rcf_cad}"
 
 # ---------- reviewer-round additions ----------
 # Item 8: cross-model pairs not conditioned on matching predicted label
@@ -361,6 +362,19 @@ check("appD E-R delta", 0.056,
 
 # §3.3 simulation numbers are asserted in tests/test_disattenuation_recovery.py
 # (run: python -m pytest tests/test_disattenuation_recovery.py)
+
+# Paraphrase expansion (2026-07-20): three rewordings pooled.
+ps = dis.get("paraphrase_sensitivity", {})
+check("paraphrase n_variants", 3, len(ps.get("variants", [])))
+SPREAD = {"RO_CF": 0.034, "H_CF": 0.043, "H_R": 0.038, "RO_R": 0.017, "R_CF": 0.005}
+for pair, exp in SPREAD.items():
+    check(f"spread {pair}", exp, ps["corrected_spread"][pair]["range"], tol=6e-4)
+# every corrected CI now excludes 1 (the single-paraphrase RO-CF CI did not)
+for pair in SPREAD:
+    assert dis["overall"]["pairs"][pair]["ci_upper"] < 1.0, f"{pair} CI must exclude 1"
+# Nova/AG News CF reliability under pooled ceilings (floor exclusion cause)
+novacf = dis["per_cell"]["nova-pro_ag_news"]["pairs"]["R_CF"]["rel_b"]
+check("nova ag_news rel_CF", 0.10, novacf, tol=6e-3)
 
 print(f"checks run; failures: {len(failures)}")
 for f in failures:
