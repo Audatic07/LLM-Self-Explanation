@@ -306,8 +306,20 @@ async def run_ablations(config, args, model_cfg=None, dataset_cfgs=None, paraphr
     if dataset_cfgs is None:
         dataset_cfgs = list(config.datasets)
     alt_prompt_map = ALT_PROMPT_SETS[paraphrase]
+    # Scope the run directory by model AND paraphrase variant, not by timestamp alone.
+    # Ablation passes are routinely launched one-per-model in parallel; the second-
+    # resolution timestamp collides when they start in the same second, and every
+    # process then writes ablation_results.json to the SAME path — last writer wins and
+    # the other models' ceilings are silently lost (observed 2026-07-20: three parallel
+    # alt2 passes, only one survived). The suffix makes the path a function of the run's
+    # identity, so a collision is impossible and provenance is readable from the path.
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_dir = Path(config.output.base_dir) / timestamp / "ablations"
+    run_dir = f"{timestamp}_{model_cfg.name}_{paraphrase}"
+    output_dir = Path(config.output.base_dir) / run_dir / "ablations"
+    if output_dir.exists() and any(output_dir.iterdir()):
+        raise RuntimeError(
+            f"{output_dir} already exists and is non-empty — refusing to overwrite "
+            f"collected ceilings. Move it aside or wait a second and retry.")
     output_dir.mkdir(parents=True, exist_ok=True)
 
     setup_logging(log_dir=output_dir / "logs", console_level=config.output.log_level)
