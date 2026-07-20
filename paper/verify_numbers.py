@@ -376,6 +376,35 @@ for pair in SPREAD:
 novacf = dis["per_cell"]["nova-pro_ag_news"]["pairs"]["R_CF"]["rel_b"]
 check("nova ag_news rel_CF", 0.10, novacf, tol=6e-3)
 
+# Salience baseline (post-hoc erasure control, 2026-07-20 collection).
+sal = json.loads((RUN / "aggregate_salience_baseline.json").read_text())
+SAL = {  # (arm, op): (arm_rate, cc3_rate, diff)
+    ("ss1", "mask"): (0.064, 0.289, 0.224),
+    ("ss1", "delete"): (0.058, 0.305, 0.247),
+    ("tfidf", "mask"): (0.074, 0.294, 0.219),
+    ("tfidf", "delete"): (0.081, 0.314, 0.233),
+}
+for (arm, op), (ar, cc, diff) in SAL.items():
+    e = sal["pooled"]["arms"][arm][op]
+    check(f"salience {arm}/{op} arm", ar, e["arm_flip_rate"])
+    check(f"salience {arm}/{op} cc3", cc, e["cc3_flip_rate_paired"])
+    check(f"salience {arm}/{op} diff", diff, e["mean_paired_diff"])
+    check(f"salience {arm}/{op} p_holm", 0.0002, round(e["p_holm"], 4), tol=1e-9)
+    # matched-only subset must not overturn the conclusion
+    assert e["matched_only"]["mean_paired_diff"] > 0.18, f"{arm}/{op} matched-only diff"
+check("salience ss1 pct_matched", 65, round(sal["pooled"]["arms"]["ss1"]["mask"]["pct_matched"]))
+check("salience tfidf pct_matched", 96, round(sal["pooled"]["arms"]["tfidf"]["mask"]["pct_matched"]))
+# every model significant, both operators, both arms
+for m in sal["per_model"]:
+    for arm in ("ss1", "tfidf"):
+        for op in ("mask", "delete"):
+            assert sal["per_model"][m]["arms"][arm][op]["p_holm"] < 0.05, f"{m}/{arm}/{op}"
+# prose: CC3 is 4-5x the salience arms, and salience arms fall BELOW random control
+rand = er["pooled"]["overall"]["random_flip_rate"]
+for (arm, op), (ar, cc, _d) in SAL.items():
+    assert 3.5 <= cc / ar <= 5.5, f"{arm}/{op} ratio {cc/ar:.2f}"
+    assert ar < rand[op], f"{arm}/{op} should fall below random control"
+
 print(f"checks run; failures: {len(failures)}")
 for f in failures:
     print("  MISMATCH:", f)

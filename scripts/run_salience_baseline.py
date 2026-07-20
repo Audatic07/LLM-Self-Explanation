@@ -41,6 +41,7 @@ import logging
 import math
 import sys
 from collections import Counter, defaultdict
+from itertools import zip_longest
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set
 
@@ -325,10 +326,18 @@ async def run(config, args):
         raise RuntimeError(f"Records from unconfigured model(s): {unknown}. Re-classification "
                            f"must use the SAME model that made each prediction.")
 
+    # One model in this account (the EU cross-region profile) throttles hard under
+    # concurrency; with the config's default retry budget ~4% of its calls exhaust
+    # retries and become silent missing data. Allow a larger budget for this pass —
+    # the backoff is exponential, so extra attempts cost wall-clock, not correctness.
+    max_retries = int(getattr(args, "max_retries", 0) or config.inference.max_retries)
     engines = {mid: InferenceEngine(model_name=mid,
-                                    max_retries=config.inference.max_retries,
+                                    max_retries=max_retries,
                                     concurrent_requests=config.inference.concurrent_requests)
                for mid in by_model}
+    logger.info(f"Engines: max_retries={max_retries}, "
+                f"concurrent_requests={config.inference.concurrent_requests}, "
+                f"instance concurrency={getattr(args, 'concurrency', 12)}")
     parser = Parser()
     normalizer = Normalizer(use_lemmatization=config.normalization.use_lemmatization,
                             remove_stopwords=config.normalization.remove_stopwords,
@@ -363,21 +372,49 @@ async def run(config, args):
     if out_jsonl.exists():
         records = [json.loads(l) for l in out_jsonl.open(encoding="utf-8") if l.strip()]
 
-    todo = [(mid, d) for mid, ds in by_model.items() for d in ds
-            if (d["instance_id"], mid) not in done]
+    # Interleave models round-robin. Grouping model-by-model means the first N workers
+    # all target the SAME model, so the pool saturates on whichever model throttles
+    # while the others idle — the concurrency window has to be spread across engines
+    # for their per-model semaphores to be used at all.
+    per_model_todo = [[(mid, d) for d in ds if (d["instance_id"], mid) not in done]
+                      for mid, ds in by_model.items()]
+    todo = [item for row in zip_longest(*per_model_todo) for item in row if item is not None]
     logger.info(f"Salience baseline: {len(todo)} instances to collect "
                 f"(arms={arms}, operators={operators})")
 
-    with out_jsonl.open("a", encoding="utf-8") as fh:
-        for i, (mid, data) in enumerate(todo, 1):
-            rec = await process_instance(
+    # Instances are independent, so run them through a bounded worker pool.
+    # Two earlier shapes were worse: a strictly sequential loop keeps exactly one
+    # request in flight (~2 instances/min), and chunked gather suffers head-of-line
+    # blocking — one model in this account throttles hard, so every chunk stalls on its
+    # slowest member while the unthrottled models sit idle. A semaphore plus
+    # as_completed lets fast models run ahead, and results are appended to the
+    # checkpoint the moment each instance finishes.
+    concurrency = max(1, int(getattr(args, "concurrency", 0) or 12))
+    sem = asyncio.Semaphore(concurrency)
+
+    async def worker(mid, data):
+        async with sem:
+            return mid, data, await process_instance(
                 data, engines[mid], parser, class_prompt_for(data.get("dataset", "")),
-                labels_for.get(data.get("dataset", ""), []), operators, normalizer, arms, idf)
+                labels_for.get(data.get("dataset", ""), []), operators, normalizer,
+                arms, idf)
+
+    tasks = [asyncio.create_task(worker(mid, data)) for mid, data in todo]
+    done_count = 0
+    with out_jsonl.open("a", encoding="utf-8") as fh:
+        for fut in asyncio.as_completed(tasks):
+            try:
+                _mid, _data, rec = await fut
+            except Exception as e:  # one instance failing must not abort the pass
+                logger.error(f"instance failed: {type(e).__name__}: {e}")
+                done_count += 1
+                continue
             fh.write(json.dumps(rec, ensure_ascii=False) + "\n")
-            fh.flush()
             records.append(rec)
-            if i % 50 == 0 or i == len(todo):
-                logger.info(f"  {i}/{len(todo)} instances")
+            done_count += 1
+            if done_count % 100 == 0 or done_count == len(todo):
+                fh.flush()
+                logger.info(f"  {done_count}/{len(todo)} instances")
 
     scored = [r for r in records if r.get("arms")]
     agg = aggregate(scored, cc3_by_id, operators, arms, seed=42)
@@ -402,6 +439,11 @@ def main():
     extra.add_argument("--operators", type=str, nargs="+", default=None,
                        choices=["mask", "delete"])
     extra.add_argument("--max-instances", type=int, default=None)
+    extra.add_argument("--max-retries", type=int, default=None,
+                       help="Override inference.max_retries (raise for throttled models)")
+    extra.add_argument("--concurrency", type=int, default=12,
+                       help="Instances processed concurrently (default 12). Each still "
+                            "respects its engine's own request semaphore.")
     own, remaining = extra.parse_known_args()
     args = parse_command_line_args(remaining)
     for k, v in vars(own).items():

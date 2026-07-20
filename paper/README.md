@@ -1,14 +1,14 @@
 # Paper draft — "Do LLM Self-Explanations Tell One Story?"
 
 Draft of record built from run `outputs/20260718_041618_eaa24e67`.
-Current build: **18 pages** (main content pp. 1–9, Limitations onward exempt),
+Current build: **19 pages** (main content pp. 1–9, Limitations onward exempt),
 zero LaTeX errors, zero overfull boxes, all citations resolved, `verify_numbers.py` green.
 
 ## Files
 
 - `main.tex` — full paper (ACL format, `[preprint]` mode: named authors + page numbers).
   Switch to `\usepackage[review]{acl}` for anonymous *ACL submission.
-- `references.bib` — two entries carry `TODO-VERIFY` notes on author lists
+- `refs.bib` (NOT `references.bib` — a sibling `references/` PDF directory shadows that basename in BibTeX lookup) — two entries carry `TODO-VERIFY` notes on author lists
   (arXiv:2407.14487, arXiv:2502.18156); verify before submission.
 - `acl.sty`, `acl_natbib.bst` — official ACL style files (acl-org/acl-style-files).
 - `figures/` — vector PDFs copied from the run's `paper/figures/`, plus
@@ -19,7 +19,7 @@ zero LaTeX errors, zero overfull boxes, all citations resolved, `verify_numbers.
   booktabs tables (prettified names only; numbers untouched). Run from repo root.
   `tables/A5_correctness.tex` is hand-written from the correctness computation.
 - `verify_numbers.py` — cross-checks every number in Tables 1–5, the appendix additions,
-  and the headline prose against the run artifacts (~180 checks). Run from repo root;
+  and the headline prose against the run artifacts (~270 checks). Run from repo root;
   exits nonzero on any mismatch. **Run this after any edit to results text.**
 - `../tests/test_disattenuation_recovery.py` — planted-agreement simulation validating
   the Spearman correction on the AJ scale; backs every number in Appendix C.
@@ -47,24 +47,22 @@ tectonic main.tex
      but this weakens the pre-registered-null framing, so it is listed last.
 5. Switch to `[review]` mode.
 
-## Two API runs that would close the last open holes
+## Completed collection runs (2026-07-20/21)
 
-Both are specified in the text as not-run. Neither is possible right now: Bedrock
-credentials are not loaded, and the campaign key was slated for rotation. With access
-restored, these are the highest-value additions, in order:
+Both API runs flagged in earlier revisions are done; their results are in the paper.
 
-1. **Paraphrase expansion** (~5k calls). Two further paraphrases per strategy across all
-   cells, so each reliability ceiling becomes a distribution rather than a point, and
-   Table 2's corrected column can be re-derived across the spread. This is the one thing
-   that would convert the "extraction↔CF at ceiling" claim from provisional to solid —
-   it currently rests on a single paraphrase per strategy, and low reliability inflates
-   the corrected ratio. Run: `python scripts/run_ablations.py --model <name>` per model
-   with the additional paraphrase templates, then re-run
-   `scripts/run_disattenuated_agreement.py`.
-2. **Erasure salience baseline** (~4–5k calls). CC3-sized top-TF-IDF or
-   single-strategy-only token sets, both operators, over the ~2,200 CC3 instances. The
-   post-hoc per-token density analysis (§5.4) already shows CC3 is the densest evidence
-   per token erased, but a like-sized non-consensus baseline is the controlled version.
+1. **Paraphrase expansion** (~11k calls). Two further rewordings of all four elicitation
+   prompts, collected per model over all four datasets (`prompts/*_alt2.txt`,
+   `*_alt3.txt`; `run_ablations.py --paraphrase alt2|alt3`). Every reliability ceiling
+   now pools three rewordings. Re-deriving the table under each wording separately moves
+   no pair by more than 0.043 — but pooling shifted RO-CF's CI to exclude 1, so the
+   extraction-perturbation pairs are described as approaching, not reaching, the ceiling.
+   To extend further: add `alt4` to `ALT_PROMPT_SETS` and rerun the same command.
+
+2. **Erasure salience baseline** (~9k calls, `run_salience_baseline.py`). Size- and
+   occurrence-matched NON-consensus controls: SS1 (named by exactly one strategy) and
+   TF-IDF (top lexical salience excluding the core). Consensus erasure flips 4-5x more
+   than either, every model, both operators, Holm p=.0002.
 
 ## Other known open items (flagged in the text, not defects)
 
@@ -73,4 +71,8 @@ restored, these are the highest-value additions, in order:
   explanation-derived arm is the natural follow-up.
 - **The recovery simulation models independent instrument noise only.** Correlated
   errors (plausible under the shared label anchor) would inflate corrected values;
-  disclosed in Appendix C and Limitations.
+  disclosed in Appendix C and Limitations. This is the one exposure the paraphrase
+  expansion could NOT address - more rewordings do not decorrelate a shared label anchor.
+- **Per-cell reliabilities remain wording-sensitive** (up to 0.26 spread for one
+  strategy in one cell) even though pooled values are stable; per-cell corrected values
+  in Appendix F carry more uncertainty than their bootstrap CIs show.
