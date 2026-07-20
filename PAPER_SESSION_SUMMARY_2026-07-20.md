@@ -226,3 +226,76 @@ single-paraphrase reliabilities. Every one of these is now either closed or expl
 bounded in the text — which is the most a draft can do without the two API runs above.
 
 NeurIPS/ICLR are a poor fit; interpretability there skews mechanistic.
+
+---
+
+## 8. Collection runs (2026-07-20/21) — both open holes closed
+
+The two API runs earlier flagged as "specified but not run" were executed. Both changed
+the paper; one changed a claim.
+
+### 8.1 Paraphrase expansion (~11k calls)
+
+Two further rewordings of each of the four elicitation prompts (`prompts/*_alt2.txt`,
+`*_alt3.txt`), collected per model over all four datasets. Every reliability ceiling now
+pools three independent wordings.
+
+**Conclusions are robust.** Re-deriving the overall table under each wording separately:
+
+| Pair | wording 1 | 2 | 3 | range |
+|---|---|---|---|---|
+| RO–CF | 0.956 | 0.923 | 0.931 | 0.034 |
+| H–CF | 0.883 | 0.895 | 0.853 | 0.043 |
+| H–R | 0.654 | 0.666 | 0.628 | 0.038 |
+| RO–R | 0.516 | 0.499 | 0.499 | 0.017 |
+| R–CF | 0.391 | 0.396 | 0.392 | **0.005** |
+
+**But one claim had to change.** Pooling moved RO–CF from 0.956 [0.909, 1.006] to
+0.936 [0.898, 0.978] — the CI now *excludes* 1. The paper no longer says
+extraction↔counterfactual sits *at* the ceiling; it says the pairs approach it,
+statistically just short. Every corrected CI now excludes 1, asserted in the harness.
+
+Per-cell reliabilities move far more than pooled ones (up to 0.26 for one strategy in
+one cell), so Appendix F values carry more uncertainty than their bootstrap CIs suggest.
+
+### 8.2 Erasure salience baseline (~9k calls)
+
+Size- and occurrence-matched **non-consensus** controls, re-classified by each instance's
+own model: SS1 (named by exactly one strategy) and TF-IDF (top lexical salience excluding
+the core).
+
+| Arm | mask | delete | vs CC3 |
+|---|---|---|---|
+| CC3 (consensus) | 0.289 | 0.305 | — |
+| SS1 | 0.064 | 0.058 | **4.5–5.3×** |
+| TF-IDF | 0.074 | 0.081 | 3.9–4.0× |
+| random (pre-registered) | 0.125 | 0.123 | 2.4× |
+
+Significant for every model, both operators, both baselines (Holm p=.0002), and the
+matched-only subsets (SS1 65%, TF-IDF 96%) leave the gap essentially unchanged.
+
+**Both salience arms fall *below* the random control** — because the random control
+samples content words without excluding consensus tokens and so hits them by chance. The
+pre-registered comparison is the weaker one; the effect against a genuinely non-consensus
+baseline is about twice the headline size.
+
+### 8.3 Two silent bugs found and fixed
+
+Both exited 0 with logs reporting success; both were caught by checking what the
+artifacts actually claimed rather than trusting the logs.
+
+1. **Ablation output-directory collision.** The run dir came from a second-resolution
+   timestamp alone, so three parallel one-per-model passes resolved to the same path and
+   overwrote each other — two models' ceilings were destroyed (~3,600 calls wasted). The
+   dir is now a function of run identity; a non-empty target is a hard error.
+2. **BibTeX shadowed by a sibling directory.** A `references/` folder of cited-paper PDFs
+   shadows the basename in `ibliography{references}`, so BibTeX opened the *directory*
+   ("Access is denied"). A stale `main.bbl` had masked it, meaning the build was not
+   reproducible from clean. The bib is now `refs.bib`; intermediates are gitignored.
+
+### 8.4 What remains open
+
+- **Correlated instrument errors** — the one exposure more rewordings cannot address, since
+  they do not decorrelate a shared label anchor. Disclosed in Appendix C and Limitations.
+- **Explanation-derived simulatability**, English-only scope, and no frontier model — all
+  unchanged, all disclosed. The frontier-model run was never attempted (cost).
